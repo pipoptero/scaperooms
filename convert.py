@@ -30,15 +30,15 @@ print(f"   Hoja Hechos     : {hecho_name}")
 
 # ── Mapa de columnas (flexible) ───────────────────────────────────────────────
 COL_ALIASES = {
-    "nombre":     ["nombre del escape", "nombre", "name", "escape"],
-    "empresa":    ["empresa", "company"],
-    "ciudad":     ["ciudad", "city", "location"],
-    "tematica":   ["temática", "tematica", "theme", "tema"],
-    "tipo":       ["tipo", "type"],
-    "duracion":   ["duración", "duracion", "duración (min)", "duration", "min"],
-    "dificultad": ["dificultad", "difficulty"],
-    "rating":     ["valoración", "valoracion", "rating escapistas", "rating", "score"],
-    "web":        ["web", "url", "link"],
+    "nombre":      ["nombre del escape", "nombre", "name", "escape"],
+    "empresa":     ["empresa", "company"],
+    "ciudad":      ["ciudad", "city", "location"],
+    "tematica":    ["temática", "tematica", "theme", "tema"],
+    "tipo":        ["tipo", "type"],
+    "duracion":    ["duración", "duracion", "duración (min)", "duration", "min"],
+    "dificultad":  ["dificultad", "difficulty"],
+    "rating":      ["valoración", "valoracion", "rating escapistas", "rating", "score"],
+    "web":         ["web", "url", "link"],
     "valoracion":  ["valoración grupo", "valoracion grupo", "group rating", "puntuación", "puntuacion"],
     "descripcion": ["descripción", "descripcion", "description", "descripción del escape", "descripcion del escape", "descripción del room", "resumen"],
 }
@@ -50,6 +50,21 @@ def find_col(headers, key):
             if h and str(h).strip().lower() == alias.lower():
                 return i
     return -1
+
+def safe_str(val):
+    """Convierte un valor de celda a string limpio, ignorando fechas y valores no textuales."""
+    if val is None:
+        return ""
+    # Si es fecha u objeto datetime, ignorar
+    import datetime
+    if isinstance(val, (datetime.date, datetime.datetime)):
+        return ""
+    s = str(val).strip()
+    # Detectar strings con formato de fecha (ej: "2026-05-09 00:00:00")
+    import re
+    if re.match(r'^\d{4}-\d{2}-\d{2}', s):
+        return ""
+    return s
 
 def parse_sheet(ws):
     rows = list(ws.iter_rows(values_only=True))
@@ -70,7 +85,7 @@ def parse_sheet(ws):
         for key, idx in col_map.items():
             val = ""
             if idx >= 0 and idx < len(row) and row[idx] is not None:
-                val = str(row[idx]).strip()
+                val = safe_str(row[idx])
             obj[key] = val
         result.append(obj)
     return result
@@ -80,8 +95,14 @@ pendientes = parse_sheet(wb[pend_name])
 hechos_raw = parse_sheet(wb[hecho_name])
 hechos = [h for h in hechos_raw if h["nombre"]]
 
-# Calcular ranking por valoración grupo
-hechos_sorted = sorted(hechos, key=lambda h: float(h["valoracion"]) if h["valoracion"] else 0, reverse=True)
+# Calcular ranking por valoración grupo (robusto ante valores no numéricos)
+def safe_float(val):
+    try:
+        return float(val)
+    except (ValueError, TypeError):
+        return 0
+
+hechos_sorted = sorted(hechos, key=lambda h: safe_float(h["valoracion"]), reverse=True)
 for h in hechos:
     h["ranking"] = next((i + 1 for i, x in enumerate(hechos_sorted) if x["nombre"] == h["nombre"]), 0)
 
