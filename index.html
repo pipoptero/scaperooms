@@ -143,6 +143,17 @@
   .rv-web{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .2s;margin-top:auto;align-self:flex-start;}
   .rv-web:hover{color:var(--amber);} .rv-web::before{content:'→ ';}
 
+  /* ── Category stars ── */
+  .rv-cats{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px;margin-top:4px;}
+  .rv-cat{display:flex;flex-direction:column;gap:3px;}
+  .rv-cat-label{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+  .rv-cat-stars{display:flex;gap:1px;align-items:center;}
+  .rv-cat-star{font-size:1rem;line-height:1;}
+  .rv-cat-star.on{color:var(--amber);}
+  .rv-cat-star.half{background:linear-gradient(90deg,var(--amber) 50%,var(--border) 50%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .rv-cat-star.off{color:var(--border);}
+  .rv-cat-val{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text2);margin-left:5px;}
+
   @media(max-width:900px){
     .review-row{grid-template-columns:50px 1fr;}
     .rv-opinion{grid-column:1/-1;border-top:1px solid var(--border);border-right:none;}
@@ -281,7 +292,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -544,6 +555,26 @@ function clearFilters(w) {
   }
 }
 
+// ── Helper: estrellas de categoría (escala 0-10) ──────────────────────────────
+function catStars(label, rawVal) {
+  if (!rawVal) return '';
+  const val = parseFloat(rawVal);
+  if (isNaN(val)) return '';
+  // Convertir a escala 0-5 para mostrar 5 estrellas
+  const out_of_5 = val / 2;
+  let stars = '';
+  for (let i = 1; i <= 5; i++) {
+    const diff = out_of_5 - (i - 1);
+    if (diff >= 1)        stars += `<span class="rv-cat-star on">★</span>`;
+    else if (diff >= 0.5) stars += `<span class="rv-cat-star half">★</span>`;
+    else                  stars += `<span class="rv-cat-star off">★</span>`;
+  }
+  return `<div class="rv-cat">
+    <div class="rv-cat-label">${label}</div>
+    <div class="rv-cat-stars">${stars}<span class="rv-cat-val">${val}</span></div>
+  </div>`;
+}
+
 // ── Templates de tarjetas ─────────────────────────────────────────────────────
 function cardPend(p, i) {
   const slug = slugify(p.nombre);
@@ -620,6 +651,14 @@ function cardHecho(h, rank) {
       <div class="rv-opinion-text ${!h.descripcion ? 'empty' : ''}">
         ${h.descripcion || 'Sin descripción añadida aún.'}
       </div>
+      ${(h.historia || h.ambientacion || h.jugabilidad || h.gamemaster) ? `
+      <div class="rv-opinion-label" style="margin-top:12px">Valoración por categorías</div>
+      <div class="rv-cats">
+        ${catStars('Historia',     h.historia)}
+        ${catStars('Ambientación', h.ambientacion)}
+        ${catStars('Jugabilidad',  h.jugabilidad)}
+        ${catStars('Game Master',  h.gamemaster)}
+      </div>` : ''}
       ${h.web ? `<a class="rv-web" href="${h.web}" target="_blank">Ver web</a>` : ''}
     </div>
 

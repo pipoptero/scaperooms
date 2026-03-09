@@ -42,6 +42,10 @@ COL_ALIASES = {
     "valoracion":  ["valoración grupo", "valoracion grupo", "group rating", "puntuación", "puntuacion"],
     "descripcion":   ["descripción", "descripcion", "description", "descripción del escape", "descripcion del escape", "descripción del room", "resumen"],
     "max_personas":  ["max_personas", "max personas", "máximo jugadores", "maximo jugadores", "jugadores", "players", "max players", "capacidad"],
+    "historia":      ["historia", "history"],
+    "ambientacion":  ["ambientación", "ambientacion", "atmosphere"],
+    "jugabilidad":   ["jugabilidad", "gameplay"],
+    "gamemaster":    ["gamemaster", "game master", "gm", "game_master"],
 }
 
 def find_col(headers, key):
