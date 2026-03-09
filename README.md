@@ -108,3 +108,61 @@ Ve a Settings → Actions → General → Workflow permissions y activa "Read an
 
 **La web muestra error 404 en data.json**
 La Action aún no se ha ejecutado o falló. Ve a la pestaña Actions, comprueba el log y si es necesario dale a "Re-run jobs".
+
+---
+
+## 🔥 Configurar votaciones con Firebase
+
+Las votaciones requieren una base de datos gratuita de Firebase. Solo necesitas configurarla una vez.
+
+### 1. Crear proyecto Firebase
+- Ve a [console.firebase.google.com](https://console.firebase.google.com)
+- Haz clic en **Añadir proyecto** → ponle un nombre (ej: `escape-rooms-tracker`)
+- Desactiva Google Analytics (no hace falta) → **Crear proyecto**
+
+### 2. Crear la base de datos
+- En el menú izquierdo: **Compilación → Realtime Database**
+- Haz clic en **Crear una base de datos**
+- Elige la región más cercana (ej: `europe-west1`)
+- Selecciona **Empezar en modo de prueba** → **Habilitar**
+
+### 3. Copiar la URL de la base de datos
+Verás una URL del tipo:
+```
+https://tu-proyecto-default-rtdb.europe-west1.firebasedatabase.app
+```
+Cópiala.
+
+### 4. Pegar la URL en index.html
+Abre `index.html` y busca esta línea (está al principio del `<script>`):
+```js
+const FIREBASE_URL = '';
+```
+Sustitúyela por:
+```js
+const FIREBASE_URL = 'https://tu-proyecto-default-rtdb.europe-west1.firebasedatabase.app';
+```
+Guarda y sube el archivo a GitHub. ¡Listo! 🎉
+
+### 5. Reglas de seguridad (recomendado)
+Por defecto el modo prueba expira en 30 días. Para uso permanente ve a **Realtime Database → Reglas** y pega esto:
+```json
+{
+  "rules": {
+    "votes": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
+```
+Haz clic en **Publicar**.
+
+---
+
+### ¿Cómo funciona el sistema de votación?
+- Cada persona que abre la web tiene un **ID anónimo** generado automáticamente en su navegador
+- Pueden puntuar cualquier escape room de 1 a 5 estrellas (= 2 a 10 puntos)
+- Pueden cambiar su voto cuando quieran haciendo clic en otra estrella
+- Cada tarjeta muestra la **media de la comunidad** y el número de votos
+- Los votos se guardan en Firebase en tiempo real

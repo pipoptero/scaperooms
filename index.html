@@ -18,17 +18,20 @@
   @keyframes pulse-lock{0%,100%{filter:drop-shadow(0 0 14px rgba(245,166,35,.5))}50%{filter:drop-shadow(0 0 28px rgba(245,166,35,.95))}}
   @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
   @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.4)}100%{transform:scale(1)}}
 
-  /* ── LOADING ── */
+  /* ── LOADING / ERROR ── */
   #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:20px;}
   .spinner{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin 0.8s linear infinite;}
   .loading-text{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--text3);letter-spacing:.2em;text-transform:uppercase;}
-
-  /* ── ERROR ── */
   #error-screen{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:16px;padding:32px;}
   .error-icon{font-size:3rem;opacity:.5;}
   .error-title{font-family:'Cinzel',serif;color:var(--red);font-size:1.2rem;letter-spacing:.1em;}
-  .error-msg{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--text3);letter-spacing:.08em;text-align:center;line-height:1.8;max-width:480px;}
+  .error-msg{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--text3);letter-spacing:.08em;text-align:center;line-height:1.8;max-width:480px;white-space:pre-line;}
+
+  /* ── SETUP BANNER ── */
+  #setup-banner{display:none;background:rgba(230,57,70,.08);border-bottom:1px solid rgba(230,57,70,.25);padding:10px 32px;text-align:center;font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--red);letter-spacing:.08em;line-height:1.8;}
+  #setup-banner a{color:var(--amber);text-decoration:underline;}
 
   /* ── HEADER ── */
   #app{display:none;position:relative;z-index:1;}
@@ -37,8 +40,6 @@
   .lock-icon{font-size:2.5rem;display:block;margin-bottom:12px;filter:drop-shadow(0 0 12px rgba(245,166,35,.5));animation:pulse-lock 3s ease-in-out infinite;}
   h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(1.5rem,4vw,2.6rem);letter-spacing:.12em;background:linear-gradient(135deg,var(--amber) 0%,var(--gold) 50%,var(--amber2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
   .subtitle{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.72rem;letter-spacing:.22em;margin-top:5px;text-transform:uppercase;}
-
-  /* Updated badge */
   .updated-badge{position:absolute;top:20px;right:24px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.08em;border:1px solid var(--border);padding:5px 12px;line-height:1.6;text-align:right;}
   .updated-badge span{color:var(--green);display:block;}
 
@@ -56,7 +57,7 @@
   .tab.active{background:var(--card);border-color:var(--amber);color:var(--amber);border-bottom-color:var(--card);z-index:1;}
   .tab .count-badge{font-family:'Share Tech Mono',monospace;font-size:.62rem;background:rgba(245,166,35,.12);color:var(--amber);border:1px solid rgba(245,166,35,.25);padding:1px 6px;border-radius:20px;margin-left:7px;vertical-align:middle;}
 
-  /* ── CONTENT ── */
+  /* ── CONTENT / PANEL ── */
   .content{position:relative;z-index:1;padding:0 32px 56px;max-width:1400px;margin:0 auto;}
   .panel{background:var(--card);border:1px solid var(--border);border-top:none;padding:22px;margin-bottom:20px;}
 
@@ -77,7 +78,7 @@
 
   /* ── CARDS ── */
   .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:14px;}
-  .room-card{background:var(--bg2);border:1px solid var(--border);padding:18px;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;animation:fadeUp .3s ease both;}
+  .room-card{background:var(--bg2);border:1px solid var(--border);padding:18px;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;animation:fadeUp .3s ease both;display:flex;flex-direction:column;}
   .room-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:opacity .2s;}
   .room-card:hover{border-color:rgba(245,166,35,.35);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45);}
   .room-card:hover::before{opacity:1;}
@@ -98,7 +99,8 @@
   .meta-key{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
   .meta-val{font-family:'Rajdhani',sans-serif;font-size:.86rem;font-weight:600;color:var(--text2);margin-top:2px;}
   .diff-alta{color:var(--red);}.diff-media-alta{color:var(--amber);}.diff-media{color:var(--green);}.diff-baja{color:var(--blue);}
-  .card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid rgba(255,255,255,.04);}
+  .card-desc{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:400;color:var(--text3);line-height:1.55;margin-bottom:12px;padding:10px 12px;border-left:2px solid rgba(245,166,35,.2);background:rgba(255,255,255,.02);font-style:italic;}
+  .card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid rgba(255,255,255,.04);margin-top:auto;}
   .web-link{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .2s;}
   .web-link:hover{color:var(--amber);}.web-link::before{content:'→ ';}
   .rank-badge{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;padding:2px 9px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);color:var(--amber);}
@@ -106,12 +108,28 @@
   .group-score{margin-top:10px;padding:9px 13px;background:rgba(245,166,35,.04);border:1px solid rgba(245,166,35,.14);display:flex;align-items:center;justify-content:space-between;}
   .group-score-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
-  .card-desc{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:400;color:var(--text3);line-height:1.55;margin-bottom:12px;padding:10px 12px;border-left:2px solid rgba(245,166,35,.2);background:rgba(255,255,255,.02);font-style:italic;}
+
+  /* ── VOTE SECTION ── */
+  .vote-section{margin-top:10px;padding:11px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:0;}
+  .vote-section-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+  .vote-label{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+  .vote-community{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);text-align:right;}
+  .vote-community strong{color:var(--amber);font-size:.8rem;}
+  .stars{display:flex;gap:4px;cursor:pointer;}
+  .star{font-size:1.3rem;color:var(--border);transition:color .15s,transform .15s;user-select:none;line-height:1;}
+  .star:hover,.star.hovered{color:var(--gold);}
+  .star.voted{color:var(--amber);animation:pop .25s ease;}
+  .star.voted-dim{color:rgba(245,166,35,.3);}
+  .vote-status{font-family:'Share Tech Mono',monospace;font-size:.6rem;margin-top:6px;text-align:right;min-height:14px;}
+  .vote-status.my-vote{color:var(--green);}
+  .vote-status.saving{color:var(--text3);}
+  .vote-status.error{color:var(--red);}
+  .vote-no-firebase{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);font-style:italic;text-align:center;padding:4px 0;}
+
+  /* ── RANKING TABLE ── */
   .empty-state{text-align:center;padding:56px 20px;color:var(--text3);grid-column:1/-1;}
   .empty-state .lock{font-size:2.8rem;margin-bottom:14px;opacity:.25;}
   .empty-state p{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.14em;}
-
-  /* ── RANKING TABLE ── */
   .ranking-table{width:100%;border-collapse:collapse;margin-top:16px;}
   .ranking-table th{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.13em;color:var(--text3);text-transform:uppercase;padding:9px 13px;border-bottom:1px solid var(--border);text-align:left;font-weight:normal;}
   .ranking-table td{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:500;padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text2);}
@@ -129,21 +147,25 @@
 </head>
 <body>
 
-<!-- LOADING -->
 <div id="loading">
   <div class="spinner"></div>
   <div class="loading-text">Cargando datos...</div>
 </div>
 
-<!-- ERROR -->
 <div id="error-screen">
   <div class="error-icon">🔓</div>
   <div class="error-title">Error al cargar datos</div>
   <div class="error-msg" id="error-msg"></div>
 </div>
 
-<!-- APP -->
 <div id="app">
+
+  <!-- Banner si Firebase no está configurado -->
+  <div id="setup-banner">
+    ⚠ Las votaciones no están activas — configura Firebase en index.html para habilitarlas.
+    <a href="https://github.com/TU_USUARIO/TU_REPO#-configurar-votaciones-con-firebase" target="_blank">Ver instrucciones →</a>
+  </div>
+
   <header>
     <div class="updated-badge">DATOS ACTUALIZADOS<span id="update-date"></span></div>
     <span class="lock-icon">🔐</span>
@@ -205,57 +227,213 @@
 </div>
 
 <script>
-let PENDIENTES=[],HECHOS=[],sortPend='rating';
+// ════════════════════════════════════════════════════════════
+//  🔥 CONFIGURACIÓN FIREBASE
+//  Rellena con tus datos de Firebase Realtime Database.
+//  Deja FIREBASE_URL = '' si no quieres usar votaciones.
+// ════════════════════════════════════════════════════════════
+const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+// ════════════════════════════════════════════════════════════
+
+const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
+
+// ID único por navegador/usuario (se genera una sola vez y se guarda)
+let USER_ID = localStorage.getItem('er_uid');
+if (!USER_ID) {
+  USER_ID = 'u_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
+  localStorage.setItem('er_uid', USER_ID);
+}
+
+// Cache de votos: { roomSlug: { userId: stars, ... }, ... }
+let votesCache = {};
+
+let PENDIENTES = [], HECHOS = [], sortPend = 'rating';
+
+// ── Utilidades ────────────────────────────────────────────────────────────────
+function slugify(str) {
+  return str.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, '_').replace(/^_|_$/g, '');
+}
+
+function rc(r){const n=parseFloat(r);return n>=9?'rating-high':n>=8?'rating-mid':'rating-low';}
+function dc(d){if(!d)return'';const l=d.toLowerCase();return l==='alta'?'diff-alta':l.includes('media-alta')||l.includes('media alta')?'diff-media-alta':l==='media'?'diff-media':'diff-baja';}
+function do_(d){return{'Alta':4,'Media-Alta':3,'Media':2,'Baja':1}[d]||2;}
+
+// ── Firebase REST API ─────────────────────────────────────────────────────────
+async function fbGet(path) {
+  const r = await fetch(`${FIREBASE_URL}/${path}.json`);
+  if (!r.ok) throw new Error(`Firebase GET error: ${r.status}`);
+  return r.json();
+}
+
+async function fbPut(path, value) {
+  const r = await fetch(`${FIREBASE_URL}/${path}.json`, {
+    method: 'PUT',
+    body: JSON.stringify(value),
+    headers: {'Content-Type': 'application/json'}
+  });
+  if (!r.ok) throw new Error(`Firebase PUT error: ${r.status}`);
+  return r.json();
+}
+
+// Calcular media y número de votos para un slug
+function voteStats(slug) {
+  const roomVotes = votesCache[slug] || {};
+  const vals = Object.values(roomVotes).filter(v => v > 0);
+  if (!vals.length) return { avg: null, count: 0, myVote: 0 };
+  const avg = vals.reduce((s, v) => s + v, 0) / vals.length;
+  return { avg: Math.round(avg * 10) / 10, count: vals.length, myVote: roomVotes[USER_ID] || 0 };
+}
+
+// ── Renderizar widget de votación ────────────────────────────────────────────
+function voteWidget(slug) {
+  if (!FIREBASE_ENABLED) {
+    return `<div class="vote-section"><div class="vote-no-firebase">Votaciones no configuradas</div></div>`;
+  }
+  const { avg, count, myVote } = voteStats(slug);
+  const communityText = count > 0
+    ? `<strong>${(avg * 2).toFixed(1)}</strong>/10 &nbsp;·&nbsp; ${count} voto${count !== 1 ? 's' : ''}`
+    : 'sin votos aún';
+
+  let starsHtml = '';
+  for (let i = 1; i <= 5; i++) {
+    let cls = 'star';
+    if (myVote >= i) cls += ' voted';
+    starsHtml += `<span class="${cls}" data-slug="${slug}" data-val="${i}" onclick="castVote('${slug}',${i})" onmouseenter="hoverStars('${slug}',${i})" onmouseleave="unhoverStars('${slug}')">★</span>`;
+  }
+
+  const statusText = myVote > 0
+    ? `Tu nota: ${(myVote * 2)}/10`
+    : 'Haz clic para votar';
+
+  return `<div class="vote-section" id="vs_${slug}">
+    <div class="vote-section-top">
+      <div>
+        <div class="vote-label">Tu valoración</div>
+        <div class="stars" id="stars_${slug}">${starsHtml}</div>
+      </div>
+      <div class="vote-community" id="comm_${slug}">
+        <div class="vote-label" style="text-align:right">Comunidad</div>
+        ${communityText}
+      </div>
+    </div>
+    <div class="vote-status ${myVote > 0 ? 'my-vote' : ''}" id="vstatus_${slug}">${statusText}</div>
+  </div>`;
+}
+
+function hoverStars(slug, val) {
+  const container = document.getElementById('stars_' + slug);
+  if (!container) return;
+  container.querySelectorAll('.star').forEach((s, i) => {
+    s.classList.toggle('hovered', i < val);
+  });
+}
+
+function unhoverStars(slug) {
+  const container = document.getElementById('stars_' + slug);
+  if (!container) return;
+  container.querySelectorAll('.star').forEach(s => s.classList.remove('hovered'));
+}
+
+async function castVote(slug, stars) {
+  if (!FIREBASE_ENABLED) return;
+  const statusEl = document.getElementById('vstatus_' + slug);
+  const commEl   = document.getElementById('comm_'    + slug);
+
+  // Optimistic update
+  if (!votesCache[slug]) votesCache[slug] = {};
+  votesCache[slug][USER_ID] = stars;
+  refreshVoteWidget(slug);
+
+  if (statusEl) { statusEl.textContent = 'Guardando...'; statusEl.className = 'vote-status saving'; }
+
+  try {
+    await fbPut(`votes/${slug}/${USER_ID}`, stars);
+    const { avg, count, myVote } = voteStats(slug);
+    if (statusEl) { statusEl.textContent = `Tu nota: ${myVote * 2}/10 ✓`; statusEl.className = 'vote-status my-vote'; }
+    if (commEl) {
+      const t = count > 0 ? `<strong>${(avg*2).toFixed(1)}</strong>/10 &nbsp;·&nbsp; ${count} voto${count!==1?'s':''}` : 'sin votos aún';
+      commEl.innerHTML = `<div class="vote-label" style="text-align:right">Comunidad</div>${t}`;
+    }
+  } catch(e) {
+    if (statusEl) { statusEl.textContent = 'Error al guardar :('; statusEl.className = 'vote-status error'; }
+  }
+}
+
+function refreshVoteWidget(slug) {
+  const container = document.getElementById('stars_' + slug);
+  if (!container) return;
+  const { myVote } = voteStats(slug);
+  container.querySelectorAll('.star').forEach((s, i) => {
+    s.className = 'star' + (myVote > i ? ' voted' : '');
+  });
+}
+
+// Cargar todos los votos desde Firebase de una sola vez
+async function loadVotes() {
+  if (!FIREBASE_ENABLED) return;
+  try {
+    const data = await fbGet('votes');
+    if (data) votesCache = data;
+  } catch(e) {
+    console.warn('No se pudieron cargar los votos de Firebase:', e.message);
+  }
+}
 
 // ── Cargar data.json ──────────────────────────────────────────────────────────
-async function loadData(){
-  try{
-    const r=await fetch('data.json?v='+Date.now());
-    if(!r.ok)throw new Error(`HTTP ${r.status} — no se encontró data.json`);
-    const d=await r.json();
-    PENDIENTES=d.pendientes||[];
-    HECHOS=d.hechos||[];
-
-    // Fecha de la última modificación desde la cabecera HTTP
-    const lastMod=r.headers.get('last-modified');
-    if(lastMod){
-      const fecha=new Date(lastMod).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
-      document.getElementById('update-date').textContent=fecha;
+async function loadData() {
+  try {
+    const r = await fetch('data.json?v=' + Date.now());
+    if (!r.ok) throw new Error(`HTTP ${r.status} — no se encontró data.json`);
+    const d = await r.json();
+    PENDIENTES = d.pendientes || [];
+    HECHOS     = d.hechos     || [];
+    const lastMod = r.headers.get('last-modified');
+    if (lastMod) {
+      document.getElementById('update-date').textContent =
+        new Date(lastMod).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
     }
+    // Cargar votos en paralelo
+    await loadVotes();
 
-    document.getElementById('loading').style.display='none';
-    document.getElementById('app').style.display='block';
-    populateFilters();renderStats();renderPendientes();renderHechos();renderRanking();
-  }catch(err){
-    document.getElementById('loading').style.display='none';
-    const es=document.getElementById('error-screen');
-    es.style.display='flex';
-    document.getElementById('error-msg').textContent=
-      'No se pudo cargar data.json.\n'+err.message+'\n\nAsegúrate de que el archivo existe y la GitHub Action se ejecutó correctamente.';
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    if (!FIREBASE_ENABLED) document.getElementById('setup-banner').style.display = 'block';
+
+    populateFilters(); renderStats(); renderPendientes(); renderHechos(); renderRanking();
+  } catch(err) {
+    document.getElementById('loading').style.display = 'none';
+    const es = document.getElementById('error-screen');
+    es.style.display = 'flex';
+    document.getElementById('error-msg').textContent =
+      'No se pudo cargar data.json.\n' + err.message +
+      '\n\nAsegúrate de que el archivo existe y la GitHub Action se ejecutó correctamente.';
   }
 }
 
 loadData();
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
-function rc(r){const n=parseFloat(r);return n>=9?'rating-high':n>=8?'rating-mid':'rating-low';}
-function dc(d){if(!d)return'';const l=d.toLowerCase();return l==='alta'?'diff-alta':l.includes('media-alta')||l.includes('media alta')?'diff-media-alta':l==='media'?'diff-media':'diff-baja';}
-function do_(d){return{'Alta':4,'Media-Alta':3,'Media':2,'Baja':1}[d]||2;}
-
-function populateFilters(){
-  const fill=(id,vals,ph)=>{const s=document.getElementById(id);s.innerHTML=`<option value="">${ph}</option>`;vals.forEach(v=>{const o=new Option(v,v);s.appendChild(o);});};
-  fill('filter-ciudad-pend',[...new Set(PENDIENTES.map(p=>p.ciudad).filter(Boolean))].sort(),'Todas las ciudades');
-  fill('filter-dif-pend',[...new Set(PENDIENTES.map(p=>p.dificultad).filter(Boolean))].sort(),'Dificultad');
-  fill('filter-tipo-pend',[...new Set(PENDIENTES.map(p=>p.tipo).filter(Boolean))].sort(),'Tipo');
-  fill('filter-dif-hecho',[...new Set(HECHOS.map(h=>h.dificultad).filter(Boolean))].sort(),'Dificultad');
-  document.getElementById('badge-pend').textContent=PENDIENTES.length;
-  document.getElementById('badge-hecho').textContent=HECHOS.length;
+// ── Filtros y UI ──────────────────────────────────────────────────────────────
+function populateFilters() {
+  const fill = (id, vals, ph) => {
+    const s = document.getElementById(id);
+    s.innerHTML = `<option value="">${ph}</option>`;
+    vals.forEach(v => s.appendChild(new Option(v, v)));
+  };
+  fill('filter-ciudad-pend', [...new Set(PENDIENTES.map(p=>p.ciudad).filter(Boolean))].sort(), 'Todas las ciudades');
+  fill('filter-dif-pend',    [...new Set(PENDIENTES.map(p=>p.dificultad).filter(Boolean))].sort(), 'Dificultad');
+  fill('filter-tipo-pend',   [...new Set(PENDIENTES.map(p=>p.tipo).filter(Boolean))].sort(), 'Tipo');
+  fill('filter-dif-hecho',   [...new Set(HECHOS.map(h=>h.dificultad).filter(Boolean))].sort(), 'Dificultad');
+  document.getElementById('badge-pend').textContent  = PENDIENTES.length;
+  document.getElementById('badge-hecho').textContent = HECHOS.length;
 }
 
-function renderStats(){
-  const avg=HECHOS.length?(HECHOS.reduce((s,h)=>s+parseFloat(h.valoracion||0),0)/HECHOS.length).toFixed(1):'—';
-  const hrs=Math.round(HECHOS.reduce((s,h)=>s+(parseInt(h.duracion)||0),0)/60);
-  document.getElementById('stats-bar').innerHTML=`
+function renderStats() {
+  const avg = HECHOS.length
+    ? (HECHOS.reduce((s,h)=>s+parseFloat(h.valoracion||0),0)/HECHOS.length).toFixed(1) : '—';
+  const hrs = Math.round(HECHOS.reduce((s,h)=>s+(parseInt(h.duracion)||0),0)/60);
+  document.getElementById('stats-bar').innerHTML = `
     <div class="stat-item"><span class="stat-num">${HECHOS.length}</span><span class="stat-label">Completados</span></div>
     <div class="stat-item"><span class="stat-num">${PENDIENTES.length}</span><span class="stat-label">Pendientes</span></div>
     <div class="stat-item"><span class="stat-num">${HECHOS.length+PENDIENTES.length}</span><span class="stat-label">Total</span></div>
@@ -263,101 +441,133 @@ function renderStats(){
     <div class="stat-item"><span class="stat-num">${hrs}h</span><span class="stat-label">Horas jugadas</span></div>`;
 }
 
-function switchTab(t){
-  ['pendientes','hechos','ranking'].forEach(x=>{
-    document.getElementById('panel-'+x).style.display=x===t?'block':'none';
-    const id=x==='pendientes'?'pend':x==='hechos'?'hecho':'rank';
-    document.getElementById('tab-'+id).classList.toggle('active',x===t);
+function switchTab(t) {
+  ['pendientes','hechos','ranking'].forEach(x => {
+    document.getElementById('panel-' + x).style.display = x === t ? 'block' : 'none';
+    const id = x==='pendientes'?'pend':x==='hechos'?'hecho':'rank';
+    document.getElementById('tab-' + id).classList.toggle('active', x === t);
   });
 }
 
-function setSortPend(s){
-  sortPend=s;
-  document.querySelectorAll('[id^="sort-pend-"]').forEach(b=>b.classList.remove('active'));
-  document.getElementById('sort-pend-'+s).classList.add('active');
+function setSortPend(s) {
+  sortPend = s;
+  document.querySelectorAll('[id^="sort-pend-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('sort-pend-' + s).classList.add('active');
   renderPendientes();
 }
 
-function clearFilters(w){
-  if(w==='pend'){['search-pend','filter-ciudad-pend','filter-dif-pend','filter-tipo-pend'].forEach(id=>{document.getElementById(id).value='';});renderPendientes();}
-  else{document.getElementById('search-hecho').value='';document.getElementById('filter-dif-hecho').value='';renderHechos();}
+function clearFilters(w) {
+  if (w === 'pend') {
+    ['search-pend','filter-ciudad-pend','filter-dif-pend','filter-tipo-pend']
+      .forEach(id => { document.getElementById(id).value = ''; });
+    renderPendientes();
+  } else {
+    document.getElementById('search-hecho').value = '';
+    document.getElementById('filter-dif-hecho').value = '';
+    renderHechos();
+  }
 }
 
-function cardPend(p,i){return`<div class="room-card" style="animation-delay:${i*.04}s">
-  <div class="card-header"><div class="room-name">${p.nombre}</div>${p.rating?`<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>`:''}</div>
-  <div class="empresa">${p.empresa}</div>
-  <div class="card-tags">${p.ciudad?`<span class="tag tag-city">📍 ${p.ciudad}</span>`:''}${p.tematica?`<span class="tag tag-tema">${p.tematica}</span>`:''}</div>
-  ${p.tipo?`<div class="card-tags"><span class="tag tag-tipo">${p.tipo}</span></div>`:''}
-  ${p.descripcion?`<div class="card-desc">${p.descripcion}</div>`:''}
-  <div class="card-meta">
-    ${p.duracion?`<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>`:''}
-    ${p.dificultad?`<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>`:''}
+// ── Templates de tarjetas ─────────────────────────────────────────────────────
+function cardPend(p, i) {
+  const slug = slugify(p.nombre);
+  return `<div class="room-card" style="animation-delay:${i*.04}s">
+  <div class="card-header">
+    <div class="room-name">${p.nombre}</div>
+    ${p.rating ? `<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>` : ''}
   </div>
+  <div class="empresa">${p.empresa}</div>
+  <div class="card-tags">
+    ${p.ciudad   ? `<span class="tag tag-city">📍 ${p.ciudad}</span>` : ''}
+    ${p.tematica ? `<span class="tag tag-tema">${p.tematica}</span>`  : ''}
+  </div>
+  ${p.tipo ? `<div class="card-tags"><span class="tag tag-tipo">${p.tipo}</span></div>` : ''}
+  ${p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : ''}
+  <div class="card-meta">
+    ${p.duracion   ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>` : ''}
+    ${p.dificultad ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>` : ''}
+  </div>
+  ${voteWidget(slug)}
   <div class="card-footer">
-    ${p.web?`<a class="web-link" href="${p.web}" target="_blank">Ver web</a>`:'<span></span>'}
+    ${p.web ? `<a class="web-link" href="${p.web}" target="_blank">Ver web</a>` : '<span></span>'}
     <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
   </div>
-</div>`;}
+</div>`;
+}
 
-function cardHecho(h,i){return`<div class="room-card" style="animation-delay:${i*.06}s">
-  <div class="card-header"><div class="room-name">${h.nombre}</div><div class="rank-badge ${h.ranking===1?'rank-1':''}">#${h.ranking}</div></div>
-  <div class="empresa">${h.empresa}</div>
-  <div class="card-tags">${h.ciudad?`<span class="tag tag-city">📍 ${h.ciudad}</span>`:''}${h.tematica?`<span class="tag tag-tema">${h.tematica}</span>`:''}</div>
-  ${h.tipo?`<div class="card-tags"><span class="tag tag-tipo">${h.tipo}</span></div>`:''}
-  ${h.descripcion?`<div class="card-desc">${h.descripcion}</div>`:''}
-  <div class="card-meta">
-    ${h.duracion?`<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${h.duracion} min</span></div>`:''}
-    ${h.dificultad?`<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(h.dificultad)}">⚠ ${h.dificultad}</span></div>`:''}
-    ${h.rating?`<div class="meta-item"><span class="meta-key">Rating Escapistas</span><span class="meta-val">★ ${h.rating}</span></div>`:''}
-    ${h.valoracion?`<div class="meta-item"><span class="meta-key">Valoración Grupo</span><span class="meta-val" style="color:var(--amber)">★ ${h.valoracion}/10</span></div>`:''}
+function cardHecho(h, i) {
+  const slug = slugify(h.nombre);
+  return `<div class="room-card" style="animation-delay:${i*.06}s">
+  <div class="card-header">
+    <div class="room-name">${h.nombre}</div>
+    <div class="rank-badge ${h.ranking===1?'rank-1':''}">#${h.ranking}</div>
   </div>
-  ${h.valoracion?`<div class="group-score"><span class="group-score-label">Puntuación del grupo</span><span class="group-score-val">${h.valoracion}<span style="font-size:.75rem;color:var(--text3)">/10</span></span></div>`:''}
+  <div class="empresa">${h.empresa}</div>
+  <div class="card-tags">
+    ${h.ciudad   ? `<span class="tag tag-city">📍 ${h.ciudad}</span>` : ''}
+    ${h.tematica ? `<span class="tag tag-tema">${h.tematica}</span>`  : ''}
+  </div>
+  ${h.tipo ? `<div class="card-tags"><span class="tag tag-tipo">${h.tipo}</span></div>` : ''}
+  ${h.descripcion ? `<div class="card-desc">${h.descripcion}</div>` : ''}
+  <div class="card-meta">
+    ${h.duracion   ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${h.duracion} min</span></div>` : ''}
+    ${h.dificultad ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(h.dificultad)}">⚠ ${h.dificultad}</span></div>` : ''}
+    ${h.rating     ? `<div class="meta-item"><span class="meta-key">Rating Escapistas</span><span class="meta-val">★ ${h.rating}</span></div>` : ''}
+    ${h.valoracion ? `<div class="meta-item"><span class="meta-key">Valoración Grupo</span><span class="meta-val" style="color:var(--amber)">★ ${h.valoracion}/10</span></div>` : ''}
+  </div>
+  ${h.valoracion ? `<div class="group-score"><span class="group-score-label">Puntuación del grupo</span><span class="group-score-val">${h.valoracion}<span style="font-size:.75rem;color:var(--text3)">/10</span></span></div>` : ''}
+  ${voteWidget(slug)}
   <div class="card-footer" style="margin-top:10px">
-    ${h.web?`<a class="web-link" href="${h.web}" target="_blank">Ver web</a>`:'<span></span>'}
+    ${h.web ? `<a class="web-link" href="${h.web}" target="_blank">Ver web</a>` : '<span></span>'}
     <span class="tag tag-tipo" style="background:rgba(245,166,35,.07);color:var(--amber)">✅ Completado</span>
   </div>
-</div>`;}
-
-function renderPendientes(){
-  const s=document.getElementById('search-pend').value.toLowerCase();
-  const c=document.getElementById('filter-ciudad-pend').value;
-  const d=document.getElementById('filter-dif-pend').value;
-  const t=document.getElementById('filter-tipo-pend').value;
-  let f=PENDIENTES.filter(p=>{
-    if(s&&![p.nombre,p.empresa,p.tematica].some(x=>(x||'').toLowerCase().includes(s)))return false;
-    if(c&&p.ciudad!==c)return false;
-    if(d&&p.dificultad!==d)return false;
-    if(t&&p.tipo!==t)return false;
-    return true;
-  });
-  if(sortPend==='rating')f.sort((a,b)=>parseFloat(b.rating||0)-parseFloat(a.rating||0));
-  else if(sortPend==='name')f.sort((a,b)=>a.nombre.localeCompare(b.nombre));
-  else if(sortPend==='dur')f.sort((a,b)=>parseInt(b.duracion||0)-parseInt(a.duracion||0));
-  else if(sortPend==='dif')f.sort((a,b)=>do_(b.dificultad)-do_(a.dificultad));
-  document.getElementById('result-info-pend').textContent=`Mostrando ${f.length} de ${PENDIENTES.length} escape rooms`;
-  const g=document.getElementById('grid-pendientes');
-  g.innerHTML=f.length?f.map(cardPend).join(''):`<div class="empty-state"><div class="lock">🔒</div><p>NO SE ENCONTRARON RESULTADOS</p></div>`;
+</div>`;
 }
 
-function renderHechos(){
-  const s=document.getElementById('search-hecho').value.toLowerCase();
-  const d=document.getElementById('filter-dif-hecho').value;
-  let f=HECHOS.filter(h=>{
-    if(s&&![h.nombre,h.empresa].some(x=>(x||'').toLowerCase().includes(s)))return false;
-    if(d&&h.dificultad!==d)return false;
+// ── Renders principales ───────────────────────────────────────────────────────
+function renderPendientes() {
+  const s = document.getElementById('search-pend').value.toLowerCase();
+  const c = document.getElementById('filter-ciudad-pend').value;
+  const d = document.getElementById('filter-dif-pend').value;
+  const t = document.getElementById('filter-tipo-pend').value;
+  let f = PENDIENTES.filter(p => {
+    if (s && ![p.nombre,p.empresa,p.tematica].some(x=>(x||'').toLowerCase().includes(s))) return false;
+    if (c && p.ciudad !== c) return false;
+    if (d && p.dificultad !== d) return false;
+    if (t && p.tipo !== t) return false;
     return true;
   });
-  f.sort((a,b)=>a.ranking-b.ranking);
-  document.getElementById('result-info-hecho').textContent=`${f.length} escape rooms completados`;
-  document.getElementById('grid-hechos').innerHTML=f.map(cardHecho).join('');
+  if      (sortPend==='rating') f.sort((a,b)=>parseFloat(b.rating||0)-parseFloat(a.rating||0));
+  else if (sortPend==='name')   f.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  else if (sortPend==='dur')    f.sort((a,b)=>parseInt(b.duracion||0)-parseInt(a.duracion||0));
+  else if (sortPend==='dif')    f.sort((a,b)=>do_(b.dificultad)-do_(a.dificultad));
+  document.getElementById('result-info-pend').textContent = `Mostrando ${f.length} de ${PENDIENTES.length} escape rooms`;
+  const g = document.getElementById('grid-pendientes');
+  g.innerHTML = f.length ? f.map(cardPend).join('') : `<div class="empty-state"><div class="lock">🔒</div><p>NO SE ENCONTRARON RESULTADOS</p></div>`;
 }
 
-function renderRanking(){
-  const s=[...HECHOS].sort((a,b)=>a.ranking-b.ranking);
-  const medals=['gold','silver','bronze'],emoji=['🥇','🥈','🥉'];
-  document.getElementById('ranking-table').innerHTML=`
-    <thead><tr><th>#</th><th>Escape Room</th><th>Empresa</th><th>Temática</th><th>Dificultad</th><th>⏱ Min</th><th>★ Escapistas</th><th>★ Grupo</th></tr></thead>
-    <tbody>${s.map((h,i)=>`<tr>
+function renderHechos() {
+  const s = document.getElementById('search-hecho').value.toLowerCase();
+  const d = document.getElementById('filter-dif-hecho').value;
+  let f = HECHOS.filter(h => {
+    if (s && ![h.nombre,h.empresa].some(x=>(x||'').toLowerCase().includes(s))) return false;
+    if (d && h.dificultad !== d) return false;
+    return true;
+  });
+  f.sort((a,b) => a.ranking - b.ranking);
+  document.getElementById('result-info-hecho').textContent = `${f.length} escape rooms completados`;
+  document.getElementById('grid-hechos').innerHTML = f.map(cardHecho).join('');
+}
+
+function renderRanking() {
+  const s = [...HECHOS].sort((a,b) => a.ranking - b.ranking);
+  const medals = ['gold','silver','bronze'], emoji = ['🥇','🥈','🥉'];
+  document.getElementById('ranking-table').innerHTML = `
+    <thead><tr>
+      <th>#</th><th>Escape Room</th><th>Empresa</th><th>Temática</th>
+      <th>Dificultad</th><th>⏱ Min</th><th>★ Escapistas</th><th>★ Grupo</th>
+    </tr></thead>
+    <tbody>${s.map((h,i) => `<tr>
       <td><span class="rank-pos ${medals[i]||''}">${emoji[i]||'#'+(i+1)}</span></td>
       <td style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--text)">${h.nombre}</td>
       <td>${h.empresa}</td>
