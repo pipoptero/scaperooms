@@ -9,9 +9,10 @@
       "duracion": "80.0",
       "dificultad": "Media",
       "rating": "",
-      "web": "https://willyeltuertoescaperoom.com/",
+      "web": "Escape Room",
       "valoracion": "",
-      "descripcion": "Una aventura pirata de película donde te sumerges en la búsqueda del tesoro de uno de los piratas más famosos. Destaca por su escenografía espectacular que recuerda a atracciones temáticas de grandes parques."
+      "descripcion": "Una aventura pirata de película donde te sumerges en la búsqueda del tesoro de uno de los piratas más famosos. Destaca por su escenografía espectacular que recuerda a atracciones temáticas de grandes parques.",
+      "max_personas": "6.0"
     },
     {
       "nombre": "Cybercity 2049",
@@ -24,7 +25,8 @@
       "rating": "",
       "web": "https://www.escapebarcelona.com/cybercity-2049.php",
       "valoracion": "",
-      "descripcion": "Experiencia de estilo Cyberpunk inspirada en clásicos como Blade Runner o Matrix. Te traslada a un mundo decadente y futurista donde la toma de decisiones y la inmersión son los pilares centrales."
+      "descripcion": "Experiencia de estilo Cyberpunk inspirada en clásicos como Blade Runner o Matrix. Te traslada a un mundo decadente y futurista donde la toma de decisiones y la inmersión son los pilares centrales.",
+      "max_personas": "6.0"
     },
     {
       "nombre": "Exodus",
@@ -37,7 +39,8 @@
       "rating": "",
       "web": "https://www.elementsescaperoom.com/exodus/",
       "valoracion": "",
-      "descripcion": "Una odisea de ciencia ficción post-apocalíptica en la que la humanidad debe abandonar la Tierra tras un virus global. Es muy valorada por su narrativa, el papel del Game Master y su ambientación \"calma-tensa\"."
+      "descripcion": "Una odisea de ciencia ficción post-apocalíptica en la que la humanidad debe abandonar la Tierra tras un virus global. Es muy valorada por su narrativa, el papel del Game Master y su ambientación \"calma-tensa\".",
+      "max_personas": "6.0"
     },
     {
       "nombre": "La Mina",
@@ -50,7 +53,8 @@
       "rating": "",
       "web": "https://unrealroomescape.es/",
       "valoracion": "",
-      "descripcion": "Ambientada en la centenaria Mina de St. Louis, donde los jugadores deben investigar una extraña fuente de minerales tras una explosión. Es una sala clásica de aventura con una ambientación minera muy lograda."
+      "descripcion": "Ambientada en la centenaria Mina de St. Louis, donde los jugadores deben investigar una extraña fuente de minerales tras una explosión. Es una sala clásica de aventura con una ambientación minera muy lograda.",
+      "max_personas": "7.0"
     },
     {
       "nombre": "Distrito 111",
@@ -61,9 +65,10 @@
       "duracion": "90.0",
       "dificultad": "Media-Alta",
       "rating": "9.0",
-      "web": "https://www.escapebarcelona.com/",
+      "web": "https://escapeup.es/escape-room/unreal/barcelona/distrito-111/",
       "valoracion": "",
-      "descripcion": "Un thriller de supervivencia en un mundo al borde del colapso total. Con una atmósfera de cine y estética post-apocalíptica, los jugadores deben cumplir una misión crítica en un entorno hostil y caótico."
+      "descripcion": "Un thriller de supervivencia en un mundo al borde del colapso total. Con una atmósfera de cine y estética post-apocalíptica, los jugadores deben cumplir una misión crítica en un entorno hostil y caótico.",
+      "max_personas": "7.0"
     },
     {
       "nombre": "Room Angie",
@@ -76,12 +81,13 @@
       "rating": "7.0",
       "web": "https://ilusiumroomescape.es/",
       "valoracion": "",
-      "descripcion": "Un misterio trepidante de 80 minutos donde el trabajo en equipo es vital. Los jugadores deben resolver enigmas y acertijos para completar una misión de la que solo podrán salir \"gritando su nombre tres veces\"."
+      "descripcion": "Un misterio trepidante de 80 minutos donde el trabajo en equipo es vital. Los jugadores deben resolver enigmas y acertijos para completar una misión de la que solo podrán salir \"gritando su nombre tres veces\".",
+      "max_personas": "8.0"
     },
     {
       "nombre": "Enterprise",
       "empresa": "Abduction Escape Rooms",
-      "ciudad": "Barcelona",
+      "ciudad": "Badalona",
       "tematica": "Nave espacial / sci-fi",
       "tipo": "Tecnológico",
       "duracion": "90.0",
@@ -89,20 +95,8 @@
       "rating": "8.0",
       "web": "https://www.abduction.es/badalona/abduction4.html",
       "valoracion": "",
-      "descripcion": "Una aventura tecnológica ambientada en una nave espacial. Destaca por requerir agilidad física y por integrar tecnología avanzada en sus puzzles, alejándose de los candados tradicionales para ofrecer una experiencia de adrenalina."
-    },
-    {
-      "nombre": "Nautilus",
-      "empresa": "Scaparium",
-      "ciudad": "Vilanova i la Geltrú",
-      "tematica": "Submarino / steampunk",
-      "tipo": "Aventura inmersiva",
-      "duracion": "70.0",
-      "dificultad": "Media-Alta",
-      "rating": "",
-      "web": "https://scaparium.com/",
-      "valoracion": "",
-      "descripcion": "Experiencia de estética Steampunk inspirada en las novelas de Julio Verne. Los jugadores deben explorar un submarino fantástico, resolviendo acertijos que combinan la mecánica clásica con una narrativa inmersiva."
+      "descripcion": "Una aventura tecnológica ambientada en una nave espacial. Destaca por requerir agilidad física y por integrar tecnología avanzada en sus puzzles, alejándose de los candados tradicionales para ofrecer una experiencia de adrenalina.",
+      "max_personas": "10.0"
     },
     {
       "nombre": "Awaken",
@@ -115,12 +109,13 @@
       "rating": "",
       "web": "https://www.reddopamine.com/landing-aventura",
       "valoracion": "",
-      "descripcion": "Una experiencia inmersiva que mezcla fantasía y magia. Los jugadores se convierten en protagonistas de una \"película\" donde el ingenio es la clave para superar pruebas diseñadas para fomentar la adrenalina y el trabajo en equipo."
+      "descripcion": "Una experiencia inmersiva que mezcla fantasía y magia. Los jugadores se convierten en protagonistas de una \"película\" donde el ingenio es la clave para superar pruebas diseñadas para fomentar la adrenalina y el trabajo en equipo.",
+      "max_personas": "7.0"
     },
     {
       "nombre": "The Exam",
       "empresa": "Abduction",
-      "ciudad": "Barcelona",
+      "ciudad": "Badalona",
       "tematica": "Thriller psicológico",
       "tipo": "Misterio / tensión",
       "duracion": "90.0",
@@ -128,20 +123,22 @@
       "rating": "",
       "web": "https://www.abduction.es/badalona/abduction3.html",
       "valoracion": "",
-      "descripcion": "Un test de acción y aventura que pone a prueba tanto la mente como la agilidad física (subir escaleras, trepar). Es un juego dinámico y divertido, diseñado para que los adultos vuelvan a sentirse como niños."
+      "descripcion": "Un test de acción y aventura que pone a prueba tanto la mente como la agilidad física (subir escaleras, trepar). Es un juego dinámico y divertido, diseñado para que los adultos vuelvan a sentirse como niños.",
+      "max_personas": "6.0"
     },
     {
-      "nombre": "Sherlock Holmes",
-      "empresa": "Maximum Escape",
+      "nombre": "Jurassic Land",
+      "empresa": "Escape Barcelona",
       "ciudad": "Barcelona",
-      "tematica": "Investigación / detectives",
-      "tipo": "Misterio / puzzles",
+      "tematica": "Exploración",
+      "tipo": "Aventura",
       "duracion": "60.0",
       "dificultad": "Media",
       "rating": "",
-      "web": "https://www.escapebarcelona.com/",
+      "web": "https://www.escapebarcelona.com/jurassic-land.php",
       "valoracion": "",
-      "descripcion": "En esta misión de investigación, los jugadores son reclutados como agentes para resolver una serie de acertijos en el Londres victoriano y devolver la seguridad a la ciudad antes de que fuerzas oscuras ataquen."
+      "descripcion": "Una aventura inmersiva ambientada en una reserva de dinosaurios. Los jugadores deben restaurar los sistemas de seguridad de la isla tras un fallo crítico. Destaca por su ambientación selvática, el uso de animatronics y por ser una sala ideal para grupos grandes y familias.",
+      "max_personas": "10.0"
     },
     {
       "nombre": "Atlantis",
@@ -154,7 +151,8 @@
       "rating": "",
       "web": "https://www.elementsescaperoom.com/atlantis/",
       "valoracion": "",
-      "descripcion": "Un \"hall escape\" diseñado para grupos grandes donde el objetivo es descifrar los enigmas de una civilización sumergida. A diferencia de las salas estándar, el foco está en los puzzles y la comunicación del equipo."
+      "descripcion": "Un \"hall escape\" diseñado para grupos grandes donde el objetivo es descifrar los enigmas de una civilización sumergida. A diferencia de las salas estándar, el foco está en los puzzles y la comunicación del equipo.",
+      "max_personas": "12.0"
     },
     {
       "nombre": "Intracorpus",
@@ -167,10 +165,11 @@
       "rating": "",
       "web": "https://vortexescape.com/reservar-ahora",
       "valoracion": "",
-      "descripcion": "Una aventura inmersiva única de 120 minutos (2 horas) donde los jugadores realizan un viaje al interior del cuerpo humano. Es extremadamente tecnológica, de gran formato y requiere calzado cómodo para moverse."
+      "descripcion": "Una aventura inmersiva única de 120 minutos (2 horas) donde los jugadores realizan un viaje al interior del cuerpo humano. Es extremadamente tecnológica, de gran formato y requiere calzado cómodo para moverse.",
+      "max_personas": "7.0"
     },
     {
-      "nombre": "Tomb Hunter",
+      "nombre": "Tomb Hunter : La Leyenda de Akasha Escape Room",
       "empresa": "Escape Barcelona",
       "ciudad": "Barcelona",
       "tematica": "Arqueología",
@@ -180,7 +179,8 @@
       "rating": "7.0",
       "web": "https://www.escapebarcelona.com/tomb-hunter-la-leyenda-de-akasha.php",
       "valoracion": "",
-      "descripcion": "Aventura de arqueología pura al estilo Indiana Jones. Con efectos especiales que hacen \"vibrar el suelo\" y una escenografía de templo antiguo, combina puzzles lógicos con pruebas físicas de agilidad y tensión."
+      "descripcion": "Aventura de arqueología pura al estilo Indiana Jones. Con efectos especiales que hacen \"vibrar el suelo\" y una escenografía de templo antiguo, combina puzzles lógicos con pruebas físicas de agilidad y tensión.",
+      "max_personas": "6.0"
     },
     {
       "nombre": "Alien: El Origen",
@@ -193,7 +193,8 @@
       "rating": "",
       "web": "https://www.escapebarcelona.com/alien-el-origen.php",
       "valoracion": "",
-      "descripcion": "Un thriller de ciencia ficción ambientado en la nave USCSS Escape. Tras despertar de un coma inducido, los jugadores deben sobrevivir a una amenaza espacial en una sala que destaca por su opresiva y espectacular ambientación."
+      "descripcion": "Un thriller de ciencia ficción ambientado en la nave USCSS Escape. Tras despertar de un coma inducido, los jugadores deben sobrevivir a una amenaza espacial en una sala que destaca por su opresiva y espectacular ambientación.",
+      "max_personas": "10.0"
     },
     {
       "nombre": "Criogenic 500",
@@ -206,7 +207,8 @@
       "rating": "",
       "web": "https://criogenicescaperoom.com/barcelona",
       "valoracion": "",
-      "descripcion": "Experiencia de larga duración (2 horas) en la que los jugadores despiertan 500 años en el futuro tras ser criogenizados. Ofrece más de 140 metros cuadrados de ciencia ficción con instalaciones galardonadas."
+      "descripcion": "Experiencia de larga duración (2 horas) en la que los jugadores despiertan 500 años en el futuro tras ser criogenizados. Ofrece más de 140 metros cuadrados de ciencia ficción con instalaciones galardonadas.",
+      "max_personas": "8.0"
     },
     {
       "nombre": "Katrina",
@@ -219,7 +221,8 @@
       "rating": "",
       "web": "https://www.elementsescaperoom.com/katrina/",
       "valoracion": "",
-      "descripcion": "Una expedición arqueológica de gran formato (120 minutos) en busca del oro maldito de Moctezuma. Destaca por una ambientación selvática impresionante, dimensiones muy amplias y pruebas que requieren agilidad física. Es una experiencia de 'nueva generación' donde la escenografía y los mecanismos electrónicos sustituyen por completo a los candados tradicionales"
+      "descripcion": "Una expedición arqueológica de gran formato (120 minutos) en busca del oro maldito de Moctezuma. Destaca por una ambientación selvática impresionante, dimensiones muy amplias y pruebas que requieren agilidad física. Es una experiencia de 'nueva generación' donde la escenografía y los mecanismos electrónicos sustituyen por completo a los candados tradicionales",
+      "max_personas": "6.0"
     }
   ],
   "hechos": [
@@ -234,7 +237,8 @@
       "rating": "9.0",
       "web": "https://sagaescaperoom.com/",
       "valoracion": "",
-      "descripcion": "Esto es un review de pruebas, muy muy chulo guay guay perfecto",
+      "descripcion": "Inmersión cinematográfica absoluta en el Londres victoriano. Destaca por una escenografía de primer nivel que recrea calles realistas con niebla, olores y texturas impecables. Puzzles de nueva generación totalmente integrados en la trama (sin candados forzados) y un flujo de juego excelente. El acting del Game Master y la transición de espacios elevan la experiencia a un nivel de 'imprescindible' para amantes del misterio. Jugado con 3 adultos + 2 niñas de 10 años",
+      "max_personas": "",
       "ranking": 4
     },
     {
@@ -248,7 +252,8 @@
       "rating": "",
       "web": "https://thecityescape.com/",
       "valoracion": "9.0",
-      "descripcion": "",
+      "descripcion": "Aventura medieval de alta inmersión situada en una taberna hiperrealista donde la interacción con el entorno y el Game Master es la clave. Destaca por su escenografía detallada, enigmas mecánicos totalmente integrados y un inicio de juego muy original que rompe la cuarta pared. Es una sala con mucho 'flow' que prioriza la diversión y el roleo sobre la dificultad extrema, logrando que el equipo se sienta realmente dentro de una película de fantasía. Interacción con personajes. Fuimos 3 adultos y 2 niñas de 9 años",
+      "max_personas": "",
       "ranking": 1
     },
     {
@@ -263,6 +268,7 @@
       "web": "https://escapebarcelona.com/",
       "valoracion": "",
       "descripcion": "",
+      "max_personas": "",
       "ranking": 5
     },
     {
@@ -276,7 +282,8 @@
       "rating": "8.0",
       "web": "https://goldenpop.es/",
       "valoracion": "",
-      "descripcion": "",
+      "descripcion": "Espectáculo visual y sensorial que recrea una selva hiperrealista bajo el centro de Barcelona. Una aventura de 120 minutos cargada de nostalgia, con una escenografía de nivel cinematográfico, efectos de sonido potentes y transiciones asombrosas que te hacen sentir dentro de la película. Es una sala muy física (requiere gatear, trepar y posiblemente ensuciarse un poco) que apuesta por la inmersión total y la adrenalina sin llegar al terror. Los constantes guiños y el acting inicial la consolidan como una de las experiencias de 'nueva generación' más potentes actualmente. Lo hicimos 4 adultos y una niña de 9 años",
+      "max_personas": "",
       "ranking": 6
     },
     {
@@ -290,7 +297,8 @@
       "rating": "9.0",
       "web": "roomwhitechapel.com",
       "valoracion": "",
-      "descripcion": "",
+      "descripcion": "Un viaje asfixiante al Londres de Jack el Destripador que destaca por una de las ambientaciones más envolventes de Barcelona. El diseño de sus 'calles' oscuras y el uso de la iluminación crean una atmósfera lúgubre y laberíntica donde la narrativa cobra vida gracias a un acting magistral (mención especial al personaje de Sam). Combina puzzles lógicos con momentos de alta adrenalina, logrando que el equipo se sienta acechado constantemente. Es una experiencia puramente cinematográfica donde la tensión nunca decae. Fuimos 6 adultos. Siendo bastantes nuca estabas parado.",
+      "max_personas": "",
       "ranking": 7
     },
     {
@@ -304,7 +312,8 @@
       "rating": "",
       "web": "goldenpop.es/catacumbas/",
       "valoracion": "",
-      "descripcion": "",
+      "descripcion": "Aventura épica de corte clásico inspirada en el universo de Indiana Jones, que destaca por una de las puestas en escena más espectaculares de la ciudad. Con más de 200 m² de decorados hiperrealistas, efectos de sonido envolventes y una iluminación que recrea perfectamente la atmósfera de una expedición arqueológica. Los enigmas están magistralmente integrados en el entorno, priorizando los mecanismos electrónicos y el trabajo cooperativo. Es una experiencia de pura adrenalina y exploración, ideal para quienes buscan sentirse protagonistas de una película de acción sin elementos de terror. Lo hicimos 4 adultos y la peque de 9 años.",
+      "max_personas": "",
       "ranking": 8
     },
     {
@@ -318,7 +327,8 @@
       "rating": "",
       "web": "terrorstories.com",
       "valoracion": "",
-      "descripcion": "",
+      "descripcion": "Homenaje visceral y cinematográfico al clásico del cine de posesiones. Destaca por un acting agresivo y escenas coreografiadas de una intensidad asombrosa que te hacen sentir dentro de una pesadilla real. La ambientación es lúgubre y opresiva, utilizando tecnología de efectos visuales y sonoros para recrear fenómenos paranormales impactantes. Es una sala dinámica, con pruebas de valor que obligan a dividir al equipo y una fluidez constante. Ideal para quienes buscan un terror físico y psicológico de alto nivel con una puesta en escena inolvidable. Fuimos 5 adultos, igual corto para tanta gente.",
+      "max_personas": "",
       "ranking": 9
     },
     {
@@ -332,7 +342,8 @@
       "rating": "",
       "web": "kadabraescape.com",
       "valoracion": "",
-      "descripcion": "",
+      "descripcion": "Fantasía pura y colorista inspirada en el folclore de la India que rompe con la estética lúgubre de los escapes tradicionales. Destaca por una escenografía vibrante, llena de detalles exóticos y una banda sonora envolvente que te transporta a un mercado mágico de Jaipur. Sus puzzles son ingeniosos, muy táctiles y basados en mecanismos 'mágicos' sorprendentes que fluyen con gran naturalidad. Es una experiencia alegre, mágica y cargada de buen rollo, ideal para quienes buscan una aventura inmersiva de alta calidad donde el asombro y el ingenio son los protagonistas. Lo hicimos 3 adultos y 3 peques de 10-11 años. Muy divertido",
+      "max_personas": "",
       "ranking": 10
     },
     {
@@ -347,6 +358,7 @@
       "web": "encryptroom.com",
       "valoracion": "7.0",
       "descripcion": "",
+      "max_personas": "",
       "ranking": 2
     },
     {
@@ -361,12 +373,13 @@
       "web": "missionleak.com",
       "valoracion": "6.0",
       "descripcion": "",
+      "max_personas": "",
       "ranking": 3
     }
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 17,
+    "pendientes_count": 16,
     "hechos_count": 10
   }
 }
