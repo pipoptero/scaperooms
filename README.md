@@ -15,6 +15,8 @@ escape-rooms-tracker/
         └── update-data.yml           ← La GitHub Action (no tocar)
 ```
 
+---
+
 ## 🚀 Configuración inicial (solo una vez)
 
 ### 1. Crear el repositorio en GitHub
@@ -53,7 +55,7 @@ Al subir el Excel por primera vez, la Action se ejecutará automáticamente y ge
 
 ## 🔄 Flujo de actualización (uso diario)
 
-1. **Edita tu Excel** localmente (añade rooms, cambia valoraciones...)
+1. **Edita tu Excel** localmente (añade rooms, cambia valoraciones, añade opiniones...)
 2. **Sube el Excel** a GitHub (arrastra y suelta en la interfaz web, o `git push`)
 3. **GitHub Action** se ejecuta automáticamente (~30 segundos)
 4. **La web** se actualiza sola con los nuevos datos ✅
@@ -83,9 +85,96 @@ Mismas columnas que Pendientes, más:
 | Columna | Descripción |
 |---------|-------------|
 | Valoración Grupo | Vuestra puntuación (0-10) |
-| Descripción | Descripción breve del escape room *(opcional)* |
+| Descripción | **Tu opinión/reseña personal** del escape room *(opcional)* |
 
-> **Nota sobre la columna Descripción:** puede llamarse `Descripción`, `Descripcion`, `Description`, `Descripción del Escape` o `Resumen`. Si una tarjeta no tiene descripción, simplemente no se muestra nada.
+> **Nota sobre la columna Descripción:**
+> - En **Pendientes** se muestra como descripción informativa en la tarjeta.
+> - En **Hechos** se muestra como **reseña personal** en una vista expandida tipo revista.
+> - Puede llamarse: `Descripción`, `Descripcion`, `Description`, `Descripción del Escape` o `Resumen`.
+
+---
+
+## 🖥 Vistas de la web
+
+### Pestaña Pendientes
+Cuadrícula de tarjetas con filtros por ciudad, dificultad y tipo. Ordenación por rating, nombre, duración o dificultad. Incluye widget de votación con **medias estrellas** (nota del 1 al 10 en pasos de 1).
+
+### Pestaña Hechos
+Vista de **reseñas** — cada escape ocupa una fila dividida en tres columnas:
+- **Izquierda:** posición en el ranking (🥇🥈🥉 para el podio)
+- **Centro:** info técnica completa + puntuaciones (Escapistas / Grupo / Comunidad) + widget de votación
+- **Derecha:** tu opinión personal extraída de la columna Descripción del Excel
+
+### Pestaña Ranking
+Tabla comparativa de todos los hechos con columnas: posición, nombre, empresa, temática, dificultad, duración, rating Escapistas, nota del Grupo y **media de votos de la Comunidad** (con número de votantes entre paréntesis). La columna Comunidad solo aparece si Firebase está configurado.
+
+---
+
+## ⭐ Sistema de votación
+
+Cada tarjeta (Pendientes y Hechos) incluye un widget de **medias estrellas**:
+- 5 estrellas clicables, cada una dividida en mitad izquierda (½ estrella) y mitad derecha (estrella entera)
+- Permite notas del **1 al 10 en pasos de 1** (pasando por las medias: 1, 2, 3... 10, pero también 3, 5, 7...)
+- Al pasar el ratón se previsualiza la nota antes de votar
+- Muestra tu nota y la **media de la comunidad** con número de votos
+- Los votos se guardan en Firebase en tiempo real
+
+---
+
+## 🔥 Configurar votaciones con Firebase
+
+Las votaciones requieren una base de datos gratuita de Firebase. Solo necesitas configurarla una vez.
+
+### 1. Crear proyecto Firebase
+- Ve a [console.firebase.google.com](https://console.firebase.google.com)
+- Haz clic en **Añadir proyecto** → ponle un nombre (ej: `scapesrooms`)
+- Desactiva Google Analytics (no hace falta) → **Crear proyecto**
+
+### 2. Crear la base de datos
+- En el menú izquierdo: **Compilación → Realtime Database**
+- Haz clic en **Crear una base de datos**
+- Elige la región: **Belgium (europe-west1)**
+- Selecciona **Empezar en modo de prueba** → **Habilitar**
+
+### 3. Copiar la URL de la base de datos
+Verás una URL del tipo:
+```
+https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app
+```
+Cópiala.
+
+### 4. Pegar la URL en index.html
+Abre `index.html` y busca esta línea (está al principio del `<script>`):
+```js
+const FIREBASE_URL = '';
+```
+Sustitúyela por:
+```js
+const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';
+```
+Guarda y sube el archivo a GitHub. ¡Listo! 🎉
+
+### 5. Reglas de seguridad (importante)
+El modo prueba expira en 30 días. Para uso permanente ve a **Realtime Database → Reglas** y pega esto:
+```json
+{
+  "rules": {
+    "votes": {
+      ".read": true,
+      ".write": true
+    }
+  }
+}
+```
+Haz clic en **Publicar**.
+
+### ¿Cómo funciona el sistema de votación?
+- Cada persona que abre la web tiene un **ID anónimo** generado automáticamente en su navegador (no hace falta registrarse)
+- Pueden votar con medias estrellas → nota del 1 al 10
+- Pueden cambiar su voto en cualquier momento
+- Cada tarjeta muestra la **media de la comunidad** y el número de votantes
+- El **Ranking** tiene una columna extra con la media comunitaria de cada escape
+- Los votos se guardan en Firebase en tiempo real
 
 ---
 
@@ -109,60 +198,5 @@ Ve a Settings → Actions → General → Workflow permissions y activa "Read an
 **La web muestra error 404 en data.json**
 La Action aún no se ha ejecutado o falló. Ve a la pestaña Actions, comprueba el log y si es necesario dale a "Re-run jobs".
 
----
-
-## 🔥 Configurar votaciones con Firebase
-
-Las votaciones requieren una base de datos gratuita de Firebase. Solo necesitas configurarla una vez.
-
-### 1. Crear proyecto Firebase
-- Ve a [console.firebase.google.com](https://console.firebase.google.com)
-- Haz clic en **Añadir proyecto** → ponle un nombre (ej: `escape-rooms-tracker`)
-- Desactiva Google Analytics (no hace falta) → **Crear proyecto**
-
-### 2. Crear la base de datos
-- En el menú izquierdo: **Compilación → Realtime Database**
-- Haz clic en **Crear una base de datos**
-- Elige la región más cercana (ej: `europe-west1`)
-- Selecciona **Empezar en modo de prueba** → **Habilitar**
-
-### 3. Copiar la URL de la base de datos
-Verás una URL del tipo:
-```
-https://tu-proyecto-default-rtdb.europe-west1.firebasedatabase.app
-```
-Cópiala.
-
-### 4. Pegar la URL en index.html
-Abre `index.html` y busca esta línea (está al principio del `<script>`):
-```js
-const FIREBASE_URL = '';
-```
-Sustitúyela por:
-```js
-const FIREBASE_URL = 'https://tu-proyecto-default-rtdb.europe-west1.firebasedatabase.app';
-```
-Guarda y sube el archivo a GitHub. ¡Listo! 🎉
-
-### 5. Reglas de seguridad (recomendado)
-Por defecto el modo prueba expira en 30 días. Para uso permanente ve a **Realtime Database → Reglas** y pega esto:
-```json
-{
-  "rules": {
-    "votes": {
-      ".read": true,
-      ".write": true
-    }
-  }
-}
-```
-Haz clic en **Publicar**.
-
----
-
-### ¿Cómo funciona el sistema de votación?
-- Cada persona que abre la web tiene un **ID anónimo** generado automáticamente en su navegador
-- Pueden puntuar cualquier escape room de 1 a 5 estrellas (= 2 a 10 puntos)
-- Pueden cambiar su voto cuando quieran haciendo clic en otra estrella
-- Cada tarjeta muestra la **media de la comunidad** y el número de votos
-- Los votos se guardan en Firebase en tiempo real
+**Las votaciones no aparecen**
+Asegúrate de haber puesto la URL de Firebase en `index.html` y de haber subido el archivo actualizado al repo.

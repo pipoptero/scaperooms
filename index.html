@@ -109,6 +109,52 @@
   .group-score-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
 
+  /* ── REVIEW LIST (Hechos) ── */
+  .reviews-list{display:flex;flex-direction:column;gap:2px;}
+  .review-row{display:grid;grid-template-columns:60px 1fr 1fr;gap:0;border:1px solid var(--border);background:var(--bg2);animation:fadeUp .3s ease both;transition:border-color .2s;}
+  .review-row:hover{border-color:rgba(245,166,35,.3);}
+
+  /* Left: rank number */
+  .rv-rank{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px 0;border-right:1px solid var(--border);background:rgba(245,166,35,.03);}
+  .rv-rank-num{font-family:'Cinzel',serif;font-weight:900;font-size:1.6rem;color:var(--text3);line-height:1;}
+  .rv-rank-num.gold{color:var(--gold);} .rv-rank-num.silver{color:#c0c0c0;} .rv-rank-num.bronze{color:#cd7f32;}
+  .rv-rank-emoji{font-size:1.4rem;line-height:1;}
+
+  /* Center: info */
+  .rv-info{padding:18px 20px;border-right:1px solid var(--border);display:flex;flex-direction:column;gap:8px;}
+  .rv-title-row{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap;}
+  .rv-name{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:700;color:var(--text);line-height:1.2;}
+  .rv-empresa{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;}
+  .rv-tags{display:flex;gap:5px;flex-wrap:wrap;}
+  .rv-meta{display:flex;gap:16px;flex-wrap:wrap;margin-top:2px;}
+  .rv-meta-item{display:flex;flex-direction:column;}
+  .rv-scores{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+  .rv-score-pill{font-family:'Share Tech Mono',monospace;font-size:.72rem;padding:4px 10px;border-radius:2px;white-space:nowrap;}
+  .rv-score-escapistas{background:rgba(76,201,240,.08);color:var(--blue);border:1px solid rgba(76,201,240,.18);}
+  .rv-score-grupo{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.28);font-size:.82rem;font-weight:700;}
+  .rv-score-comunidad{background:rgba(123,45,139,.1);color:#c084fc;border:1px solid rgba(123,45,139,.25);}
+
+  /* Right: opinion + vote */
+  .rv-opinion{padding:18px 20px;display:flex;flex-direction:column;gap:12px;}
+  .rv-opinion-label{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;display:flex;align-items:center;gap:6px;}
+  .rv-opinion-label::after{content:'';flex:1;height:1px;background:var(--border);}
+  .rv-opinion-text{font-family:'Rajdhani',sans-serif;font-size:.95rem;font-weight:400;color:var(--text2);line-height:1.7;flex:1;}
+  .rv-opinion-text.empty{color:var(--text3);font-style:italic;font-size:.85rem;}
+  .rv-web{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .2s;margin-top:auto;align-self:flex-start;}
+  .rv-web:hover{color:var(--amber);} .rv-web::before{content:'→ ';}
+
+  @media(max-width:900px){
+    .review-row{grid-template-columns:50px 1fr;}
+    .rv-opinion{grid-column:1/-1;border-top:1px solid var(--border);border-right:none;}
+    .rv-info{border-right:none;}
+  }
+  @media(max-width:640px){
+    .review-row{grid-template-columns:1fr;}
+    .rv-rank{flex-direction:row;gap:10px;padding:12px 16px;border-right:none;border-bottom:1px solid var(--border);}
+    .rv-info{border-right:none;padding:14px 16px;}
+    .rv-opinion{padding:14px 16px;}
+  }
+
   /* ── VOTE SECTION ── */
   .vote-section{margin-top:10px;padding:11px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);}
   .vote-section-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
@@ -219,7 +265,7 @@
       </div>
       <div class="divider-line" style="margin-top:18px"></div>
       <div class="result-info" id="result-info-hecho"></div>
-      <div class="rooms-grid"  id="grid-hechos"></div>
+      <div class="reviews-list" id="grid-hechos"></div>
     </div>
 
     <!-- RANKING -->
@@ -526,32 +572,58 @@ function cardPend(p, i) {
 }
 
 function cardHecho(h, i) {
-  const slug = slugify(h.nombre);
-  return `<div class="room-card" style="animation-delay:${i*.06}s">
-  <div class="card-header">
-    <div class="room-name">${h.nombre}</div>
-    <div class="rank-badge ${h.ranking===1?'rank-1':''}">#${h.ranking}</div>
-  </div>
-  <div class="empresa">${h.empresa}</div>
-  <div class="card-tags">
-    ${h.ciudad   ? `<span class="tag tag-city">📍 ${h.ciudad}</span>` : ''}
-    ${h.tematica ? `<span class="tag tag-tema">${h.tematica}</span>`  : ''}
-  </div>
-  ${h.tipo ? `<div class="card-tags"><span class="tag tag-tipo">${h.tipo}</span></div>` : ''}
-  ${h.descripcion ? `<div class="card-desc">${h.descripcion}</div>` : ''}
-  <div class="card-meta">
-    ${h.duracion   ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${h.duracion} min</span></div>` : ''}
-    ${h.dificultad ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(h.dificultad)}">⚠ ${h.dificultad}</span></div>` : ''}
-    ${h.rating     ? `<div class="meta-item"><span class="meta-key">Rating Escapistas</span><span class="meta-val">★ ${h.rating}</span></div>` : ''}
-    ${h.valoracion ? `<div class="meta-item"><span class="meta-key">Valoración Grupo</span><span class="meta-val" style="color:var(--amber)">★ ${h.valoracion}/10</span></div>` : ''}
-  </div>
-  ${h.valoracion ? `<div class="group-score"><span class="group-score-label">Puntuación del grupo</span><span class="group-score-val">${h.valoracion}<span style="font-size:.75rem;color:var(--text3)">/10</span></span></div>` : ''}
-  ${voteWidget(slug)}
-  <div class="card-footer" style="margin-top:10px">
-    ${h.web ? `<a class="web-link" href="${h.web}" target="_blank">Ver web</a>` : '<span></span>'}
-    <span class="tag tag-tipo" style="background:rgba(245,166,35,.07);color:var(--amber)">✅ Completado</span>
-  </div>
-</div>`;
+  const slug    = slugify(h.nombre);
+  const medals  = ['gold','silver','bronze'];
+  const emoji   = ['🥇','🥈','🥉'];
+  const rankCls = medals[h.ranking - 1] || '';
+  const rankDisp = emoji[h.ranking - 1]
+    ? `<div class="rv-rank-emoji">${emoji[h.ranking - 1]}</div>`
+    : `<div class="rv-rank-num">#${h.ranking}</div>`;
+
+  const { avg, count } = voteStats(slug);
+  const commPill = FIREBASE_ENABLED && count > 0
+    ? `<span class="rv-score-pill rv-score-comunidad">🗳 ${(avg*2).toFixed(1)}/10 <span style="opacity:.6">(${count})</span></span>`
+    : '';
+
+  return `<div class="review-row" style="animation-delay:${i*.05}s">
+
+    <div class="rv-rank">
+      ${rankDisp}
+    </div>
+
+    <div class="rv-info">
+      <div class="rv-title-row">
+        <div>
+          <div class="rv-name">${h.nombre}</div>
+          <div class="rv-empresa">${h.empresa}</div>
+        </div>
+      </div>
+      <div class="rv-tags">
+        ${h.ciudad   ? `<span class="tag tag-city">📍 ${h.ciudad}</span>` : ''}
+        ${h.tematica ? `<span class="tag tag-tema">${h.tematica}</span>`  : ''}
+        ${h.tipo     ? `<span class="tag tag-tipo">${h.tipo}</span>`      : ''}
+      </div>
+      <div class="rv-meta">
+        ${h.duracion   ? `<div class="rv-meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${h.duracion} min</span></div>` : ''}
+        ${h.dificultad ? `<div class="rv-meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(h.dificultad)}">⚠ ${h.dificultad}</span></div>` : ''}
+      </div>
+      <div class="rv-scores">
+        ${h.rating     ? `<span class="rv-score-pill rv-score-escapistas">Escapistas ★ ${h.rating}</span>` : ''}
+        ${h.valoracion ? `<span class="rv-score-pill rv-score-grupo">Grupo ★ ${h.valoracion}/10</span>`    : ''}
+        ${commPill}
+      </div>
+      ${voteWidget(slug)}
+    </div>
+
+    <div class="rv-opinion">
+      <div class="rv-opinion-label">Opinión personal</div>
+      <div class="rv-opinion-text ${!h.descripcion ? 'empty' : ''}">
+        ${h.descripcion || 'Sin descripción añadida aún.'}
+      </div>
+      ${h.web ? `<a class="rv-web" href="${h.web}" target="_blank">Ver web</a>` : ''}
+    </div>
+
+  </div>`;
 }
 
 // ── Renders principales ───────────────────────────────────────────────────────
