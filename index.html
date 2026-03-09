@@ -106,6 +106,7 @@
   .group-score{margin-top:10px;padding:9px 13px;background:rgba(245,166,35,.04);border:1px solid rgba(245,166,35,.14);display:flex;align-items:center;justify-content:space-between;}
   .group-score-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
+  .card-desc{font-family:'Rajdhani',sans-serif;font-size:.85rem;font-weight:400;color:var(--text3);line-height:1.55;margin-bottom:12px;padding:10px 12px;border-left:2px solid rgba(245,166,35,.2);background:rgba(255,255,255,.02);font-style:italic;}
   .empty-state{text-align:center;padding:56px 20px;color:var(--text3);grid-column:1/-1;}
   .empty-state .lock{font-size:2.8rem;margin-bottom:14px;opacity:.25;}
   .empty-state p{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.14em;}
@@ -287,6 +288,7 @@ function cardPend(p,i){return`<div class="room-card" style="animation-delay:${i*
   <div class="empresa">${p.empresa}</div>
   <div class="card-tags">${p.ciudad?`<span class="tag tag-city">📍 ${p.ciudad}</span>`:''}${p.tematica?`<span class="tag tag-tema">${p.tematica}</span>`:''}</div>
   ${p.tipo?`<div class="card-tags"><span class="tag tag-tipo">${p.tipo}</span></div>`:''}
+  ${p.descripcion?`<div class="card-desc">${p.descripcion}</div>`:''}
   <div class="card-meta">
     ${p.duracion?`<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>`:''}
     ${p.dificultad?`<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>`:''}
@@ -302,6 +304,7 @@ function cardHecho(h,i){return`<div class="room-card" style="animation-delay:${i
   <div class="empresa">${h.empresa}</div>
   <div class="card-tags">${h.ciudad?`<span class="tag tag-city">📍 ${h.ciudad}</span>`:''}${h.tematica?`<span class="tag tag-tema">${h.tematica}</span>`:''}</div>
   ${h.tipo?`<div class="card-tags"><span class="tag tag-tipo">${h.tipo}</span></div>`:''}
+  ${h.descripcion?`<div class="card-desc">${h.descripcion}</div>`:''}
   <div class="card-meta">
     ${h.duracion?`<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${h.duracion} min</span></div>`:''}
     ${h.dificultad?`<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(h.dificultad)}">⚠ ${h.dificultad}</span></div>`:''}

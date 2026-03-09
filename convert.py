@@ -39,7 +39,8 @@ COL_ALIASES = {
     "dificultad": ["dificultad", "difficulty"],
     "rating":     ["valoración", "valoracion", "rating escapistas", "rating", "score"],
     "web":        ["web", "url", "link"],
-    "valoracion": ["valoración grupo", "valoracion grupo", "group rating", "puntuación", "puntuacion"],
+    "valoracion":  ["valoración grupo", "valoracion grupo", "group rating", "puntuación", "puntuacion"],
+    "descripcion": ["descripción", "descripcion", "description", "descripción del escape", "descripcion del escape", "descripción del room", "resumen"],
 }
 
 def find_col(headers, key):
