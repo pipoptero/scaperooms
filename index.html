@@ -279,9 +279,9 @@
 // ════════════════════════════════════════════════════════════
 //  🔥 CONFIGURACIÓN FIREBASE
 //  Rellena con tus datos de Firebase Realtime Database.
-//  Deja FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/' si no quieres usar votaciones.
+//  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -560,8 +560,9 @@ function cardPend(p, i) {
   ${p.tipo ? `<div class="card-tags"><span class="tag tag-tipo">${p.tipo}</span></div>` : ''}
   ${p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : ''}
   <div class="card-meta">
-    ${p.duracion   ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>` : ''}
-    ${p.dificultad ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>` : ''}
+    ${p.duracion      ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>` : ''}
+    ${p.dificultad    ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>` : ''}
+    ${p.max_personas  ? `<div class="meta-item"><span class="meta-key">Máx. jugadores</span><span class="meta-val">👥 ${p.max_personas}</span></div>` : ''}
   </div>
   ${voteWidget(slug)}
   <div class="card-footer">
