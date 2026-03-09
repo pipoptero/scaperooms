@@ -110,16 +110,19 @@
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
 
   /* ── VOTE SECTION ── */
-  .vote-section{margin-top:10px;padding:11px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);border-radius:0;}
+  .vote-section{margin-top:10px;padding:11px 13px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.05);}
   .vote-section-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
   .vote-label{font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
   .vote-community{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);text-align:right;}
-  .vote-community strong{color:var(--amber);font-size:.8rem;}
-  .stars{display:flex;gap:4px;cursor:pointer;}
-  .star{font-size:1.3rem;color:var(--border);transition:color .15s,transform .15s;user-select:none;line-height:1;}
-  .star:hover,.star.hovered{color:var(--gold);}
-  .star.voted{color:var(--amber);animation:pop .25s ease;}
-  .star.voted-dim{color:rgba(245,166,35,.3);}
+  .vote-community strong{color:var(--amber);font-size:.85rem;}
+  /* ── Half-star widget ── */
+  .stars{display:flex;gap:2px;cursor:pointer;user-select:none;}
+  .star-wrap{position:relative;width:1.5rem;height:1.5rem;flex-shrink:0;}
+  .star-bg{position:absolute;inset:0;font-size:1.35rem;line-height:1.5rem;color:var(--border);pointer-events:none;transition:color .12s;}
+  .star-fg{position:absolute;inset:0;font-size:1.35rem;line-height:1.5rem;color:var(--amber);overflow:hidden;width:0%;pointer-events:none;transition:width .12s,color .12s;white-space:nowrap;}
+  .star-fg.preview{color:var(--gold);}
+  .half-l,.half-r{position:absolute;top:0;height:100%;width:50%;z-index:2;}
+  .half-l{left:0;}.half-r{right:0;}
   .vote-status{font-family:'Share Tech Mono',monospace;font-size:.6rem;margin-top:6px;text-align:right;min-height:14px;}
   .vote-status.my-vote{color:var(--green);}
   .vote-status.saving{color:var(--text3);}
@@ -232,7 +235,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -286,88 +289,115 @@ function voteStats(slug) {
   return { avg: Math.round(avg * 10) / 10, count: vals.length, myVote: roomVotes[USER_ID] || 0 };
 }
 
-// ── Renderizar widget de votación ────────────────────────────────────────────
+// ── Half-star widget ──────────────────────────────────────────────────────────
+// Cada estrella tiene mitad izquierda (valor N-0.5) y mitad derecha (valor N)
+// Los valores guardados en Firebase son 0.5 a 5.0 (× 2 = nota 1-10)
+
+function buildStarsHtml(slug, myVote) {
+  let html = '';
+  for (let i = 1; i <= 5; i++) {
+    const fillPct = Math.min(Math.max((myVote - (i - 1)) * 100, 0), 100);
+    html += `<div class="star-wrap">
+      <div class="star-bg">★</div>
+      <div class="star-fg" id="sfg_${slug}_${i}" style="width:${fillPct}%">★</div>
+      <div class="half-l" onmouseenter="previewStars('${slug}',${i - 0.5})" onmouseleave="unpreviewStars('${slug}',${myVote})" onclick="castVote('${slug}',${i - 0.5})"></div>
+      <div class="half-r" onmouseenter="previewStars('${slug}',${i})"       onmouseleave="unpreviewStars('${slug}',${myVote})" onclick="castVote('${slug}',${i})"></div>
+    </div>`;
+  }
+  return html;
+}
+
+function previewStars(slug, val) {
+  for (let i = 1; i <= 5; i++) {
+    const fg = document.getElementById(`sfg_${slug}_${i}`);
+    if (!fg) continue;
+    const fillPct = Math.min(Math.max((val - (i - 1)) * 100, 0), 100);
+    fg.style.width = fillPct + '%';
+    fg.classList.add('preview');
+  }
+  const statusEl = document.getElementById('vstatus_' + slug);
+  if (statusEl && statusEl.dataset.saved !== '1') {
+    statusEl.textContent = `${(val * 2 % 1 === 0 ? val * 2 : (val * 2).toFixed(1))}/10`;
+    statusEl.className = 'vote-status saving';
+  }
+}
+
+function unpreviewStars(slug, myVote) {
+  for (let i = 1; i <= 5; i++) {
+    const fg = document.getElementById(`sfg_${slug}_${i}`);
+    if (!fg) continue;
+    const fillPct = Math.min(Math.max((myVote - (i - 1)) * 100, 0), 100);
+    fg.style.width = fillPct + '%';
+    fg.classList.remove('preview');
+  }
+  const statusEl = document.getElementById('vstatus_' + slug);
+  if (statusEl && statusEl.dataset.saved !== '1') {
+    statusEl.textContent = myVote > 0 ? `Tu nota: ${myVote * 2}/10` : 'Haz clic para votar';
+    statusEl.className = myVote > 0 ? 'vote-status my-vote' : 'vote-status';
+  }
+}
+
+function communityHtml(avg, count) {
+  if (!FIREBASE_ENABLED) return '';
+  if (count === 0) return 'sin votos aún';
+  const score = (avg * 2).toFixed(1);
+  return `<strong>${score}</strong>/10 &nbsp;·&nbsp; ${count} voto${count !== 1 ? 's' : ''}`;
+}
+
 function voteWidget(slug) {
   if (!FIREBASE_ENABLED) {
     return `<div class="vote-section"><div class="vote-no-firebase">Votaciones no configuradas</div></div>`;
   }
   const { avg, count, myVote } = voteStats(slug);
-  const communityText = count > 0
-    ? `<strong>${(avg * 2).toFixed(1)}</strong>/10 &nbsp;·&nbsp; ${count} voto${count !== 1 ? 's' : ''}`
-    : 'sin votos aún';
-
-  let starsHtml = '';
-  for (let i = 1; i <= 5; i++) {
-    let cls = 'star';
-    if (myVote >= i) cls += ' voted';
-    starsHtml += `<span class="${cls}" data-slug="${slug}" data-val="${i}" onclick="castVote('${slug}',${i})" onmouseenter="hoverStars('${slug}',${i})" onmouseleave="unhoverStars('${slug}')">★</span>`;
-  }
-
-  const statusText = myVote > 0
-    ? `Tu nota: ${(myVote * 2)}/10`
-    : 'Haz clic para votar';
+  const statusText  = myVote > 0 ? `Tu nota: ${myVote * 2}/10` : 'Haz clic para votar';
+  const statusClass = myVote > 0 ? 'my-vote' : '';
 
   return `<div class="vote-section" id="vs_${slug}">
     <div class="vote-section-top">
       <div>
         <div class="vote-label">Tu valoración</div>
-        <div class="stars" id="stars_${slug}">${starsHtml}</div>
+        <div class="stars" id="stars_${slug}">${buildStarsHtml(slug, myVote)}</div>
       </div>
       <div class="vote-community" id="comm_${slug}">
         <div class="vote-label" style="text-align:right">Comunidad</div>
-        ${communityText}
+        ${communityHtml(avg, count)}
       </div>
     </div>
-    <div class="vote-status ${myVote > 0 ? 'my-vote' : ''}" id="vstatus_${slug}">${statusText}</div>
+    <div class="vote-status ${statusClass}" id="vstatus_${slug}" data-saved="${myVote > 0 ? 1 : 0}">${statusText}</div>
   </div>`;
-}
-
-function hoverStars(slug, val) {
-  const container = document.getElementById('stars_' + slug);
-  if (!container) return;
-  container.querySelectorAll('.star').forEach((s, i) => {
-    s.classList.toggle('hovered', i < val);
-  });
-}
-
-function unhoverStars(slug) {
-  const container = document.getElementById('stars_' + slug);
-  if (!container) return;
-  container.querySelectorAll('.star').forEach(s => s.classList.remove('hovered'));
 }
 
 async function castVote(slug, stars) {
   if (!FIREBASE_ENABLED) return;
-  const statusEl = document.getElementById('vstatus_' + slug);
-  const commEl   = document.getElementById('comm_'    + slug);
-
-  // Optimistic update
   if (!votesCache[slug]) votesCache[slug] = {};
   votesCache[slug][USER_ID] = stars;
-  refreshVoteWidget(slug);
 
-  if (statusEl) { statusEl.textContent = 'Guardando...'; statusEl.className = 'vote-status saving'; }
+  // Update stars visually
+  for (let i = 1; i <= 5; i++) {
+    const fg = document.getElementById(`sfg_${slug}_${i}`);
+    if (fg) { fg.style.width = Math.min(Math.max((stars-(i-1))*100,0),100)+'%'; fg.classList.remove('preview'); }
+  }
+
+  const statusEl = document.getElementById('vstatus_' + slug);
+  const commEl   = document.getElementById('comm_'    + slug);
+  if (statusEl) { statusEl.textContent = 'Guardando...'; statusEl.className = 'vote-status saving'; statusEl.dataset.saved = '0'; }
 
   try {
     await fbPut(`votes/${slug}/${USER_ID}`, stars);
-    const { avg, count, myVote } = voteStats(slug);
-    if (statusEl) { statusEl.textContent = `Tu nota: ${myVote * 2}/10 ✓`; statusEl.className = 'vote-status my-vote'; }
-    if (commEl) {
-      const t = count > 0 ? `<strong>${(avg*2).toFixed(1)}</strong>/10 &nbsp;·&nbsp; ${count} voto${count!==1?'s':''}` : 'sin votos aún';
-      commEl.innerHTML = `<div class="vote-label" style="text-align:right">Comunidad</div>${t}`;
+    const { avg, count } = voteStats(slug);
+    if (statusEl) { statusEl.textContent = `Tu nota: ${stars * 2}/10 ✓`; statusEl.className = 'vote-status my-vote'; statusEl.dataset.saved = '1'; }
+    if (commEl)   { commEl.innerHTML = `<div class="vote-label" style="text-align:right">Comunidad</div>${communityHtml(avg, count)}`; }
+    // Re-bind mouseleave con el nuevo myVote
+    const starsEl = document.getElementById('stars_' + slug);
+    if (starsEl) {
+      starsEl.querySelectorAll('.half-l,.half-r').forEach(el => {
+        const v = parseFloat(el.getAttribute('onmouseleave').match(/[\d.]+/g).pop());
+        el.setAttribute('onmouseleave', `unpreviewStars('${slug}',${stars})`);
+      });
     }
   } catch(e) {
     if (statusEl) { statusEl.textContent = 'Error al guardar :('; statusEl.className = 'vote-status error'; }
   }
-}
-
-function refreshVoteWidget(slug) {
-  const container = document.getElementById('stars_' + slug);
-  if (!container) return;
-  const { myVote } = voteStats(slug);
-  container.querySelectorAll('.star').forEach((s, i) => {
-    s.className = 'star' + (myVote > i ? ' voted' : '');
-  });
 }
 
 // Cargar todos los votos desde Firebase de una sola vez
@@ -566,17 +596,32 @@ function renderRanking() {
     <thead><tr>
       <th>#</th><th>Escape Room</th><th>Empresa</th><th>Temática</th>
       <th>Dificultad</th><th>⏱ Min</th><th>★ Escapistas</th><th>★ Grupo</th>
+      ${FIREBASE_ENABLED ? '<th>🗳 Comunidad</th>' : ''}
     </tr></thead>
-    <tbody>${s.map((h,i) => `<tr>
-      <td><span class="rank-pos ${medals[i]||''}">${emoji[i]||'#'+(i+1)}</span></td>
-      <td style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--text)">${h.nombre}</td>
-      <td>${h.empresa}</td>
-      <td><span class="tag tag-tema" style="font-size:.7rem">${h.tematica}</span></td>
-      <td><span class="meta-val ${dc(h.dificultad)}" style="font-size:.82rem">⚠ ${h.dificultad}</span></td>
-      <td>${h.duracion}</td>
-      <td>★ ${h.rating}</td>
-      <td style="font-family:'Cinzel',serif;color:var(--amber);font-size:1rem">★ ${h.valoracion}</td>
-    </tr>`).join('')}</tbody>`;
+    <tbody>${s.map((h,i) => {
+      const slug = slugify(h.nombre);
+      const { avg, count } = voteStats(slug);
+      const commCell = FIREBASE_ENABLED
+        ? `<td style="font-family:'Share Tech Mono',monospace;font-size:.82rem;">
+            ${count > 0
+              ? `<span style="color:var(--amber);font-family:'Cinzel',serif;font-size:.95rem;">★ ${(avg*2).toFixed(1)}</span>
+                 <span style="color:var(--text3);font-size:.68rem;margin-left:4px;">(${count})</span>`
+              : `<span style="color:var(--text3);font-size:.68rem;">—</span>`
+            }
+          </td>`
+        : '';
+      return `<tr>
+        <td><span class="rank-pos ${medals[i]||''}">${emoji[i]||'#'+(i+1)}</span></td>
+        <td style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--text)">${h.nombre}</td>
+        <td>${h.empresa}</td>
+        <td><span class="tag tag-tema" style="font-size:.7rem">${h.tematica}</span></td>
+        <td><span class="meta-val ${dc(h.dificultad)}" style="font-size:.82rem">⚠ ${h.dificultad}</span></td>
+        <td>${h.duracion}</td>
+        <td>★ ${h.rating}</td>
+        <td style="font-family:'Cinzel',serif;color:var(--amber);font-size:1rem">★ ${h.valoracion}</td>
+        ${commCell}
+      </tr>`;
+    }).join('')}</tbody>`;
 }
 </script>
 </body>
