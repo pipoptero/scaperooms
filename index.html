@@ -572,21 +572,20 @@ function cardPend(p, i) {
 </div>`;
 }
 
-function cardHecho(h, i) {
+function cardHecho(h, rank) {
   const slug    = slugify(h.nombre);
   const medals  = ['gold','silver','bronze'];
   const emoji   = ['🥇','🥈','🥉'];
-  const rankCls = medals[h.ranking - 1] || '';
-  const rankDisp = emoji[h.ranking - 1]
-    ? `<div class="rv-rank-emoji">${emoji[h.ranking - 1]}</div>`
-    : `<div class="rv-rank-num">#${h.ranking}</div>`;
+  const rankDisp = emoji[rank - 1]
+    ? `<div class="rv-rank-emoji">${emoji[rank - 1]}</div>`
+    : `<div class="rv-rank-num">#${rank}</div>`;
 
   const { avg, count } = voteStats(slug);
   const commPill = FIREBASE_ENABLED && count > 0
     ? `<span class="rv-score-pill rv-score-comunidad">🗳 ${(avg*2).toFixed(1)}/10 <span style="opacity:.6">(${count})</span></span>`
     : '';
 
-  return `<div class="review-row" style="animation-delay:${i*.05}s">
+  return `<div class="review-row" style="animation-delay:${(rank-1)*.05}s">
 
     <div class="rv-rank">
       ${rankDisp}
@@ -657,13 +656,21 @@ function renderHechos() {
     if (d && h.dificultad !== d) return false;
     return true;
   });
-  f.sort((a,b) => a.ranking - b.ranking);
+
+  // Ordenar por nota media de comunidad (Firebase), fallback 0 si sin votos
+  f.sort((a, b) => {
+    const avgA = voteStats(slugify(a.nombre)).avg || 0;
+    const avgB = voteStats(slugify(b.nombre)).avg || 0;
+    return avgB - avgA;
+  });
+
   document.getElementById('result-info-hecho').textContent = `${f.length} escape rooms completados`;
-  document.getElementById('grid-hechos').innerHTML = f.map(cardHecho).join('');
+  document.getElementById('grid-hechos').innerHTML = f.map((h, i) => cardHecho(h, i + 1)).join('');
 }
 
 function renderRanking() {
-  const s = [...HECHOS].sort((a,b) => a.ranking - b.ranking);
+  // Ordenar por Valoración Grupo del Excel (con decimales: 9.2, 8.5...)
+  const s = [...HECHOS].sort((a, b) => parseFloat(b.valoracion || 0) - parseFloat(a.valoracion || 0));
   const medals = ['gold','silver','bronze'], emoji = ['🥇','🥈','🥉'];
   document.getElementById('ranking-table').innerHTML = `
     <thead><tr>
@@ -671,7 +678,7 @@ function renderRanking() {
       <th>Dificultad</th><th>⏱ Min</th><th>★ Escapistas</th><th>★ Grupo</th>
       ${FIREBASE_ENABLED ? '<th>🗳 Comunidad</th>' : ''}
     </tr></thead>
-    <tbody>${s.map((h,i) => {
+    <tbody>${s.map((h, i) => {
       const slug = slugify(h.nombre);
       const { avg, count } = voteStats(slug);
       const commCell = FIREBASE_ENABLED
