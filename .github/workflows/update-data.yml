@@ -1,0 +1,39 @@
+name: 🔄 Actualizar datos desde Excel
+
+on:
+  push:
+    paths:
+      - "**.xlsx"
+      - "**.xls"
+      - "convert.py"   # también si editas el script
+
+jobs:
+  convert-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write   # necesario para hacer commit de data.json
+
+    steps:
+      - name: 📥 Checkout repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: 📦 Instalar dependencias
+        run: pip install openpyxl
+
+      - name: ⚙️ Convertir Excel → data.json
+        run: python convert.py
+
+      - name: 💾 Commit y push data.json
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data.json
+          git diff --staged --quiet && echo "Sin cambios en data.json" || (
+            git commit -m "🔄 Auto-update data.json desde Excel"
+            git push
+          )
