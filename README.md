@@ -35,14 +35,18 @@ Sube todos los archivos de esta carpeta al repo. Puedes hacerlo:
   git push -u origin main
   ```
 
-### 3. Activar GitHub Pages
+### 3. Activar permisos de la Action
+- En el repo: **Settings → Actions → General → Workflow permissions**
+- Selecciona **"Read and write permissions"** → **Save**
+
+### 4. Activar GitHub Pages
 - En el repo: **Settings** → **Pages**
 - Source: **Deploy from a branch**
 - Branch: `main` / folder: `/ (root)`
 - Guarda → en ~2 minutos tendrás una URL del tipo:
   `https://TU_USUARIO.github.io/escape-rooms-tracker`
 
-### 4. Primera ejecución de la Action
+### 5. Primera ejecución de la Action
 Al subir el Excel por primera vez, la Action se ejecutará automáticamente y generará `data.json`. Puedes seguirlo en la pestaña **Actions** del repo.
 
 ---
@@ -72,12 +76,16 @@ El Excel debe tener **dos hojas**:
 | Dificultad | Alta / Media-Alta / Media / Baja |
 | Valoración | Rating de escapistas.com (0-10) |
 | Web | URL de la web |
+| Descripción | Descripción breve del escape room *(opcional)* |
 
 ### Hoja «Hechos»
 Mismas columnas que Pendientes, más:
 | Columna | Descripción |
 |---------|-------------|
 | Valoración Grupo | Vuestra puntuación (0-10) |
+| Descripción | Descripción breve del escape room *(opcional)* |
+
+> **Nota sobre la columna Descripción:** puede llamarse `Descripción`, `Descripcion`, `Description`, `Descripción del Escape` o `Resumen`. Si una tarjeta no tiene descripción, simplemente no se muestra nada.
 
 ---
 
@@ -94,3 +102,9 @@ Sí, el script detecta automáticamente cualquier `.xlsx` en la raíz del repo.
 
 **¿El repositorio tiene que ser público?**
 Para GitHub Pages gratis, sí. Si quieres repo privado, necesitas GitHub Pro (o usar Netlify que permite repos privados gratis).
+
+**La Action falla con error de permisos**
+Ve a Settings → Actions → General → Workflow permissions y activa "Read and write permissions".
+
+**La web muestra error 404 en data.json**
+La Action aún no se ha ejecutado o falló. Ve a la pestaña Actions, comprueba el log y si es necesario dale a "Re-run jobs".
