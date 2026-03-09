@@ -10,7 +10,8 @@
       "dificultad": "Media",
       "rating": "8.9",
       "web": "https://willyeltuertoescaperoom.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Cybercity 2049",
@@ -22,7 +23,8 @@
       "dificultad": "Media-Alta",
       "rating": "9.3",
       "web": "https://www.escapebarcelona.com/cybercity-2049",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Exodus",
@@ -34,7 +36,8 @@
       "dificultad": "Media-Alta",
       "rating": "8",
       "web": "https://www.elementsescaperoom.com/exodus/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "La Mina",
@@ -46,7 +49,8 @@
       "dificultad": "Media",
       "rating": "8.3",
       "web": "https://unrealroomescape.es/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Distrito 111",
@@ -58,7 +62,8 @@
       "dificultad": "Media-Alta",
       "rating": "9.0",
       "web": "https://www.escapebarcelona.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Room Angie",
@@ -70,7 +75,8 @@
       "dificultad": "Media",
       "rating": "7",
       "web": "https://ilusiumroomescape.es/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Enterprise",
@@ -82,7 +88,8 @@
       "dificultad": "Alta",
       "rating": "9",
       "web": "https://www.abduction.es/badalona/abduction4.html",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Nautilus",
@@ -94,7 +101,8 @@
       "dificultad": "Media-Alta",
       "rating": "8.8",
       "web": "https://scaparium.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Dragonborn",
@@ -106,7 +114,8 @@
       "dificultad": "Media",
       "rating": "8.4",
       "web": "https://questfactory.es/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Awaken",
@@ -118,7 +127,8 @@
       "dificultad": "Media-Alta",
       "rating": "8.8",
       "web": "https://enigmaroom.es/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "The Exam",
@@ -130,7 +140,8 @@
       "dificultad": "Alta",
       "rating": "9.2",
       "web": "https://enigmaroom.es/the-exam/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "La Cueva",
@@ -142,7 +153,8 @@
       "dificultad": "Media",
       "rating": "8.0",
       "web": "https://lacovaescaperoom.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Sherlock Holmes",
@@ -154,7 +166,8 @@
       "dificultad": "Media",
       "rating": "7.5",
       "web": "https://www.escapebarcelona.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "El Tesoro del Pirata",
@@ -166,7 +179,8 @@
       "dificultad": "Media",
       "rating": "7.8",
       "web": "https://escapesitges.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Atlantis",
@@ -178,7 +192,8 @@
       "dificultad": "Media",
       "rating": "8.2",
       "web": "https://escapeworldbarcelona.com/",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Intracorpus",
@@ -190,7 +205,8 @@
       "dificultad": "Media-Alta",
       "rating": "9.3",
       "web": "vortexescape.com",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Tomb Hunter",
@@ -202,7 +218,8 @@
       "dificultad": "Media",
       "rating": "10",
       "web": "https://www.escapebarcelona.com/tomb-hunter-la-leyenda-de-akasha.php",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Alien: El Origen",
@@ -214,7 +231,8 @@
       "dificultad": "Media",
       "rating": "9.5",
       "web": "https://www.escapebarcelona.com/alien-el-origen.php",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     },
     {
       "nombre": "Criogenic 500",
@@ -226,7 +244,8 @@
       "dificultad": "Alta",
       "rating": "9.6",
       "web": "https://criogenicescaperoom.com/barcelona",
-      "valoracion": ""
+      "valoracion": "",
+      "descripcion": ""
     }
   ],
   "hechos": [
@@ -241,6 +260,7 @@
       "rating": "9",
       "web": "https://sagaescaperoom.com/",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 1
     },
     {
@@ -254,6 +274,7 @@
       "rating": "8.5",
       "web": "https://thecityescape.com/",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 2
     },
     {
@@ -267,6 +288,7 @@
       "rating": "9",
       "web": "https://escapebarcelona.com/",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 3
     },
     {
@@ -280,6 +302,7 @@
       "rating": "8",
       "web": "https://goldenpop.es/",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 4
     },
     {
@@ -293,6 +316,7 @@
       "rating": "9",
       "web": "roomwhitechapel.com",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 5
     },
     {
@@ -306,6 +330,7 @@
       "rating": "7.5",
       "web": "goldenpop.es/catacumbas/",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 6
     },
     {
@@ -319,6 +344,7 @@
       "rating": "8.5",
       "web": "terrorstories.com",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 7
     },
     {
@@ -332,6 +358,7 @@
       "rating": "7.5",
       "web": "kadabraescape.com",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 8
     },
     {
@@ -345,6 +372,7 @@
       "rating": "7.5",
       "web": "encryptroom.com",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 9
     },
     {
@@ -358,6 +386,7 @@
       "rating": "6.5",
       "web": "missionleak.com",
       "valoracion": "",
+      "descripcion": "",
       "ranking": 10
     }
   ],
