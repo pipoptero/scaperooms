@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Escape Rooms Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0f;--bg2:#0f0f18;--bg3:#141422;--card:#12121e;--border:#2a2a45;
+    --amber:#f5a623;--amber2:#e8891a;--gold:#ffd166;--red:#e63946;--green:#06d6a0;--blue:#4cc9f0;
+    --text:#e8e8f0;--text2:#9090b0;--text3:#5a5a80;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  body{background:var(--bg);color:var(--text);font-family:'Rajdhani',sans-serif;min-height:100vh;overflow-x:hidden;}
+  body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.4;}
+
+  @keyframes pulse-lock{0%,100%{filter:drop-shadow(0 0 14px rgba(245,166,35,.5))}50%{filter:drop-shadow(0 0 28px rgba(245,166,35,.95))}}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+
+  /* ── LOADING ── */
+  #loading{position:fixed;inset:0;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:20px;}
+  .spinner{width:40px;height:40px;border:2px solid var(--border);border-top-color:var(--amber);border-radius:50%;animation:spin 0.8s linear infinite;}
+  .loading-text{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--text3);letter-spacing:.2em;text-transform:uppercase;}
+
+  /* ── ERROR ── */
+  #error-screen{display:none;position:fixed;inset:0;background:var(--bg);flex-direction:column;align-items:center;justify-content:center;z-index:100;gap:16px;padding:32px;}
+  .error-icon{font-size:3rem;opacity:.5;}
+  .error-title{font-family:'Cinzel',serif;color:var(--red);font-size:1.2rem;letter-spacing:.1em;}
+  .error-msg{font-family:'Share Tech Mono',monospace;font-size:.72rem;color:var(--text3);letter-spacing:.08em;text-align:center;line-height:1.8;max-width:480px;}
+
+  /* ── HEADER ── */
+  #app{display:none;position:relative;z-index:1;}
+  header{padding:40px 32px 30px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0d0d1a 0%,var(--bg) 100%);position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:200px;background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);pointer-events:none;}
+  .lock-icon{font-size:2.5rem;display:block;margin-bottom:12px;filter:drop-shadow(0 0 12px rgba(245,166,35,.5));animation:pulse-lock 3s ease-in-out infinite;}
+  h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(1.5rem,4vw,2.6rem);letter-spacing:.12em;background:linear-gradient(135deg,var(--amber) 0%,var(--gold) 50%,var(--amber2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+  .subtitle{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.72rem;letter-spacing:.22em;margin-top:5px;text-transform:uppercase;}
+
+  /* Updated badge */
+  .updated-badge{position:absolute;top:20px;right:24px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.08em;border:1px solid var(--border);padding:5px 12px;line-height:1.6;text-align:right;}
+  .updated-badge span{color:var(--green);display:block;}
+
+  /* ── STATS ── */
+  .stats-bar{display:flex;gap:0;justify-content:center;flex-wrap:wrap;padding:18px 32px;background:var(--bg2);border-bottom:1px solid var(--border);}
+  .stat-item{text-align:center;padding:10px 26px;position:relative;}
+  .stat-item:not(:last-child)::after{content:'|';position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--border);}
+  .stat-num{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;color:var(--amber);line-height:1;display:block;}
+  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.64rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;display:block;}
+
+  /* ── TABS ── */
+  .tabs-container{display:flex;justify-content:center;padding:26px 32px 0;gap:4px;max-width:1400px;margin:0 auto;}
+  .tab{font-family:'Cinzel',serif;font-weight:600;font-size:.82rem;letter-spacing:.12em;padding:11px 28px;border:1px solid var(--border);background:transparent;color:var(--text3);cursor:pointer;transition:all .2s;text-transform:uppercase;}
+  .tab:hover{color:var(--amber);border-color:rgba(245,166,35,.3);}
+  .tab.active{background:var(--card);border-color:var(--amber);color:var(--amber);border-bottom-color:var(--card);z-index:1;}
+  .tab .count-badge{font-family:'Share Tech Mono',monospace;font-size:.62rem;background:rgba(245,166,35,.12);color:var(--amber);border:1px solid rgba(245,166,35,.25);padding:1px 6px;border-radius:20px;margin-left:7px;vertical-align:middle;}
+
+  /* ── CONTENT ── */
+  .content{position:relative;z-index:1;padding:0 32px 56px;max-width:1400px;margin:0 auto;}
+  .panel{background:var(--card);border:1px solid var(--border);border-top:none;padding:22px;margin-bottom:20px;}
+
+  /* ── FILTERS ── */
+  .filters{display:flex;gap:10px;flex-wrap:wrap;align-items:center;}
+  .filter-label{font-family:'Share Tech Mono',monospace;font-size:.67rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;}
+  .filter-select,.filter-input{font-family:'Rajdhani',sans-serif;font-size:.86rem;font-weight:500;background:var(--bg3);color:var(--text);border:1px solid var(--border);padding:7px 12px;outline:none;cursor:pointer;transition:border-color .2s;appearance:none;-webkit-appearance:none;min-width:110px;}
+  .filter-select:focus,.filter-input:focus{border-color:rgba(245,166,35,.45);}
+  .filter-input{min-width:190px;}
+  .filter-input::placeholder{color:var(--text3);}
+  .clear-btn{font-family:'Share Tech Mono',monospace;font-size:.67rem;letter-spacing:.08em;background:transparent;color:var(--text3);border:1px solid var(--border);padding:7px 13px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+  .clear-btn:hover{color:var(--red);border-color:var(--red);}
+  .sort-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center;}
+  .sort-btn{font-family:'Share Tech Mono',monospace;font-size:.65rem;letter-spacing:.08em;background:transparent;color:var(--text3);border:1px solid var(--border);padding:5px 11px;cursor:pointer;transition:all .2s;text-transform:uppercase;}
+  .sort-btn:hover,.sort-btn.active{color:var(--amber);border-color:rgba(245,166,35,.4);}
+  .divider-line{height:1px;background:linear-gradient(90deg,transparent,var(--border),transparent);margin:16px 0;}
+  .result-info{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);letter-spacing:.08em;margin-bottom:14px;}
+
+  /* ── CARDS ── */
+  .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:14px;}
+  .room-card{background:var(--bg2);border:1px solid var(--border);padding:18px;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;animation:fadeUp .3s ease both;}
+  .room-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:opacity .2s;}
+  .room-card:hover{border-color:rgba(245,166,35,.35);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45);}
+  .room-card:hover::before{opacity:1;}
+  .card-header{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:10px;}
+  .room-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--text);line-height:1.2;flex:1;}
+  .rating-badge{font-family:'Share Tech Mono',monospace;font-size:.85rem;padding:3px 9px;border-radius:2px;white-space:nowrap;flex-shrink:0;}
+  .rating-high{background:rgba(6,214,160,.1);color:var(--green);border:1px solid rgba(6,214,160,.28);}
+  .rating-mid{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.28);}
+  .rating-low{background:rgba(230,57,70,.1);color:var(--red);border:1px solid rgba(230,57,70,.28);}
+  .empresa{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);letter-spacing:.07em;margin-bottom:9px;text-transform:uppercase;}
+  .card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
+  .tag{font-family:'Rajdhani',sans-serif;font-size:.73rem;font-weight:600;padding:2px 7px;border-radius:2px;}
+  .tag-city{background:rgba(76,201,240,.08);color:var(--blue);border:1px solid rgba(76,201,240,.18);}
+  .tag-tema{background:rgba(123,45,139,.12);color:#c084fc;border:1px solid rgba(123,45,139,.25);}
+  .tag-tipo{background:rgba(245,166,35,.07);color:var(--amber2);border:1px solid rgba(245,166,35,.14);}
+  .card-meta{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px;}
+  .meta-item{display:flex;flex-direction:column;}
+  .meta-key{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;}
+  .meta-val{font-family:'Rajdhani',sans-serif;font-size:.86rem;font-weight:600;color:var(--text2);margin-top:2px;}
+  .diff-alta{color:var(--red);}.diff-media-alta{color:var(--amber);}.diff-media{color:var(--green);}.diff-baja{color:var(--blue);}
+  .card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid rgba(255,255,255,.04);}
+  .web-link{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);text-decoration:none;letter-spacing:.07em;text-transform:uppercase;transition:color .2s;}
+  .web-link:hover{color:var(--amber);}.web-link::before{content:'→ ';}
+  .rank-badge{font-family:'Cinzel',serif;font-size:.72rem;font-weight:700;padding:2px 9px;background:rgba(245,166,35,.07);border:1px solid rgba(245,166,35,.18);color:var(--amber);}
+  .rank-1{background:rgba(255,209,102,.12);border-color:var(--gold);color:var(--gold);}
+  .group-score{margin-top:10px;padding:9px 13px;background:rgba(245,166,35,.04);border:1px solid rgba(245,166,35,.14);display:flex;align-items:center;justify-content:space-between;}
+  .group-score-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
+  .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
+  .empty-state{text-align:center;padding:56px 20px;color:var(--text3);grid-column:1/-1;}
+  .empty-state .lock{font-size:2.8rem;margin-bottom:14px;opacity:.25;}
+  .empty-state p{font-family:'Share Tech Mono',monospace;font-size:.75rem;letter-spacing:.14em;}
+
+  /* ── RANKING TABLE ── */
+  .ranking-table{width:100%;border-collapse:collapse;margin-top:16px;}
+  .ranking-table th{font-family:'Share Tech Mono',monospace;font-size:.62rem;letter-spacing:.13em;color:var(--text3);text-transform:uppercase;padding:9px 13px;border-bottom:1px solid var(--border);text-align:left;font-weight:normal;}
+  .ranking-table td{font-family:'Rajdhani',sans-serif;font-size:.9rem;font-weight:500;padding:11px 13px;border-bottom:1px solid rgba(255,255,255,.03);color:var(--text2);}
+  .ranking-table tr:hover td{background:rgba(255,255,255,.02);}
+  .rank-pos{font-family:'Cinzel',serif;font-weight:700;font-size:1.05rem;color:var(--text3);}
+  .rank-pos.gold{color:var(--gold);}.rank-pos.silver{color:#c0c0c0;}.rank-pos.bronze{color:#cd7f32;}
+
+  @media(max-width:640px){
+    header{padding:28px 18px 60px;}.content{padding:0 14px 40px;}
+    .tabs-container{padding:18px 14px 0;gap:0;}.tab{padding:9px 14px;font-size:.72rem;}
+    .panel{padding:14px;}.rooms-grid{grid-template-columns:1fr;}
+    .updated-badge{top:auto;bottom:16px;right:50%;transform:translateX(50%);text-align:center;}
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADING -->
+<div id="loading">
+  <div class="spinner"></div>
+  <div class="loading-text">Cargando datos...</div>
+</div>
+
+<!-- ERROR -->
+<div id="error-screen">
+  <div class="error-icon">🔓</div>
+  <div class="error-title">Error al cargar datos</div>
+  <div class="error-msg" id="error-msg"></div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header>
+    <div class="updated-badge">DATOS ACTUALIZADOS<span id="update-date"></span></div>
+    <span class="lock-icon">🔐</span>
+    <h1>ESCAPE ROOMS TRACKER</h1>
+    <p class="subtitle">// Barcelona & alrededores</p>
+  </header>
+
+  <div class="stats-bar" id="stats-bar"></div>
+
+  <div style="max-width:1400px;margin:0 auto;padding:0 32px;">
+    <div class="tabs-container">
+      <button class="tab active" id="tab-pend"  onclick="switchTab('pendientes')">🔒 Pendientes <span class="count-badge" id="badge-pend">0</span></button>
+      <button class="tab"        id="tab-hecho" onclick="switchTab('hechos')">✅ Hechos <span class="count-badge" id="badge-hecho">0</span></button>
+      <button class="tab"        id="tab-rank"  onclick="switchTab('ranking')">🏆 Ranking</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <!-- PENDIENTES -->
+    <div id="panel-pendientes" class="panel">
+      <div class="filters">
+        <span class="filter-label">Filtrar:</span>
+        <input type="text" class="filter-input" id="search-pend" placeholder="🔍  Nombre, empresa, temática..." oninput="renderPendientes()">
+        <select class="filter-select" id="filter-ciudad-pend" onchange="renderPendientes()"><option value="">Todas las ciudades</option></select>
+        <select class="filter-select" id="filter-dif-pend"   onchange="renderPendientes()"><option value="">Dificultad</option></select>
+        <select class="filter-select" id="filter-tipo-pend"  onchange="renderPendientes()"><option value="">Tipo</option></select>
+        <button class="clear-btn" onclick="clearFilters('pend')">✕ Limpiar</button>
+      </div>
+      <div class="sort-row">
+        <span class="filter-label">Ordenar:</span>
+        <button class="sort-btn active" id="sort-pend-rating" onclick="setSortPend('rating')">★ Rating</button>
+        <button class="sort-btn" id="sort-pend-name" onclick="setSortPend('name')">A→Z</button>
+        <button class="sort-btn" id="sort-pend-dur"  onclick="setSortPend('dur')">⏱ Duración</button>
+        <button class="sort-btn" id="sort-pend-dif"  onclick="setSortPend('dif')">⚠ Dificultad</button>
+      </div>
+      <div class="divider-line"></div>
+      <div class="result-info" id="result-info-pend"></div>
+      <div class="rooms-grid"  id="grid-pendientes"></div>
+    </div>
+
+    <!-- HECHOS -->
+    <div id="panel-hechos" class="panel" style="display:none">
+      <div class="filters">
+        <span class="filter-label">Filtrar:</span>
+        <input type="text" class="filter-input" id="search-hecho" placeholder="🔍  Nombre, empresa..." oninput="renderHechos()">
+        <select class="filter-select" id="filter-dif-hecho" onchange="renderHechos()"><option value="">Dificultad</option></select>
+        <button class="clear-btn" onclick="clearFilters('hecho')">✕ Limpiar</button>
+      </div>
+      <div class="divider-line" style="margin-top:18px"></div>
+      <div class="result-info" id="result-info-hecho"></div>
+      <div class="rooms-grid"  id="grid-hechos"></div>
+    </div>
+
+    <!-- RANKING -->
+    <div id="panel-ranking" class="panel" style="display:none">
+      <table class="ranking-table" id="ranking-table"></table>
+    </div>
+  </div>
+</div>
+
+<script>
+let PENDIENTES=[],HECHOS=[],sortPend='rating';
+
+// ── Cargar data.json ──────────────────────────────────────────────────────────
+async function loadData(){
+  try{
+    const r=await fetch('data.json?v='+Date.now());
+    if(!r.ok)throw new Error(`HTTP ${r.status} — no se encontró data.json`);
+    const d=await r.json();
+    PENDIENTES=d.pendientes||[];
+    HECHOS=d.hechos||[];
+
+    // Fecha de la última modificación desde la cabecera HTTP
+    const lastMod=r.headers.get('last-modified');
+    if(lastMod){
+      const fecha=new Date(lastMod).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
+      document.getElementById('update-date').textContent=fecha;
+    }
+
+    document.getElementById('loading').style.display='none';
+    document.getElementById('app').style.display='block';
+    populateFilters();renderStats();renderPendientes();renderHechos();renderRanking();
+  }catch(err){
+    document.getElementById('loading').style.display='none';
+    const es=document.getElementById('error-screen');
+    es.style.display='flex';
+    document.getElementById('error-msg').textContent=
+      'No se pudo cargar data.json.\n'+err.message+'\n\nAsegúrate de que el archivo existe y la GitHub Action se ejecutó correctamente.';
+  }
+}
+
+loadData();
+
+// ── Helpers ───────────────────────────────────────────────────────────────────
+function rc(r){const n=parseFloat(r);return n>=9?'rating-high':n>=8?'rating-mid':'rating-low';}
+function dc(d){if(!d)return'';const l=d.toLowerCase();return l==='alta'?'diff-alta':l.includes('media-alta')||l.includes('media alta')?'diff-media-alta':l==='media'?'diff-media':'diff-baja';}
+function do_(d){return{'Alta':4,'Media-Alta':3,'Media':2,'Baja':1}[d]||2;}
+
+function populateFilters(){
+  const fill=(id,vals,ph)=>{const s=document.getElementById(id);s.innerHTML=`<option value="">${ph}</option>`;vals.forEach(v=>{const o=new Option(v,v);s.appendChild(o);});};
+  fill('filter-ciudad-pend',[...new Set(PENDIENTES.map(p=>p.ciudad).filter(Boolean))].sort(),'Todas las ciudades');
+  fill('filter-dif-pend',[...new Set(PENDIENTES.map(p=>p.dificultad).filter(Boolean))].sort(),'Dificultad');
+  fill('filter-tipo-pend',[...new Set(PENDIENTES.map(p=>p.tipo).filter(Boolean))].sort(),'Tipo');
+  fill('filter-dif-hecho',[...new Set(HECHOS.map(h=>h.dificultad).filter(Boolean))].sort(),'Dificultad');
+  document.getElementById('badge-pend').textContent=PENDIENTES.length;
+  document.getElementById('badge-hecho').textContent=HECHOS.length;
+}
+
+function renderStats(){
+  const avg=HECHOS.length?(HECHOS.reduce((s,h)=>s+parseFloat(h.valoracion||0),0)/HECHOS.length).toFixed(1):'—';
+  const hrs=Math.round(HECHOS.reduce((s,h)=>s+(parseInt(h.duracion)||0),0)/60);
+  document.getElementById('stats-bar').innerHTML=`
+    <div class="stat-item"><span class="stat-num">${HECHOS.length}</span><span class="stat-label">Completados</span></div>
+    <div class="stat-item"><span class="stat-num">${PENDIENTES.length}</span><span class="stat-label">Pendientes</span></div>
+    <div class="stat-item"><span class="stat-num">${HECHOS.length+PENDIENTES.length}</span><span class="stat-label">Total</span></div>
+    <div class="stat-item"><span class="stat-num">${avg}</span><span class="stat-label">Media grupo</span></div>
+    <div class="stat-item"><span class="stat-num">${hrs}h</span><span class="stat-label">Horas jugadas</span></div>`;
+}
+
+function switchTab(t){
+  ['pendientes','hechos','ranking'].forEach(x=>{
+    document.getElementById('panel-'+x).style.display=x===t?'block':'none';
+    const id=x==='pendientes'?'pend':x==='hechos'?'hecho':'rank';
+    document.getElementById('tab-'+id).classList.toggle('active',x===t);
+  });
+}
+
+function setSortPend(s){
+  sortPend=s;
+  document.querySelectorAll('[id^="sort-pend-"]').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sort-pend-'+s).classList.add('active');
+  renderPendientes();
+}
+
+function clearFilters(w){
+  if(w==='pend'){['search-pend','filter-ciudad-pend','filter-dif-pend','filter-tipo-pend'].forEach(id=>{document.getElementById(id).value='';});renderPendientes();}
+  else{document.getElementById('search-hecho').value='';document.getElementById('filter-dif-hecho').value='';renderHechos();}
+}
+
+function cardPend(p,i){return`<div class="room-card" style="animation-delay:${i*.04}s">
+  <div class="card-header"><div class="room-name">${p.nombre}</div>${p.rating?`<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>`:''}</div>
+  <div class="empresa">${p.empresa}</div>
+  <div class="card-tags">${p.ciudad?`<span class="tag tag-city">📍 ${p.ciudad}</span>`:''}${p.tematica?`<span class="tag tag-tema">${p.tematica}</span>`:''}</div>
+  ${p.tipo?`<div class="card-tags"><span class="tag tag-tipo">${p.tipo}</span></div>`:''}
+  <div class="card-meta">
+    ${p.duracion?`<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>`:''}
+    ${p.dificultad?`<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>`:''}
+  </div>
+  <div class="card-footer">
+    ${p.web?`<a class="web-link" href="${p.web}" target="_blank">Ver web</a>`:'<span></span>'}
+    <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
+  </div>
+</div>`;}
+
+function cardHecho(h,i){return`<div class="room-card" style="animation-delay:${i*.06}s">
+  <div class="card-header"><div class="room-name">${h.nombre}</div><div class="rank-badge ${h.ranking===1?'rank-1':''}">#${h.ranking}</div></div>
+  <div class="empresa">${h.empresa}</div>
+  <div class="card-tags">${h.ciudad?`<span class="tag tag-city">📍 ${h.ciudad}</span>`:''}${h.tematica?`<span class="tag tag-tema">${h.tematica}</span>`:''}</div>
+  ${h.tipo?`<div class="card-tags"><span class="tag tag-tipo">${h.tipo}</span></div>`:''}
+  <div class="card-meta">
+    ${h.duracion?`<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${h.duracion} min</span></div>`:''}
+    ${h.dificultad?`<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(h.dificultad)}">⚠ ${h.dificultad}</span></div>`:''}
+    ${h.rating?`<div class="meta-item"><span class="meta-key">Rating Escapistas</span><span class="meta-val">★ ${h.rating}</span></div>`:''}
+    ${h.valoracion?`<div class="meta-item"><span class="meta-key">Valoración Grupo</span><span class="meta-val" style="color:var(--amber)">★ ${h.valoracion}/10</span></div>`:''}
+  </div>
+  ${h.valoracion?`<div class="group-score"><span class="group-score-label">Puntuación del grupo</span><span class="group-score-val">${h.valoracion}<span style="font-size:.75rem;color:var(--text3)">/10</span></span></div>`:''}
+  <div class="card-footer" style="margin-top:10px">
+    ${h.web?`<a class="web-link" href="${h.web}" target="_blank">Ver web</a>`:'<span></span>'}
+    <span class="tag tag-tipo" style="background:rgba(245,166,35,.07);color:var(--amber)">✅ Completado</span>
+  </div>
+</div>`;}
+
+function renderPendientes(){
+  const s=document.getElementById('search-pend').value.toLowerCase();
+  const c=document.getElementById('filter-ciudad-pend').value;
+  const d=document.getElementById('filter-dif-pend').value;
+  const t=document.getElementById('filter-tipo-pend').value;
+  let f=PENDIENTES.filter(p=>{
+    if(s&&![p.nombre,p.empresa,p.tematica].some(x=>(x||'').toLowerCase().includes(s)))return false;
+    if(c&&p.ciudad!==c)return false;
+    if(d&&p.dificultad!==d)return false;
+    if(t&&p.tipo!==t)return false;
+    return true;
+  });
+  if(sortPend==='rating')f.sort((a,b)=>parseFloat(b.rating||0)-parseFloat(a.rating||0));
+  else if(sortPend==='name')f.sort((a,b)=>a.nombre.localeCompare(b.nombre));
+  else if(sortPend==='dur')f.sort((a,b)=>parseInt(b.duracion||0)-parseInt(a.duracion||0));
+  else if(sortPend==='dif')f.sort((a,b)=>do_(b.dificultad)-do_(a.dificultad));
+  document.getElementById('result-info-pend').textContent=`Mostrando ${f.length} de ${PENDIENTES.length} escape rooms`;
+  const g=document.getElementById('grid-pendientes');
+  g.innerHTML=f.length?f.map(cardPend).join(''):`<div class="empty-state"><div class="lock">🔒</div><p>NO SE ENCONTRARON RESULTADOS</p></div>`;
+}
+
+function renderHechos(){
+  const s=document.getElementById('search-hecho').value.toLowerCase();
+  const d=document.getElementById('filter-dif-hecho').value;
+  let f=HECHOS.filter(h=>{
+    if(s&&![h.nombre,h.empresa].some(x=>(x||'').toLowerCase().includes(s)))return false;
+    if(d&&h.dificultad!==d)return false;
+    return true;
+  });
+  f.sort((a,b)=>a.ranking-b.ranking);
+  document.getElementById('result-info-hecho').textContent=`${f.length} escape rooms completados`;
+  document.getElementById('grid-hechos').innerHTML=f.map(cardHecho).join('');
+}
+
+function renderRanking(){
+  const s=[...HECHOS].sort((a,b)=>a.ranking-b.ranking);
+  const medals=['gold','silver','bronze'],emoji=['🥇','🥈','🥉'];
+  document.getElementById('ranking-table').innerHTML=`
+    <thead><tr><th>#</th><th>Escape Room</th><th>Empresa</th><th>Temática</th><th>Dificultad</th><th>⏱ Min</th><th>★ Escapistas</th><th>★ Grupo</th></tr></thead>
+    <tbody>${s.map((h,i)=>`<tr>
+      <td><span class="rank-pos ${medals[i]||''}">${emoji[i]||'#'+(i+1)}</span></td>
+      <td style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--text)">${h.nombre}</td>
+      <td>${h.empresa}</td>
+      <td><span class="tag tag-tema" style="font-size:.7rem">${h.tematica}</span></td>
+      <td><span class="meta-val ${dc(h.dificultad)}" style="font-size:.82rem">⚠ ${h.dificultad}</span></td>
+      <td>${h.duracion}</td>
+      <td>★ ${h.rating}</td>
+      <td style="font-family:'Cinzel',serif;color:var(--amber);font-size:1rem">★ ${h.valoracion}</td>
+    </tr>`).join('')}</tbody>`;
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+#!/usr/bin/env python3
+"""
+Convierte escape_rooms.xlsx → data.json
+Ejecutado automáticamente por GitHub Actions.
+"""
+
+import json
+import sys
+import glob
+import openpyxl
+
+# ── Buscar el archivo Excel en el repo ───────────────────────────────────────
+xlsx_files = glob.glob("*.xlsx") + glob.glob("*.xls")
+if not xlsx_files:
+    print("❌ No se encontró ningún archivo .xlsx en el repositorio.")
+    sys.exit(1)
+
+EXCEL_FILE = xlsx_files[0]
+print(f"📂 Leyendo: {EXCEL_FILE}")
+
+wb = openpyxl.load_workbook(EXCEL_FILE, data_only=True)
+
+# ── Detectar hojas ────────────────────────────────────────────────────────────
+sheet_names = wb.sheetnames
+pend_name  = next((s for s in sheet_names if "pend" in s.lower()), sheet_names[0])
+hecho_name = next((s for s in sheet_names if any(x in s.lower() for x in ["hech","done","complet"])), sheet_names[1] if len(sheet_names) > 1 else sheet_names[0])
+
+print(f"   Hoja Pendientes : {pend_name}")
+print(f"   Hoja Hechos     : {hecho_name}")
+
+# ── Mapa de columnas (flexible) ───────────────────────────────────────────────
+COL_ALIASES = {
+    "nombre":     ["nombre del escape", "nombre", "name", "escape"],
+    "empresa":    ["empresa", "company"],
+    "ciudad":     ["ciudad", "city", "location"],
+    "tematica":   ["temática", "tematica", "theme", "tema"],
+    "tipo":       ["tipo", "type"],
+    "duracion":   ["duración", "duracion", "duración (min)", "duration", "min"],
+    "dificultad": ["dificultad", "difficulty"],
+    "rating":     ["valoración", "valoracion", "rating escapistas", "rating", "score"],
+    "web":        ["web", "url", "link"],
+    "valoracion": ["valoración grupo", "valoracion grupo", "group rating", "puntuación", "puntuacion"],
+}
+
+def find_col(headers, key):
+    aliases = COL_ALIASES.get(key, [key])
+    for alias in aliases:
+        for i, h in enumerate(headers):
+            if h and str(h).strip().lower() == alias.lower():
+                return i
+    return -1
+
+def parse_sheet(ws):
+    rows = list(ws.iter_rows(values_only=True))
+    if not rows:
+        return []
+    headers = [str(h).strip() if h is not None else "" for h in rows[0]]
+    col_map = {key: find_col(headers, key) for key in COL_ALIASES}
+
+    result = []
+    for row in rows[1:]:
+        nombre_idx = col_map["nombre"]
+        if nombre_idx < 0 or nombre_idx >= len(row):
+            continue
+        if row[nombre_idx] is None or str(row[nombre_idx]).strip() == "":
+            continue
+
+        obj = {}
+        for key, idx in col_map.items():
+            val = ""
+            if idx >= 0 and idx < len(row) and row[idx] is not None:
+                val = str(row[idx]).strip()
+            obj[key] = val
+        result.append(obj)
+    return result
+
+# ── Parsear hojas ─────────────────────────────────────────────────────────────
+pendientes = parse_sheet(wb[pend_name])
+hechos_raw = parse_sheet(wb[hecho_name])
+hechos = [h for h in hechos_raw if h["nombre"]]
+
+# Calcular ranking por valoración grupo
+hechos_sorted = sorted(hechos, key=lambda h: float(h["valoracion"]) if h["valoracion"] else 0, reverse=True)
+for h in hechos:
+    h["ranking"] = next((i + 1 for i, x in enumerate(hechos_sorted) if x["nombre"] == h["nombre"]), 0)
+
+# ── Escribir data.json ────────────────────────────────────────────────────────
+data = {
+    "pendientes": pendientes,
+    "hechos": hechos,
+    "meta": {
+        "source": EXCEL_FILE,
+        "pendientes_count": len(pendientes),
+        "hechos_count": len(hechos),
+    }
+}
+
+with open("data.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+print(f"✅ data.json generado → {len(pendientes)} pendientes, {len(hechos)} hechos.")
