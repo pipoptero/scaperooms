@@ -110,9 +110,14 @@
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
 
   /* ── FAV BUTTON ── */
-  .fav-btn{background:transparent;border:none;padding:0 2px;cursor:pointer;font-size:1.5rem;line-height:1;transition:all .2s;flex-shrink:0;color:var(--border);}
-  .fav-btn:hover{color:rgba(230,57,70,.6);transform:scale(1.2);}
+  .fav-btn{background:transparent;border:none;padding:0 2px;cursor:pointer;font-size:1.5rem;line-height:1;transition:all .2s;flex-shrink:0;color:var(--border);display:flex;align-items:center;gap:4px;}
+  .fav-btn:hover{color:rgba(230,57,70,.6);transform:scale(1.1);}
   .fav-btn.active{color:var(--red);}
+  .fav-btn.active .fav-heart{animation:pop .25s ease;}
+  .fav-heart{font-size:1.5rem;line-height:1;}
+  .fav-likes{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);transition:color .2s;line-height:1;margin-top:2px;}
+  .fav-btn.active .fav-likes{color:var(--red);}
+  .fav-btn:hover .fav-likes{color:rgba(230,57,70,.6);}
   .room-card.is-fav{border-color:rgba(230,57,70,.3);}
   .room-card.is-fav::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
   .sort-btn.fav-filter{border-color:rgba(230,57,70,.3);color:var(--red);}
@@ -302,7 +307,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -491,8 +496,8 @@ async function loadData() {
       document.getElementById('update-date').textContent =
         new Date(lastMod).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
     }
-    // Cargar votos en paralelo
-    await loadVotes();
+    // Cargar votos y likes en paralelo
+    await Promise.all([loadVotes(), loadLikes()]);
 
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -566,32 +571,80 @@ function clearFilters(w) {
   }
 }
 
-// ── Favoritos ─────────────────────────────────────────────────────────────────
+// ── Likes / Favoritos (Firebase) ─────────────────────────────────────────────
+// likesCache: { slug: { userId: true, ... }, ... }
+let likesCache = {};
+// Local set para saber qué ha marcado ESTE usuario (también en localStorage como fallback)
 let FAVS = new Set(JSON.parse(localStorage.getItem('er_favs') || '[]'));
 let showOnlyFavs = false;
 
-function saveFavs() {
+function likeCount(slug) {
+  return Object.keys(likesCache[slug] || {}).length;
+}
+
+function iLiked(slug) {
+  return FAVS.has(slug);
+}
+
+async function loadLikes() {
+  if (!FIREBASE_ENABLED) return;
+  try {
+    const data = await fbGet('likes');
+    if (data) likesCache = data;
+    // Sincronizar FAVS con lo que haya en Firebase para este usuario
+    FAVS = new Set(
+      Object.entries(likesCache)
+        .filter(([, users]) => users && users[USER_ID])
+        .map(([slug]) => slug)
+    );
+    localStorage.setItem('er_favs', JSON.stringify([...FAVS]));
+  } catch(e) {
+    console.warn('No se pudieron cargar los likes:', e.message);
+  }
+}
+
+async function toggleFav(slug, btn) {
+  const wasLiked = iLiked(slug);
+
+  // Optimistic update
+  if (!likesCache[slug]) likesCache[slug] = {};
+  if (wasLiked) {
+    delete likesCache[slug][USER_ID];
+    FAVS.delete(slug);
+  } else {
+    likesCache[slug][USER_ID] = true;
+    FAVS.add(slug);
+  }
   localStorage.setItem('er_favs', JSON.stringify([...FAVS]));
+
+  // Actualizar UI inmediatamente
+  const card = btn.closest('.room-card');
+  const likesEl = btn.querySelector('.fav-likes');
+  const count = likeCount(slug);
+  btn.classList.toggle('active', !wasLiked);
+  card.classList.toggle('is-fav', !wasLiked);
+  if (likesEl) likesEl.textContent = count > 0 ? count : '';
+
   updateFavCount();
+  if (showOnlyFavs) renderPendientes();
+
+  // Persistir en Firebase
+  if (FIREBASE_ENABLED) {
+    try {
+      if (wasLiked) {
+        await fetch(`${FIREBASE_URL}/likes/${slug}/${USER_ID}.json`, { method: 'DELETE' });
+      } else {
+        await fbPut(`likes/${slug}/${USER_ID}`, true);
+      }
+    } catch(e) {
+      console.warn('Error al guardar like:', e.message);
+    }
+  }
 }
 
 function updateFavCount() {
   const el = document.getElementById('fav-count');
   if (el) el.textContent = FAVS.size > 0 ? `(${FAVS.size})` : '';
-}
-
-function toggleFav(slug, btn) {
-  if (FAVS.has(slug)) {
-    FAVS.delete(slug);
-    btn.classList.remove('active');
-    btn.closest('.room-card').classList.remove('is-fav');
-  } else {
-    FAVS.add(slug);
-    btn.classList.add('active');
-    btn.closest('.room-card').classList.add('is-fav');
-  }
-  saveFavs();
-  if (showOnlyFavs) renderPendientes();
 }
 
 function toggleFavFilter() {
@@ -626,7 +679,9 @@ function cardPend(p, i) {
   return `<div class="room-card" style="animation-delay:${i*.04}s">
   <div class="card-header">
     <div class="room-name">${p.nombre}</div>
-    <button class="fav-btn ${FAVS.has(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Marcar como favorito">♥</button>
+    <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
+      <span class="fav-heart">♥</span><span class="fav-likes">${likeCount(slug) > 0 ? likeCount(slug) : ''}</span>
+    </button>
     ${p.rating ? `<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>` : ''}
   </div>
   <div class="empresa">${p.empresa}</div>
@@ -722,7 +777,7 @@ function renderPendientes() {
     if (c && p.ciudad !== c) return false;
     if (d && p.dificultad !== d) return false;
     if (t && p.tipo !== t) return false;
-    if (showOnlyFavs && !FAVS.has(slugify(p.nombre))) return false;
+    if (showOnlyFavs && !iLiked(slugify(p.nombre))) return false;
     return true;
   });
   if      (sortPend==='rating') f.sort((a,b)=>(parseFloat(b.rating)||0)-(parseFloat(a.rating)||0));
