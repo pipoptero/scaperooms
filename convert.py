@@ -87,12 +87,15 @@ def safe_num(val):
     except ValueError:
         return ""
 
-def parse_sheet(ws):
+def parse_sheet(ws, debug_fields=None):
     rows = list(ws.iter_rows(values_only=True))
     if not rows:
         return []
     headers = [str(h).strip() if h is not None else "" for h in rows[0]]
     col_map = {key: find_col(headers, key) for key in COL_ALIASES}
+
+    # Debug: mostrar qué columnas se detectaron
+    print(f"   Columnas detectadas: { {k: (headers[v] if v >= 0 else 'NO ENCONTRADA') for k, v in col_map.items() if v >= 0} }")
 
     result = []
     for row in rows[1:]:
@@ -106,14 +109,23 @@ def parse_sheet(ws):
         for key, idx in col_map.items():
             val = ""
             if idx >= 0 and idx < len(row) and row[idx] is not None:
-                val = safe_num(row[idx]) if key in NUMERIC_FIELDS else safe_str(row[idx])
+                raw = row[idx]
+                if key in NUMERIC_FIELDS:
+                    val = safe_num(raw)
+                    # Debug campos numéricos problemáticos
+                    if debug_fields and key in debug_fields and raw != "" and raw is not None:
+                        print(f"   [{key}] raw={repr(raw)} ({type(raw).__name__}) → {repr(val)}")
+                else:
+                    val = safe_str(raw)
             obj[key] = val
         result.append(obj)
     return result
 
 # ── Parsear hojas ─────────────────────────────────────────────────────────────
-pendientes = parse_sheet(wb[pend_name])
-hechos_raw = parse_sheet(wb[hecho_name])
+print(f"\n📋 Hoja Pendientes:")
+pendientes = parse_sheet(wb[pend_name], debug_fields={"rating"})
+print(f"\n📋 Hoja Hechos:")
+hechos_raw = parse_sheet(wb[hecho_name], debug_fields={"valoracion"})
 hechos = [h for h in hechos_raw if h["nombre"]]
 
 # Calcular ranking por valoración grupo (robusto ante valores no numéricos)
