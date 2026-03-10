@@ -69,8 +69,9 @@ def safe_str(val):
         return ""
     return s
 
-# Campos que deben guardarse como número (float) en el JSON
-NUMERIC_FIELDS = {"rating", "duracion", "valoracion", "historia", "ambientacion", "jugabilidad", "gamemaster"}
+# Campos numéricos: float para notas, int para conteos/duraciones
+NUMERIC_FIELDS  = {"rating", "duracion", "valoracion", "historia", "ambientacion", "jugabilidad", "gamemaster"}
+INTEGER_FIELDS  = {"duracion", "max_personas"}
 
 def safe_num(val):
     """Convierte un valor a float limpio.
@@ -114,8 +115,10 @@ def parse_sheet(ws, debug_fields=None):
             val = ""
             if idx >= 0 and idx < len(row) and row[idx] is not None:
                 raw = row[idx]
-                if key in NUMERIC_FIELDS:
+                if key in NUMERIC_FIELDS or key in INTEGER_FIELDS:
                     val = safe_num(raw)
+                    if key in INTEGER_FIELDS and isinstance(val, float):
+                        val = int(val)
                     # Debug campos numéricos problemáticos
                     if debug_fields and key in debug_fields and raw != "" and raw is not None:
                         print(f"   [{key}] raw={repr(raw)} ({type(raw).__name__}) → {repr(val)}")
