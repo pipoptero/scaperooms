@@ -111,13 +111,13 @@
 
   /* ── FAV BUTTON ── */
   .fav-btn{background:transparent;border:none;padding:0;cursor:pointer;line-height:1;transition:all .2s;flex-shrink:0;color:var(--border);display:flex;flex-direction:column;align-items:center;gap:2px;}
-  .fav-btn:hover{color:rgba(230,57,70,.6);transform:scale(1.1);}
-  .fav-btn.active{color:var(--red);}
-  .fav-btn.active .fav-heart{animation:pop .25s ease;}
-  .fav-heart{font-size:1.5rem;line-height:1;}
-  .fav-likes{font-family:'Share Tech Mono',monospace;font-size:.62rem;font-weight:700;color:var(--text2);line-height:1;min-width:16px;text-align:center;}
-  .fav-btn.active .fav-likes{color:var(--red);}
-  .fav-btn:hover .fav-likes{color:rgba(230,57,70,.7);}
+  .fav-btn:hover{transform:scale(1.1);}
+  .fav-btn:hover .fav-heart{color:rgba(230,57,70,.7);}
+  .fav-btn.active .fav-heart{color:var(--red);animation:pop .25s ease;}
+  .fav-heart{font-size:1.5rem;line-height:1;color:var(--border);transition:color .2s;}
+  .fav-likes{font-family:'Share Tech Mono',monospace;font-size:.68rem;font-weight:700;color:var(--text);line-height:1;min-width:16px;text-align:center;background:rgba(255,255,255,.06);border:1px solid var(--border);padding:1px 5px;border-radius:10px;}
+  .fav-btn.active .fav-likes{color:var(--red);border-color:rgba(230,57,70,.4);background:rgba(230,57,70,.08);}
+  .fav-btn:hover .fav-likes{border-color:rgba(230,57,70,.3);}
   .room-card.is-fav{border-color:rgba(230,57,70,.3);}
   .room-card.is-fav::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
   .sort-btn.fav-filter{border-color:rgba(230,57,70,.3);color:var(--red);}
@@ -505,6 +505,7 @@ async function loadData() {
 
     populateFilters(); renderStats(); renderPendientes(); renderHechos(); renderRanking();
     updateFavCount();
+    refreshAllLikeCounts();
   } catch(err) {
     document.getElementById('loading').style.display = 'none';
     const es = document.getElementById('error-screen');
@@ -601,6 +602,22 @@ async function loadLikes() {
   } catch(e) {
     console.warn('No se pudieron cargar los likes:', e.message);
   }
+}
+
+// Refresca todos los contadores y estados de corazón ya renderizados en el DOM
+function refreshAllLikeCounts() {
+  document.querySelectorAll('.fav-btn').forEach(btn => {
+    const onclick = btn.getAttribute('onclick') || '';
+    const m = onclick.match(/toggleFav\('([^']+)'/);
+    if (!m) return;
+    const slug = m[1];
+    const likesEl = btn.querySelector('.fav-likes');
+    const heartEl = btn.querySelector('.fav-heart');
+    if (likesEl) likesEl.textContent = likeCount(slug);
+    btn.classList.toggle('active', iLiked(slug));
+    btn.closest('.room-card')?.classList.toggle('is-fav', iLiked(slug));
+  });
+  updateFavCount();
 }
 
 async function toggleFav(slug, btn) {
