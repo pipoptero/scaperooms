@@ -60,16 +60,32 @@ def safe_str(val):
     """Convierte un valor de celda a string limpio, ignorando fechas y valores no textuales."""
     if val is None:
         return ""
-    # Si es fecha u objeto datetime, ignorar
     import datetime
     if isinstance(val, (datetime.date, datetime.datetime)):
         return ""
     s = str(val).strip()
-    # Detectar strings con formato de fecha (ej: "2026-05-09 00:00:00")
     import re
     if re.match(r'^\d{4}-\d{2}-\d{2}', s):
         return ""
     return s
+
+# Campos que deben guardarse como número (float) en el JSON
+NUMERIC_FIELDS = {"rating", "duracion", "valoracion", "historia", "ambientacion", "jugabilidad", "gamemaster"}
+
+def safe_num(val):
+    """Convierte un valor a float limpio, soportando coma como separador decimal."""
+    if val is None:
+        return ""
+    import datetime
+    if isinstance(val, (datetime.date, datetime.datetime)):
+        return ""
+    if isinstance(val, (int, float)):
+        return val
+    s = str(val).strip().replace(",", ".")
+    try:
+        return float(s)
+    except ValueError:
+        return ""
 
 def parse_sheet(ws):
     rows = list(ws.iter_rows(values_only=True))
@@ -90,7 +106,7 @@ def parse_sheet(ws):
         for key, idx in col_map.items():
             val = ""
             if idx >= 0 and idx < len(row) and row[idx] is not None:
-                val = safe_str(row[idx])
+                val = safe_num(row[idx]) if key in NUMERIC_FIELDS else safe_str(row[idx])
             obj[key] = val
         result.append(obj)
     return result

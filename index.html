@@ -292,7 +292,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -678,7 +678,7 @@ function renderPendientes() {
     if (t && p.tipo !== t) return false;
     return true;
   });
-  if      (sortPend==='rating') f.sort((a,b)=>parseFloat(b.rating||0)-parseFloat(a.rating||0));
+  if      (sortPend==='rating') f.sort((a,b)=>(parseFloat(b.rating)||0)-(parseFloat(a.rating)||0));
   else if (sortPend==='name')   f.sort((a,b)=>a.nombre.localeCompare(b.nombre));
   else if (sortPend==='dur')    f.sort((a,b)=>parseInt(b.duracion||0)-parseInt(a.duracion||0));
   else if (sortPend==='dif')    f.sort((a,b)=>do_(b.dificultad)-do_(a.dificultad));
