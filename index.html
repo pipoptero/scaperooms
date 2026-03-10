@@ -109,6 +109,24 @@
   .group-score-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;}
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
 
+  /* ── FAV BUTTON ── */
+  .fav-btn{background:transparent;border:1px solid var(--border);padding:5px 10px;cursor:pointer;font-size:1rem;line-height:1;transition:all .2s;flex-shrink:0;color:var(--text3);}
+  .fav-btn:hover{border-color:rgba(230,57,70,.4);color:var(--red);}
+  .fav-btn.active{border-color:rgba(230,57,70,.5);background:rgba(230,57,70,.08);color:var(--red);}
+  .fav-btn.active::after{content:' guardado';}
+  .room-card.is-fav{border-color:rgba(230,57,70,.3);}
+  .room-card.is-fav::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
+  .sort-btn.fav-filter{border-color:rgba(230,57,70,.3);color:var(--red);}
+  .sort-btn.fav-filter.active{background:rgba(230,57,70,.08);border-color:var(--red);}
+
+  /* ── RADAR CHART ── */
+  .rv-radar{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:4px;}
+  .rv-radar svg{overflow:visible;}
+  .radar-grid{fill:none;stroke:var(--border);stroke-width:1;}
+  .radar-area{fill:rgba(245,166,35,.12);stroke:var(--amber);stroke-width:1.5;stroke-linejoin:round;}
+  .radar-dot{fill:var(--amber);}
+  .radar-label{font-family:'Share Tech Mono',monospace;font-size:8px;fill:var(--text3);letter-spacing:.05em;text-anchor:middle;dominant-baseline:middle;}
+
   /* ── REVIEW LIST (Hechos) ── */
   .reviews-list{display:flex;flex-direction:column;gap:2px;}
   .review-row{display:grid;grid-template-columns:60px 1fr 1fr;gap:0;border:1px solid var(--border);background:var(--bg2);animation:fadeUp .3s ease both;transition:border-color .2s;}
@@ -260,6 +278,7 @@
         <button class="sort-btn" id="sort-pend-name" onclick="setSortPend('name')">A→Z</button>
         <button class="sort-btn" id="sort-pend-dur"  onclick="setSortPend('dur')">⏱ Duración</button>
         <button class="sort-btn" id="sort-pend-dif"  onclick="setSortPend('dif')">⚠ Dificultad</button>
+        <button class="sort-btn fav-filter" id="sort-pend-fav" onclick="toggleFavFilter()" title="Mostrar solo favoritos">♥ Favoritos <span id="fav-count"></span></button>
       </div>
       <div class="divider-line"></div>
       <div class="result-info" id="result-info-pend"></div>
@@ -290,9 +309,9 @@
 // ════════════════════════════════════════════════════════════
 //  🔥 CONFIGURACIÓN FIREBASE
 //  Rellena con tus datos de Firebase Realtime Database.
-//  Deja FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app' si no quieres usar votaciones.
+//  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -489,6 +508,7 @@ async function loadData() {
     if (!FIREBASE_ENABLED) document.getElementById('setup-banner').style.display = 'block';
 
     populateFilters(); renderStats(); renderPendientes(); renderHechos(); renderRanking();
+    updateFavCount();
   } catch(err) {
     document.getElementById('loading').style.display = 'none';
     const es = document.getElementById('error-screen');
@@ -555,6 +575,107 @@ function clearFilters(w) {
   }
 }
 
+// ── Favoritos ─────────────────────────────────────────────────────────────────
+let FAVS = new Set(JSON.parse(localStorage.getItem('er_favs') || '[]'));
+let showOnlyFavs = false;
+
+function saveFavs() {
+  localStorage.setItem('er_favs', JSON.stringify([...FAVS]));
+  updateFavCount();
+}
+
+function updateFavCount() {
+  const el = document.getElementById('fav-count');
+  if (el) el.textContent = FAVS.size > 0 ? `(${FAVS.size})` : '';
+}
+
+function toggleFav(slug, btn) {
+  if (FAVS.has(slug)) {
+    FAVS.delete(slug);
+    btn.classList.remove('active');
+    btn.closest('.room-card').classList.remove('is-fav');
+  } else {
+    FAVS.add(slug);
+    btn.classList.add('active');
+    btn.closest('.room-card').classList.add('is-fav');
+  }
+  saveFavs();
+  if (showOnlyFavs) renderPendientes();
+}
+
+function toggleFavFilter() {
+  showOnlyFavs = !showOnlyFavs;
+  document.getElementById('sort-pend-fav').classList.toggle('active', showOnlyFavs);
+  renderPendientes();
+}
+
+// ── Radar chart SVG ───────────────────────────────────────────────────────────
+function radarChart(h) {
+  const cats = [
+    { label: 'Historia',     val: parseFloat(h.historia)     || 0 },
+    { label: 'Ambient.',     val: parseFloat(h.ambientacion) || 0 },
+    { label: 'Jugabilidad',  val: parseFloat(h.jugabilidad)  || 0 },
+    { label: 'Game Master',  val: parseFloat(h.gamemaster)   || 0 },
+  ];
+  if (cats.every(c => c.val === 0)) return '';
+
+  const cx = 80, cy = 80, R = 58, n = cats.length;
+  const levels = [0.25, 0.5, 0.75, 1.0];
+
+  // Polygon points for a given scale
+  function polyPoints(scale) {
+    return cats.map((_, i) => {
+      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+      const r = R * scale;
+      return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+    }).join(' ');
+  }
+
+  // Grid polygons
+  const grid = levels.map(s =>
+    `<polygon class="radar-grid" points="${polyPoints(s)}"/>`
+  ).join('');
+
+  // Axis lines
+  const axes = cats.map((_, i) => {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const x2 = cx + R * Math.cos(angle), y2 = cy + R * Math.sin(angle);
+    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--border)" stroke-width="1"/>`;
+  }).join('');
+
+  // Data polygon
+  const dataPoints = cats.map((c, i) => {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const r = R * (c.val / 10);
+    return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
+  }).join(' ');
+
+  // Dots
+  const dots = cats.map((c, i) => {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const r = R * (c.val / 10);
+    return `<circle class="radar-dot" cx="${cx + r * Math.cos(angle)}" cy="${cy + r * Math.sin(angle)}" r="3"/>`;
+  }).join('');
+
+  // Labels with values
+  const labels = cats.map((c, i) => {
+    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
+    const lr = R + 18;
+    const lx = cx + lr * Math.cos(angle), ly = cy + lr * Math.sin(angle);
+    return `<text class="radar-label" x="${lx}" y="${ly - 5}">${c.label}</text>
+            <text class="radar-label" x="${lx}" y="${ly + 7}" style="fill:var(--amber);font-size:9px">${c.val}</text>`;
+  }).join('');
+
+  return `<div class="rv-radar">
+    <div class="rv-opinion-label">Valoración por categorías</div>
+    <svg width="160" height="160" viewBox="0 0 160 160">
+      ${grid}${axes}
+      <polygon class="radar-area" points="${dataPoints}"/>
+      ${dots}${labels}
+    </svg>
+  </div>`;
+}
+
 // ── Helper: estrellas de categoría (escala 0-10) ──────────────────────────────
 function catStars(label, rawVal) {
   if (!rawVal) return '';
@@ -598,7 +719,10 @@ function cardPend(p, i) {
   ${voteWidget(slug)}
   <div class="card-footer">
     ${p.web ? `<a class="web-link" href="${p.web}" target="_blank">Ver web</a>` : '<span></span>'}
-    <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
+    <div style="display:flex;align-items:center;gap:8px">
+      <button class="fav-btn ${FAVS.has(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Marcar como favorito">♥</button>
+      <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
+    </div>
   </div>
 </div>`;
 }
@@ -651,14 +775,7 @@ function cardHecho(h, rank) {
       <div class="rv-opinion-text ${!h.descripcion ? 'empty' : ''}">
         ${h.descripcion || 'Sin descripción añadida aún.'}
       </div>
-      ${(h.historia || h.ambientacion || h.jugabilidad || h.gamemaster) ? `
-      <div class="rv-opinion-label" style="margin-top:12px">Valoración por categorías</div>
-      <div class="rv-cats">
-        ${catStars('Historia',     h.historia)}
-        ${catStars('Ambientación', h.ambientacion)}
-        ${catStars('Jugabilidad',  h.jugabilidad)}
-        ${catStars('Game Master',  h.gamemaster)}
-      </div>` : ''}
+      ${radarChart(h)}
       ${h.web ? `<a class="rv-web" href="${h.web}" target="_blank">Ver web</a>` : ''}
     </div>
 
@@ -676,15 +793,16 @@ function renderPendientes() {
     if (c && p.ciudad !== c) return false;
     if (d && p.dificultad !== d) return false;
     if (t && p.tipo !== t) return false;
+    if (showOnlyFavs && !FAVS.has(slugify(p.nombre))) return false;
     return true;
   });
   if      (sortPend==='rating') f.sort((a,b)=>(parseFloat(b.rating)||0)-(parseFloat(a.rating)||0));
   else if (sortPend==='name')   f.sort((a,b)=>a.nombre.localeCompare(b.nombre));
   else if (sortPend==='dur')    f.sort((a,b)=>parseInt(b.duracion||0)-parseInt(a.duracion||0));
   else if (sortPend==='dif')    f.sort((a,b)=>do_(b.dificultad)-do_(a.dificultad));
-  document.getElementById('result-info-pend').textContent = `Mostrando ${f.length} de ${PENDIENTES.length} escape rooms`;
+  document.getElementById('result-info-pend').textContent = `Mostrando ${f.length} de ${PENDIENTES.length} escape rooms${showOnlyFavs ? ' · solo favoritos' : ''}`;
   const g = document.getElementById('grid-pendientes');
-  g.innerHTML = f.length ? f.map(cardPend).join('') : `<div class="empty-state"><div class="lock">🔒</div><p>NO SE ENCONTRARON RESULTADOS</p></div>`;
+  g.innerHTML = f.length ? f.map(cardPend).join('') : `<div class="empty-state"><div class="lock">🔒</div><p>${showOnlyFavs ? 'NO HAY FAVORITOS AÚN — PULSA ♥ EN UNA TARJETA' : 'NO SE ENCONTRARON RESULTADOS'}</p></div>`;
 }
 
 function renderHechos() {
