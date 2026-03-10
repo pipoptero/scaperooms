@@ -119,14 +119,6 @@
   .sort-btn.fav-filter{border-color:rgba(230,57,70,.3);color:var(--red);}
   .sort-btn.fav-filter.active{background:rgba(230,57,70,.08);border-color:var(--red);}
 
-  /* ── RADAR CHART ── */
-  .rv-radar{display:flex;flex-direction:column;align-items:center;gap:6px;margin-top:4px;}
-  .rv-radar svg{overflow:visible;}
-  .radar-grid{fill:none;stroke:var(--border);stroke-width:1;}
-  .radar-area{fill:rgba(245,166,35,.12);stroke:var(--amber);stroke-width:1.5;stroke-linejoin:round;}
-  .radar-dot{fill:var(--amber);}
-  .radar-label{font-family:'Share Tech Mono',monospace;font-size:8px;fill:var(--text3);letter-spacing:.05em;text-anchor:middle;dominant-baseline:middle;}
-
   /* ── REVIEW LIST (Hechos) ── */
   .reviews-list{display:flex;flex-direction:column;gap:2px;}
   .review-row{display:grid;grid-template-columns:60px 1fr 1fr;gap:0;border:1px solid var(--border);background:var(--bg2);animation:fadeUp .3s ease both;transition:border-color .2s;}
@@ -609,73 +601,6 @@ function toggleFavFilter() {
   renderPendientes();
 }
 
-// ── Radar chart SVG ───────────────────────────────────────────────────────────
-function radarChart(h) {
-  const cats = [
-    { label: 'Historia',     val: parseFloat(h.historia)     || 0 },
-    { label: 'Ambient.',     val: parseFloat(h.ambientacion) || 0 },
-    { label: 'Jugabilidad',  val: parseFloat(h.jugabilidad)  || 0 },
-    { label: 'Game Master',  val: parseFloat(h.gamemaster)   || 0 },
-  ];
-  if (cats.every(c => c.val === 0)) return '';
-
-  const cx = 80, cy = 80, R = 58, n = cats.length;
-  const levels = [0.25, 0.5, 0.75, 1.0];
-
-  // Polygon points for a given scale
-  function polyPoints(scale) {
-    return cats.map((_, i) => {
-      const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-      const r = R * scale;
-      return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
-    }).join(' ');
-  }
-
-  // Grid polygons
-  const grid = levels.map(s =>
-    `<polygon class="radar-grid" points="${polyPoints(s)}"/>`
-  ).join('');
-
-  // Axis lines
-  const axes = cats.map((_, i) => {
-    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const x2 = cx + R * Math.cos(angle), y2 = cy + R * Math.sin(angle);
-    return `<line x1="${cx}" y1="${cy}" x2="${x2}" y2="${y2}" stroke="var(--border)" stroke-width="1"/>`;
-  }).join('');
-
-  // Data polygon
-  const dataPoints = cats.map((c, i) => {
-    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const r = R * (c.val / 10);
-    return `${cx + r * Math.cos(angle)},${cy + r * Math.sin(angle)}`;
-  }).join(' ');
-
-  // Dots
-  const dots = cats.map((c, i) => {
-    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const r = R * (c.val / 10);
-    return `<circle class="radar-dot" cx="${cx + r * Math.cos(angle)}" cy="${cy + r * Math.sin(angle)}" r="3"/>`;
-  }).join('');
-
-  // Labels with values
-  const labels = cats.map((c, i) => {
-    const angle = (Math.PI * 2 * i / n) - Math.PI / 2;
-    const lr = R + 18;
-    const lx = cx + lr * Math.cos(angle), ly = cy + lr * Math.sin(angle);
-    return `<text class="radar-label" x="${lx}" y="${ly - 5}">${c.label}</text>
-            <text class="radar-label" x="${lx}" y="${ly + 7}" style="fill:var(--amber);font-size:9px">${c.val}</text>`;
-  }).join('');
-
-  return `<div class="rv-radar">
-    <div class="rv-opinion-label">Valoración por categorías</div>
-    <svg width="160" height="160" viewBox="0 0 160 160">
-      ${grid}${axes}
-      <polygon class="radar-area" points="${dataPoints}"/>
-      ${dots}${labels}
-    </svg>
-  </div>`;
-}
-
 // ── Helper: estrellas de categoría (escala 0-10) ──────────────────────────────
 function catStars(label, rawVal) {
   if (!rawVal) return '';
@@ -775,7 +700,14 @@ function cardHecho(h, rank) {
       <div class="rv-opinion-text ${!h.descripcion ? 'empty' : ''}">
         ${h.descripcion || 'Sin descripción añadida aún.'}
       </div>
-      ${radarChart(h)}
+      ${(h.historia || h.ambientacion || h.jugabilidad || h.gamemaster) ? `
+      <div class="rv-opinion-label" style="margin-top:12px">Valoración por categorías</div>
+      <div class="rv-cats">
+        ${catStars('Historia',     h.historia)}
+        ${catStars('Ambientación', h.ambientacion)}
+        ${catStars('Jugabilidad',  h.jugabilidad)}
+        ${catStars('Game Master',  h.gamemaster)}
+      </div>` : ''}
       ${h.web ? `<a class="rv-web" href="${h.web}" target="_blank">Ver web</a>` : ''}
     </div>
 
