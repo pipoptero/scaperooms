@@ -496,8 +496,8 @@ async function loadData() {
       document.getElementById('update-date').textContent =
         new Date(lastMod).toLocaleDateString('es-ES',{day:'2-digit',month:'short',year:'numeric'});
     }
-    // Cargar votos y likes en paralelo
-    await Promise.all([loadVotes(), loadLikes()]);
+    // Cargar votos primero (bloquea hasta tener datos para el ranking)
+    await loadVotes();
 
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
@@ -505,7 +505,9 @@ async function loadData() {
 
     populateFilters(); renderStats(); renderPendientes(); renderHechos(); renderRanking();
     updateFavCount();
-    refreshAllLikeCounts();
+
+    // Cargar likes DESPUÉS de pintar la UI y actualizar contadores
+    loadLikes().then(() => refreshAllLikeCounts());
   } catch(err) {
     document.getElementById('loading').style.display = 'none';
     const es = document.getElementById('error-screen');
@@ -606,16 +608,13 @@ async function loadLikes() {
 
 // Refresca todos los contadores y estados de corazón ya renderizados en el DOM
 function refreshAllLikeCounts() {
-  document.querySelectorAll('.fav-btn').forEach(btn => {
-    const onclick = btn.getAttribute('onclick') || '';
-    const m = onclick.match(/toggleFav\('([^']+)'/);
-    if (!m) return;
-    const slug = m[1];
+  document.querySelectorAll('.fav-btn[data-slug]').forEach(btn => {
+    const slug = btn.dataset.slug;
     const likesEl = btn.querySelector('.fav-likes');
-    const heartEl = btn.querySelector('.fav-heart');
     if (likesEl) likesEl.textContent = likeCount(slug);
-    btn.classList.toggle('active', iLiked(slug));
-    btn.closest('.room-card')?.classList.toggle('is-fav', iLiked(slug));
+    const isActive = iLiked(slug);
+    btn.classList.toggle('active', isActive);
+    btn.closest('.room-card')?.classList.toggle('is-fav', isActive);
   });
   updateFavCount();
 }
@@ -623,7 +622,7 @@ function refreshAllLikeCounts() {
 async function toggleFav(slug, btn) {
   const wasLiked = iLiked(slug);
 
-  // Optimistic update
+  // Optimistic update local
   if (!likesCache[slug]) likesCache[slug] = {};
   if (wasLiked) {
     delete likesCache[slug][USER_ID];
@@ -640,22 +639,35 @@ async function toggleFav(slug, btn) {
   const count = likeCount(slug);
   btn.classList.toggle('active', !wasLiked);
   card.classList.toggle('is-fav', !wasLiked);
-  if (likesEl) likesEl.textContent = count > 0 ? count : '';
+  if (likesEl) likesEl.textContent = count;
 
   updateFavCount();
   if (showOnlyFavs) renderPendientes();
 
   // Persistir en Firebase
-  if (FIREBASE_ENABLED) {
-    try {
-      if (wasLiked) {
-        await fetch(`${FIREBASE_URL}/likes/${slug}/${USER_ID}.json`, { method: 'DELETE' });
-      } else {
-        await fbPut(`likes/${slug}/${USER_ID}`, true);
-      }
-    } catch(e) {
-      console.warn('Error al guardar like:', e.message);
+  if (!FIREBASE_ENABLED) {
+    console.warn('[Likes] Firebase no configurado — like guardado solo localmente');
+    return;
+  }
+
+  const url = `${FIREBASE_URL.replace(/\/$/, '')}/likes/${slug}/${USER_ID}.json`;
+  console.log(`[Likes] ${wasLiked ? 'DELETE' : 'PUT'} → ${url}`);
+  try {
+    const method = wasLiked ? 'DELETE' : 'PUT';
+    const opts = { method };
+    if (!wasLiked) {
+      opts.body = 'true';
+      opts.headers = { 'Content-Type': 'application/json' };
     }
+    const r = await fetch(url, opts);
+    if (!r.ok) {
+      const body = await r.text();
+      console.error(`[Likes] Error ${r.status}:`, body);
+    } else {
+      console.log(`[Likes] ✅ Guardado correctamente`);
+    }
+  } catch(e) {
+    console.error('[Likes] Error de red:', e.message);
   }
 }
 
@@ -696,7 +708,7 @@ function cardPend(p, i) {
   return `<div class="room-card" style="animation-delay:${i*.04}s">
   <div class="card-header">
     <div class="room-name">${p.nombre}</div>
-    <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
+    <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" data-slug="${slug}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
       <span class="fav-heart">♥</span>
       <span class="fav-likes">${likeCount(slug)}</span>
     </button>
