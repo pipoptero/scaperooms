@@ -110,14 +110,14 @@
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
 
   /* ── FAV BUTTON ── */
-  .fav-btn{background:transparent;border:none;padding:0 2px;cursor:pointer;font-size:1.5rem;line-height:1;transition:all .2s;flex-shrink:0;color:var(--border);display:flex;align-items:center;gap:4px;}
+  .fav-btn{background:transparent;border:none;padding:0;cursor:pointer;line-height:1;transition:all .2s;flex-shrink:0;color:var(--border);display:flex;flex-direction:column;align-items:center;gap:2px;}
   .fav-btn:hover{color:rgba(230,57,70,.6);transform:scale(1.1);}
   .fav-btn.active{color:var(--red);}
   .fav-btn.active .fav-heart{animation:pop .25s ease;}
   .fav-heart{font-size:1.5rem;line-height:1;}
-  .fav-likes{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);transition:color .2s;line-height:1;margin-top:2px;}
+  .fav-likes{font-family:'Share Tech Mono',monospace;font-size:.62rem;font-weight:700;color:var(--text2);line-height:1;min-width:16px;text-align:center;}
   .fav-btn.active .fav-likes{color:var(--red);}
-  .fav-btn:hover .fav-likes{color:rgba(230,57,70,.6);}
+  .fav-btn:hover .fav-likes{color:rgba(230,57,70,.7);}
   .room-card.is-fav{border-color:rgba(230,57,70,.3);}
   .room-card.is-fav::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
   .sort-btn.fav-filter{border-color:rgba(230,57,70,.3);color:var(--red);}
@@ -680,7 +680,8 @@ function cardPend(p, i) {
   <div class="card-header">
     <div class="room-name">${p.nombre}</div>
     <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
-      <span class="fav-heart">♥</span><span class="fav-likes">${likeCount(slug) > 0 ? likeCount(slug) : ''}</span>
+      <span class="fav-heart">♥</span>
+      <span class="fav-likes">${likeCount(slug)}</span>
     </button>
     ${p.rating ? `<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>` : ''}
   </div>
