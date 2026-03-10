@@ -300,14 +300,14 @@
       "dificultad": "Media",
       "rating": 9.0,
       "web": "https://sagaescaperoom.com/",
-      "valoracion": 9.5,
+      "valoracion": 9.8,
       "descripcion": "Inmersión cinematográfica absoluta en el Londres victoriano. Destaca por una escenografía de primer nivel que recrea calles realistas con niebla, olores y texturas impecables. Puzzles de nueva generación totalmente integrados en la trama (sin candados forzados) y un flujo de juego excelente. El acting del Game Master y la transición de espacios elevan la experiencia a un nivel de 'imprescindible' para amantes del misterio. Jugado con 3 adultos + 2 niñas de 10 años",
       "max_personas": "",
-      "historia": 9.0,
+      "historia": 9.5,
       "ambientacion": 10.0,
-      "jugabilidad": 8.0,
+      "jugabilidad": 9.0,
       "gamemaster": 9.0,
-      "ranking": 2
+      "ranking": 1
     },
     {
       "nombre": "La Taberna",
@@ -319,14 +319,14 @@
       "dificultad": "Media",
       "rating": 8.5,
       "web": "https://thecityescape.com/",
-      "valoracion": 9.0,
+      "valoracion": 8.5,
       "descripcion": "Aventura medieval de alta inmersión situada en una taberna hiperrealista donde la interacción con el entorno y el Game Master es la clave. Destaca por su escenografía detallada, enigmas mecánicos totalmente integrados y un inicio de juego muy original que rompe la cuarta pared. Es una sala con mucho 'flow' que prioriza la diversión y el roleo sobre la dificultad extrema, logrando que el equipo se sienta realmente dentro de una película de fantasía. Interacción con personajes. Fuimos 3 adultos y 2 niñas de 9 años",
       "max_personas": "",
       "historia": 9.0,
       "ambientacion": 9.0,
       "jugabilidad": 9.0,
       "gamemaster": 7.0,
-      "ranking": 5
+      "ranking": 4
     },
     {
       "nombre": "K.O.N.G. Protocol",
@@ -338,14 +338,14 @@
       "dificultad": "Media-Alta",
       "rating": 9.0,
       "web": "https://escapebarcelona.com/",
-      "valoracion": 9.2,
+      "valoracion": 0.0,
       "descripcion": "",
       "max_personas": "",
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
       "gamemaster": "",
-      "ranking": 4
+      "ranking": 10
     },
     {
       "nombre": "Jurásico",
@@ -357,14 +357,14 @@
       "dificultad": "Media",
       "rating": 8.0,
       "web": "https://goldenpop.es/",
-      "valoracion": 9.3,
+      "valoracion": 9.25,
       "descripcion": "Espectáculo visual y sensorial que recrea una selva hiperrealista bajo el centro de Barcelona. Una aventura de 120 minutos cargada de nostalgia, con una escenografía de nivel cinematográfico, efectos de sonido potentes y transiciones asombrosas que te hacen sentir dentro de la película. Es una sala muy física (requiere gatear, trepar y posiblemente ensuciarse un poco) que apuesta por la inmersión total y la adrenalina sin llegar al terror. Los constantes guiños y el acting inicial la consolidan como una de las experiencias de 'nueva generación' más potentes actualmente. Lo hicimos 4 adultos y una niña de 9 años",
       "max_personas": "",
       "historia": 9.0,
       "ambientacion": 10.0,
       "jugabilidad": 8.0,
       "gamemaster": 10.0,
-      "ranking": 3
+      "ranking": 2
     },
     {
       "nombre": "WHITECHAPEL",
@@ -376,14 +376,14 @@
       "dificultad": "Media",
       "rating": 9.0,
       "web": "roomwhitechapel.com",
-      "valoracion": 9.8,
+      "valoracion": 8.75,
       "descripcion": "Un viaje asfixiante al Londres de Jack el Destripador que destaca por una de las ambientaciones más envolventes de Barcelona. El diseño de sus 'calles' oscuras y el uso de la iluminación crean una atmósfera lúgubre y laberíntica donde la narrativa cobra vida gracias a un acting magistral (mención especial al personaje de Sam). Combina puzzles lógicos con momentos de alta adrenalina, logrando que el equipo se sienta acechado constantemente. Es una experiencia puramente cinematográfica donde la tensión nunca decae. Fuimos 6 adultos. Siendo bastantes nuca estabas parado.",
       "max_personas": "",
       "historia": 9.0,
       "ambientacion": 8.0,
       "jugabilidad": 9.0,
       "gamemaster": 9.0,
-      "ranking": 1
+      "ranking": 3
     },
     {
       "nombre": "Catacumbas",
@@ -395,7 +395,7 @@
       "dificultad": "Media",
       "rating": 7.5,
       "web": "goldenpop.es/catacumbas/",
-      "valoracion": 8.7,
+      "valoracion": 8.25,
       "descripcion": "Aventura épica de corte clásico inspirada en el universo de Indiana Jones, que destaca por una de las puestas en escena más espectaculares de la ciudad. Con más de 200 m² de decorados hiperrealistas, efectos de sonido envolventes y una iluminación que recrea perfectamente la atmósfera de una expedición arqueológica. Los enigmas están magistralmente integrados en el entorno, priorizando los mecanismos electrónicos y el trabajo cooperativo. Es una experiencia de pura adrenalina y exploración, ideal para quienes buscan sentirse protagonistas de una película de acción sin elementos de terror. Lo hicimos 4 adultos y la peque de 9 años.",
       "max_personas": "",
       "historia": 8.0,
@@ -414,7 +414,7 @@
       "dificultad": "Media",
       "rating": 8.5,
       "web": "terrorstories.com",
-      "valoracion": 7.5,
+      "valoracion": 8,
       "descripcion": "Homenaje visceral y cinematográfico al clásico del cine de posesiones. Destaca por un acting agresivo y escenas coreografiadas de una intensidad asombrosa que te hacen sentir dentro de una pesadilla real. La ambientación es lúgubre y opresiva, utilizando tecnología de efectos visuales y sonoros para recrear fenómenos paranormales impactantes. Es una sala dinámica, con pruebas de valor que obligan a dividir al equipo y una fluidez constante. Ideal para quienes buscan un terror físico y psicológico de alto nivel con una puesta en escena inolvidable. Fuimos 5 adultos, igual corto para tanta gente.",
       "max_personas": "",
       "historia": 8.0,
@@ -433,14 +433,14 @@
       "dificultad": "Media",
       "rating": 7.5,
       "web": "kadabraescape.com",
-      "valoracion": 7.5,
+      "valoracion": 8.5,
       "descripcion": "Fantasía pura y colorista inspirada en el folclore de la India que rompe con la estética lúgubre de los escapes tradicionales. Destaca por una escenografía vibrante, llena de detalles exóticos y una banda sonora envolvente que te transporta a un mercado mágico de Jaipur. Sus puzzles son ingeniosos, muy táctiles y basados en mecanismos 'mágicos' sorprendentes que fluyen con gran naturalidad. Es una experiencia alegre, mágica y cargada de buen rollo, ideal para quienes buscan una aventura inmersiva de alta calidad donde el asombro y el ingenio son los protagonistas. Lo hicimos 3 adultos y 3 peques de 10-11 años. Muy divertido",
       "max_personas": "",
       "historia": 8.0,
       "ambientacion": 9.0,
       "jugabilidad": 9.0,
       "gamemaster": 8.0,
-      "ranking": 8
+      "ranking": 5
     },
     {
       "nombre": "encryptroom",
@@ -452,14 +452,14 @@
       "dificultad": "Media-Alta",
       "rating": 7.5,
       "web": "encryptroom.com",
-      "valoracion": 7.0,
+      "valoracion": 7.5,
       "descripcion": "",
       "max_personas": "",
       "historia": 7.0,
       "ambientacion": 8.0,
       "jugabilidad": 7.0,
       "gamemaster": 8.0,
-      "ranking": 9
+      "ranking": 8
     },
     {
       "nombre": "Bank of Thaqar",
@@ -471,14 +471,14 @@
       "dificultad": "Media",
       "rating": 6.5,
       "web": "missionleak.com",
-      "valoracion": 6.0,
+      "valoracion": 6.75,
       "descripcion": "",
       "max_personas": "",
       "historia": 7.0,
       "ambientacion": 7.0,
       "jugabilidad": 7.0,
       "gamemaster": 6.0,
-      "ranking": 10
+      "ranking": 9
     }
   ],
   "meta": {
