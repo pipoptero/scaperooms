@@ -73,12 +73,16 @@ def safe_str(val):
 NUMERIC_FIELDS = {"rating", "duracion", "valoracion", "historia", "ambientacion", "jugabilidad", "gamemaster"}
 
 def safe_num(val):
-    """Convierte un valor a float limpio, soportando coma como separador decimal."""
+    """Convierte un valor a float limpio.
+    Caso especial: Excel interpreta decimales como fechas (8.9 → 8 sep → datetime(2026,9,8))
+    Se recupera el valor original como float(day.month).
+    """
     if val is None:
         return ""
     import datetime
     if isinstance(val, (datetime.date, datetime.datetime)):
-        return ""
+        # Reconstruir el decimal: día=8, mes=9 → 8.9
+        return float(f"{val.day}.{val.month}")
     if isinstance(val, (int, float)):
         return val
     s = str(val).strip().replace(",", ".")
