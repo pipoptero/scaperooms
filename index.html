@@ -110,10 +110,9 @@
   .group-score-val{font-family:'Cinzel',serif;font-size:1.25rem;font-weight:700;color:var(--amber);}
 
   /* ── FAV BUTTON ── */
-  .fav-btn{background:transparent;border:1px solid var(--border);padding:5px 10px;cursor:pointer;font-size:1rem;line-height:1;transition:all .2s;flex-shrink:0;color:var(--text3);}
-  .fav-btn:hover{border-color:rgba(230,57,70,.4);color:var(--red);}
-  .fav-btn.active{border-color:rgba(230,57,70,.5);background:rgba(230,57,70,.08);color:var(--red);}
-  .fav-btn.active::after{content:' guardado';}
+  .fav-btn{background:transparent;border:none;padding:0 2px;cursor:pointer;font-size:1.5rem;line-height:1;transition:all .2s;flex-shrink:0;color:var(--border);}
+  .fav-btn:hover{color:rgba(230,57,70,.6);transform:scale(1.2);}
+  .fav-btn.active{color:var(--red);}
   .room-card.is-fav{border-color:rgba(230,57,70,.3);}
   .room-card.is-fav::before{background:linear-gradient(90deg,transparent,var(--red),transparent);}
   .sort-btn.fav-filter{border-color:rgba(230,57,70,.3);color:var(--red);}
@@ -303,7 +302,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -627,6 +626,7 @@ function cardPend(p, i) {
   return `<div class="room-card" style="animation-delay:${i*.04}s">
   <div class="card-header">
     <div class="room-name">${p.nombre}</div>
+    <button class="fav-btn ${FAVS.has(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Marcar como favorito">♥</button>
     ${p.rating ? `<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>` : ''}
   </div>
   <div class="empresa">${p.empresa}</div>
@@ -644,10 +644,7 @@ function cardPend(p, i) {
   ${voteWidget(slug)}
   <div class="card-footer">
     ${p.web ? `<a class="web-link" href="${p.web}" target="_blank">Ver web</a>` : '<span></span>'}
-    <div style="display:flex;align-items:center;gap:8px">
-      <button class="fav-btn ${FAVS.has(slug) ? 'active' : ''}" onclick="toggleFav('${slug}',this)" title="Marcar como favorito">♥</button>
-      <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
-    </div>
+    <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
   </div>
 </div>`;
 }
