@@ -74,39 +74,44 @@ El Excel debe tener **dos hojas**:
 | Ciudad | Ciudad |
 | Temática | Temática del escape |
 | Tipo | Tipo de experiencia |
-| Duración | Duración en minutos |
+| Duración | Duración en minutos *(número, acepta decimales)* |
 | Dificultad | Alta / Media-Alta / Media / Baja |
-| Valoración | Rating de escapistas.com (0-10) |
+| Valoración | Rating de escapistas.com (0-10) *(acepta decimales: 8.5 o 8,5)* |
 | Web | URL de la web |
+| Max_personas | Número máximo de jugadores *(opcional)* |
 | Descripción | Descripción breve del escape room *(opcional)* |
 
 ### Hoja «Hechos»
 Mismas columnas que Pendientes, más:
 | Columna | Descripción |
 |---------|-------------|
-| Valoración Grupo | Vuestra puntuación (0-10) |
+| Valoración Grupo | Vuestra puntuación (0-10) *(acepta decimales: 9.2 o 9,2)* |
 | Descripción | **Tu opinión/reseña personal** del escape room *(opcional)* |
+| Historia | Valoración de la historia (0-10) *(opcional)* |
+| Ambientación | Valoración de la ambientación (0-10) *(opcional)* |
+| Jugabilidad | Valoración de la jugabilidad (0-10) *(opcional)* |
+| GameMaster | Valoración del game master (0-10) *(opcional)* |
 
-> **Nota sobre la columna Descripción:**
-> - En **Pendientes** se muestra como descripción informativa en la tarjeta.
-> - En **Hechos** se muestra como **reseña personal** en una vista expandida tipo revista.
-> - Puede llamarse: `Descripción`, `Descripcion`, `Description`, `Descripción del Escape` o `Resumen`.
+> **Notas sobre el formato:**
+> - Los valores numéricos aceptan tanto punto (`8.5`) como coma (`8,5`) como separador decimal.
+> - La columna Descripción puede llamarse: `Descripción`, `Descripcion`, `Description`, `Descripción del Escape` o `Resumen`.
+> - Las columnas de categorías (Historia, Ambientación, Jugabilidad, GameMaster) son opcionales — si no tienen dato, no se muestran.
 
 ---
 
 ## 🖥 Vistas de la web
 
 ### Pestaña Pendientes
-Cuadrícula de tarjetas con filtros por ciudad, dificultad y tipo. Ordenación por rating, nombre, duración o dificultad. Incluye widget de votación con **medias estrellas** (nota del 1 al 10 en pasos de 1).
+Cuadrícula de tarjetas con filtros por ciudad, dificultad y tipo. Cada tarjeta muestra nombre, empresa, tags, duración, dificultad y **máximo de jugadores** (`Max_personas`). Ordenación por rating, nombre, duración o dificultad — los valores con decimales se ordenan correctamente. Incluye widget de votación comunitaria con **medias estrellas**.
 
 ### Pestaña Hechos
 Vista de **reseñas** — cada escape ocupa una fila dividida en tres columnas:
-- **Izquierda:** posición en el ranking (🥇🥈🥉 para el podio)
-- **Centro:** info técnica completa + puntuaciones (Escapistas / Grupo / Comunidad) + widget de votación
-- **Derecha:** tu opinión personal extraída de la columna Descripción del Excel
+- **Izquierda:** posición en el ranking según votos de la comunidad (🥇🥈🥉 para el podio)
+- **Centro:** info técnica + puntuaciones (Escapistas / Grupo / Comunidad) + widget de votación con medias estrellas
+- **Derecha:** tu opinión personal (columna Descripción) y, si existen, las **valoraciones por categorías** (Historia, Ambientación, Jugabilidad, Game Master) mostradas como estrellas visuales con su nota numérica
 
 ### Pestaña Ranking
-Tabla comparativa de todos los hechos con columnas: posición, nombre, empresa, temática, dificultad, duración, rating Escapistas, nota del Grupo y **media de votos de la Comunidad** (con número de votantes entre paréntesis). La columna Comunidad solo aparece si Firebase está configurado.
+Tabla ordenada por **Valoración Grupo** (nota personal, con decimales). Columnas: posición, nombre, empresa, temática, dificultad, duración, rating Escapistas, nota Grupo y **media de votos de la Comunidad** con número de votantes. La columna Comunidad solo aparece si Firebase está configurado.
 
 ---
 
