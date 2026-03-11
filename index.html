@@ -35,23 +35,98 @@
 
   /* ── HEADER ── */
   #app{display:none;position:relative;z-index:1;}
-  header{padding:48px 32px 36px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#080810 0%,#0d0d18 60%,var(--bg) 100%);position:relative;overflow:hidden;}
-  header::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:280px;background:radial-gradient(ellipse,rgba(245,166,35,.09) 0%,transparent 65%);pointer-events:none;}
-  header::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.3),transparent);}
+  header{
+    padding:52px 32px 44px;text-align:center;position:relative;overflow:hidden;
+    background:radial-gradient(ellipse at 50% 0%,#1a1208 0%,#0d0a06 40%,#080808 100%);
+    border-bottom:2px solid #3a2a0a;
+  }
+  /* Fondo atmosférico con viñeta */
+  header::before{
+    content:'';position:absolute;inset:0;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% -10%,rgba(120,80,10,.25) 0%,transparent 70%),
+      radial-gradient(ellipse 40% 40% at 20% 50%,rgba(60,40,5,.15) 0%,transparent 60%),
+      radial-gradient(ellipse 40% 40% at 80% 50%,rgba(60,40,5,.15) 0%,transparent 60%);
+    pointer-events:none;
+  }
+  /* Línea dorada inferior */
+  header::after{
+    content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+    background:linear-gradient(90deg,transparent 0%,#8b6010 20%,#d4a017 50%,#8b6010 80%,transparent 100%);
+  }
 
-  /* Vault icon — engranaje animado */
-  .vault-icon{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px;}
-  .vault-line{height:1px;width:60px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.4));}
-  .vault-line.right{background:linear-gradient(90deg,rgba(245,166,35,.4),transparent);}
-  .vault-glyph{font-size:2.2rem;filter:drop-shadow(0 0 16px rgba(245,166,35,.6));animation:pulse-lock 3s ease-in-out infinite;}
+  /* Ornamentos laterales */
+  .vault-icon{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;}
+  .vault-ornament{font-size:1.1rem;opacity:.5;color:#c8922a;}
+  .vault-glyph{font-size:1.8rem;filter:drop-shadow(0 0 8px rgba(200,140,30,.7));opacity:.8;}
 
-  /* Título principal */
-  .vault-title-wrap{position:relative;display:inline-block;}
-  h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:.18em;background:linear-gradient(135deg,#c8922a 0%,var(--amber) 30%,var(--gold) 55%,var(--amber) 75%,#c8922a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;line-height:1;}
-  .vault-sub-line{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px;}
-  .vault-dash{height:1px;flex:1;max-width:80px;background:rgba(245,166,35,.2);}
-  .vault-subtitle{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;}
-  .vault-byline{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.6rem;letter-spacing:.18em;margin-top:8px;opacity:.6;}
+  /* Título principal — efecto metálico tridimensional */
+  h1{
+    font-family:'Cinzel',serif;
+    font-weight:900;
+    font-size:clamp(2.4rem,6vw,4.2rem);
+    letter-spacing:.2em;
+    text-transform:uppercase;
+    line-height:1;
+    position:relative;
+    display:inline-block;
+
+    /* Gradiente cobre/bronce */
+    background:linear-gradient(
+      180deg,
+      #f0d060 0%,
+      #c8922a 18%,
+      #f5c842 32%,
+      #a06010 48%,
+      #e8b030 58%,
+      #7a4a08 72%,
+      #d4950a 85%,
+      #f0c840 100%
+    );
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    background-clip:text;
+
+    /* Sombras para efecto 3D forjado */
+    filter:
+      drop-shadow(0 1px 0 rgba(0,0,0,.9))
+      drop-shadow(0 2px 0 rgba(0,0,0,.8))
+      drop-shadow(0 3px 0 rgba(0,0,0,.7))
+      drop-shadow(0 4px 0 rgba(0,0,0,.5))
+      drop-shadow(0 8px 20px rgba(0,0,0,.8))
+      drop-shadow(0 0 40px rgba(200,140,20,.2));
+  }
+
+  /* Marco ornamental alrededor del título */
+  .vault-frame{
+    display:inline-block;position:relative;padding:10px 32px 14px;
+    border-top:1px solid rgba(200,140,30,.3);
+    border-bottom:1px solid rgba(200,140,30,.3);
+  }
+  .vault-frame::before,.vault-frame::after{
+    content:'⚙';position:absolute;top:50%;transform:translateY(-50%);
+    font-size:1.4rem;color:#7a5010;opacity:.6;
+    filter:drop-shadow(0 0 6px rgba(200,140,20,.4));
+  }
+  .vault-frame::before{left:-8px;}
+  .vault-frame::after{right:-8px;}
+
+  /* Subtítulo */
+  .vault-sub-line{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;}
+  .vault-dash{
+    height:1px;flex:1;max-width:90px;
+    background:linear-gradient(90deg,transparent,rgba(180,120,20,.5));
+  }
+  .vault-dash.right{background:linear-gradient(90deg,rgba(180,120,20,.5),transparent);}
+  .vault-subtitle{
+    font-family:'Share Tech Mono',monospace;
+    color:#8a6820;font-size:.68rem;letter-spacing:.32em;text-transform:uppercase;
+    text-shadow:0 0 12px rgba(180,120,10,.3);
+  }
+  .vault-byline{
+    font-family:'Share Tech Mono',monospace;color:#4a3a18;
+    font-size:.58rem;letter-spacing:.18em;margin-top:10px;
+  }
 
   .updated-badge{position:absolute;top:20px;right:24px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.08em;border:1px solid var(--border);padding:5px 12px;line-height:1.6;text-align:right;}
   .updated-badge span{color:var(--green);display:block;}
@@ -281,17 +356,19 @@
   <header>
     <div class="updated-badge">DATOS ACTUALIZADOS<span id="update-date"></span></div>
     <div class="vault-icon">
-      <div class="vault-line"></div>
+      <span class="vault-ornament">⚙ ✦ ⚙</span>
       <span class="vault-glyph">🔐</span>
-      <div class="vault-line right"></div>
+      <span class="vault-ornament">⚙ ✦ ⚙</span>
     </div>
-    <h1>THE VAULT</h1>
+    <div class="vault-frame">
+      <h1>THE VAULT</h1>
+    </div>
     <div class="vault-sub-line">
       <div class="vault-dash"></div>
       <span class="vault-subtitle">Escape Room Chronicles</span>
-      <div class="vault-dash"></div>
+      <div class="vault-dash right"></div>
     </div>
-    <p class="vault-byline">// Barcelona & alrededores</p>
+    <p class="vault-byline">⸻ Barcelona & alrededores ⸻</p>
   </header>
 
   <div class="stats-bar" id="stats-bar"></div>
