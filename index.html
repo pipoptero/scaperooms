@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Escape Rooms Tracker</title>
+<title>The Vault — Escape Room Chronicles</title>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <style>
   :root{
@@ -35,11 +35,24 @@
 
   /* ── HEADER ── */
   #app{display:none;position:relative;z-index:1;}
-  header{padding:40px 32px 30px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#0d0d1a 0%,var(--bg) 100%);position:relative;overflow:hidden;}
-  header::before{content:'';position:absolute;top:-60px;left:50%;transform:translateX(-50%);width:500px;height:200px;background:radial-gradient(ellipse,rgba(245,166,35,.07) 0%,transparent 70%);pointer-events:none;}
-  .lock-icon{font-size:2.5rem;display:block;margin-bottom:12px;filter:drop-shadow(0 0 12px rgba(245,166,35,.5));animation:pulse-lock 3s ease-in-out infinite;}
-  h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(1.5rem,4vw,2.6rem);letter-spacing:.12em;background:linear-gradient(135deg,var(--amber) 0%,var(--gold) 50%,var(--amber2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-  .subtitle{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.72rem;letter-spacing:.22em;margin-top:5px;text-transform:uppercase;}
+  header{padding:48px 32px 36px;text-align:center;border-bottom:1px solid var(--border);background:linear-gradient(180deg,#080810 0%,#0d0d18 60%,var(--bg) 100%);position:relative;overflow:hidden;}
+  header::before{content:'';position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:700px;height:280px;background:radial-gradient(ellipse,rgba(245,166,35,.09) 0%,transparent 65%);pointer-events:none;}
+  header::after{content:'';position:absolute;bottom:0;left:10%;right:10%;height:1px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.3),transparent);}
+
+  /* Vault icon — engranaje animado */
+  .vault-icon{display:flex;align-items:center;justify-content:center;gap:14px;margin-bottom:16px;}
+  .vault-line{height:1px;width:60px;background:linear-gradient(90deg,transparent,rgba(245,166,35,.4));}
+  .vault-line.right{background:linear-gradient(90deg,rgba(245,166,35,.4),transparent);}
+  .vault-glyph{font-size:2.2rem;filter:drop-shadow(0 0 16px rgba(245,166,35,.6));animation:pulse-lock 3s ease-in-out infinite;}
+
+  /* Título principal */
+  .vault-title-wrap{position:relative;display:inline-block;}
+  h1{font-family:'Cinzel',serif;font-weight:900;font-size:clamp(2rem,5vw,3.4rem);letter-spacing:.18em;background:linear-gradient(135deg,#c8922a 0%,var(--amber) 30%,var(--gold) 55%,var(--amber) 75%,#c8922a 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-transform:uppercase;line-height:1;}
+  .vault-sub-line{display:flex;align-items:center;justify-content:center;gap:12px;margin-top:10px;}
+  .vault-dash{height:1px;flex:1;max-width:80px;background:rgba(245,166,35,.2);}
+  .vault-subtitle{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase;}
+  .vault-byline{font-family:'Share Tech Mono',monospace;color:var(--text3);font-size:.6rem;letter-spacing:.18em;margin-top:8px;opacity:.6;}
+
   .updated-badge{position:absolute;top:20px;right:24px;font-family:'Share Tech Mono',monospace;font-size:.6rem;color:var(--text3);letter-spacing:.08em;border:1px solid var(--border);padding:5px 12px;line-height:1.6;text-align:right;}
   .updated-badge span{color:var(--green);display:block;}
 
@@ -267,9 +280,18 @@
 
   <header>
     <div class="updated-badge">DATOS ACTUALIZADOS<span id="update-date"></span></div>
-    <span class="lock-icon">🔐</span>
-    <h1>ESCAPE ROOMS TRACKER</h1>
-    <p class="subtitle">// Barcelona & alrededores</p>
+    <div class="vault-icon">
+      <div class="vault-line"></div>
+      <span class="vault-glyph">🔐</span>
+      <div class="vault-line right"></div>
+    </div>
+    <h1>THE VAULT</h1>
+    <div class="vault-sub-line">
+      <div class="vault-dash"></div>
+      <span class="vault-subtitle">Escape Room Chronicles</span>
+      <div class="vault-dash"></div>
+    </div>
+    <p class="vault-byline">// Barcelona & alrededores</p>
   </header>
 
   <div class="stats-bar" id="stats-bar"></div>
@@ -332,7 +354,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
