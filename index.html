@@ -44,11 +44,29 @@
   .updated-badge span{color:var(--green);display:block;}
 
   /* ── STATS ── */
-  .stats-bar{display:flex;gap:0;justify-content:center;flex-wrap:wrap;padding:18px 32px;background:var(--bg2);border-bottom:1px solid var(--border);}
+  .stats-bar{padding:22px 32px;background:var(--bg2);border-bottom:1px solid var(--border);}
+  .stats-top{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
   .stat-item{text-align:center;padding:10px 26px;position:relative;}
   .stat-item:not(:last-child)::after{content:'|';position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--border);}
   .stat-num{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;color:var(--amber);line-height:1;display:block;}
-  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.64rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;display:block;}
+  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;display:block;}
+
+  /* Barra de progreso */
+  .progress-wrap{max-width:680px;margin:0 auto 16px;}
+  .progress-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
+  .progress-title{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;}
+  .progress-pct{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--amber);}
+  .progress-track{height:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);position:relative;overflow:hidden;}
+  .progress-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative;}
+  .progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:white;opacity:.6;filter:blur(1px);}
+
+  /* Insights row */
+  .stats-insights{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
+  .insight-pill{font-family:'Share Tech Mono',monospace;font-size:.62rem;padding:5px 12px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text3);display:flex;align-items:center;gap:6px;white-space:nowrap;}
+  .insight-pill .ip-icon{font-size:.85rem;}
+  .insight-pill .ip-val{color:var(--text);font-weight:700;letter-spacing:.04em;}
+  .insight-pill.highlight{border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.04);}
+  .insight-pill.highlight .ip-val{color:var(--amber);}
 
   /* ── TABS ── */
   .tabs-container{display:flex;justify-content:center;padding:26px 32px 0;gap:4px;max-width:1400px;margin:0 auto;}
@@ -543,15 +561,72 @@ function populateFilters() {
 }
 
 function renderStats() {
-  const avg = HECHOS.length
-    ? (HECHOS.reduce((s,h)=>s+parseFloat(h.valoracion||0),0)/HECHOS.length).toFixed(1) : '—';
-  const hrs = Math.round(HECHOS.reduce((s,h)=>s+(parseInt(h.duracion)||0),0)/60);
+  const total = HECHOS.length + PENDIENTES.length;
+  const pct   = total > 0 ? Math.round((HECHOS.length / total) * 100) : 0;
+
+  // Media grupo (solo los que tienen valoración)
+  const conVal = HECHOS.filter(h => parseFloat(h.valoracion) > 0);
+  const avgGrupo = conVal.length
+    ? (conVal.reduce((s,h) => s + parseFloat(h.valoracion), 0) / conVal.length).toFixed(1) : '—';
+
+  // Horas jugadas (hechos)
+  const minsJugados = HECHOS.reduce((s,h) => s + (parseInt(h.duracion) || 0), 0);
+  const hrsJugados  = minsJugados >= 60
+    ? `${Math.floor(minsJugados/60)}h ${minsJugados%60 > 0 ? minsJugados%60+'m' : ''}`
+    : `${minsJugados}m`;
+
+  // Empresa más visitada
+  const empCount = {};
+  HECHOS.forEach(h => { if (h.empresa) empCount[h.empresa] = (empCount[h.empresa]||0)+1; });
+  const topEmp = Object.entries(empCount).sort((a,b)=>b[1]-a[1])[0];
+
+  // Ciudad más visitada
+  const cityCount = {};
+  HECHOS.forEach(h => { if (h.ciudad) cityCount[h.ciudad] = (cityCount[h.ciudad]||0)+1; });
+  const topCity = Object.entries(cityCount).sort((a,b)=>b[1]-a[1])[0];
+
+  // Mejor escape (mayor valoracion grupo)
+  const mejor = HECHOS.filter(h=>parseFloat(h.valoracion)>0)
+    .sort((a,b)=>parseFloat(b.valoracion)-parseFloat(a.valoracion))[0];
+
+  // Temática favorita
+  const temaCount = {};
+  HECHOS.forEach(h => { if (h.tematica) temaCount[h.tematica] = (temaCount[h.tematica]||0)+1; });
+  const topTema = Object.entries(temaCount).sort((a,b)=>b[1]-a[1])[0];
+
   document.getElementById('stats-bar').innerHTML = `
-    <div class="stat-item"><span class="stat-num">${HECHOS.length}</span><span class="stat-label">Completados</span></div>
-    <div class="stat-item"><span class="stat-num">${PENDIENTES.length}</span><span class="stat-label">Pendientes</span></div>
-    <div class="stat-item"><span class="stat-num">${HECHOS.length+PENDIENTES.length}</span><span class="stat-label">Total</span></div>
-    <div class="stat-item"><span class="stat-num">${avg}</span><span class="stat-label">Media grupo</span></div>
-    <div class="stat-item"><span class="stat-num">${hrs}h</span><span class="stat-label">Horas jugadas</span></div>`;
+    <div class="stats-top">
+      <div class="stat-item"><span class="stat-num">${HECHOS.length}</span><span class="stat-label">Completados</span></div>
+      <div class="stat-item"><span class="stat-num">${PENDIENTES.length}</span><span class="stat-label">Pendientes</span></div>
+      <div class="stat-item"><span class="stat-num">${total}</span><span class="stat-label">Total</span></div>
+      <div class="stat-item"><span class="stat-num">${avgGrupo}</span><span class="stat-label">Media grupo</span></div>
+      <div class="stat-item"><span class="stat-num">${hrsJugados}</span><span class="stat-label">Horas jugadas</span></div>
+    </div>
+
+    <div class="progress-wrap">
+      <div class="progress-header">
+        <span class="progress-title">Progreso de la lista</span>
+        <span class="progress-pct">${pct}% completado</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="stats-insights">
+      ${mejor    ? `<div class="insight-pill highlight"><span class="ip-icon">🥇</span><span>Mejor escape</span><span class="ip-val">${mejor.nombre}</span><span style="opacity:.4">${mejor.valoracion}/10</span></div>` : ''}
+      ${topEmp   ? `<div class="insight-pill"><span class="ip-icon">🏢</span><span>Empresa top</span><span class="ip-val">${topEmp[0]}</span><span style="opacity:.4">${topEmp[1]}×</span></div>` : ''}
+      ${topCity  ? `<div class="insight-pill"><span class="ip-icon">📍</span><span>Ciudad top</span><span class="ip-val">${topCity[0]}</span><span style="opacity:.4">${topCity[1]}×</span></div>` : ''}
+      ${topTema  ? `<div class="insight-pill"><span class="ip-icon">🎭</span><span>Temática top</span><span class="ip-val">${topTema[0]}</span><span style="opacity:.4">${topTema[1]}×</span></div>` : ''}
+    </div>`;
+
+  // Animar la barra con un pequeño delay para que se vea la transición
+  requestAnimationFrame(() => {
+    setTimeout(() => {
+      const fill = document.getElementById('progress-fill');
+      if (fill) fill.style.width = pct + '%';
+    }, 150);
+  });
 }
 
 function switchTab(t) {
