@@ -188,7 +188,9 @@
   .room-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:opacity .2s;}
   .room-card:hover{border-color:rgba(245,166,35,.35);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45);}
   .room-card:hover::before{opacity:1;}
-  .card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .card-header{display:flex;flex-direction:column;gap:6px;margin-bottom:10px;}
+  .card-header-top{display:flex;align-items:center;gap:10px;}
+  .card-header-bottom{display:flex;align-items:center;justify-content:flex-end;gap:8px;min-height:20px;}
   .room-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--text);line-height:1.2;flex:1;}
   .rating-badge{font-family:'Share Tech Mono',monospace;font-size:.85rem;padding:3px 9px;border-radius:2px;white-space:nowrap;flex-shrink:0;}
   .rating-high{background:rgba(6,214,160,.1);color:var(--green);border:1px solid rgba(6,214,160,.28);}
@@ -440,7 +442,7 @@
 //  Rellena con tus datos de Firebase Realtime Database.
 //  Deja FIREBASE_URL = '' si no quieres usar votaciones.
 // ════════════════════════════════════════════════════════════
-const FIREBASE_URL = '';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
+const FIREBASE_URL = 'https://scapesrooms-default-rtdb.europe-west1.firebasedatabase.app/';   // ← Pega aquí tu URL, ej: 'https://mi-proyecto-default-rtdb.europe-west1.firebasedatabase.app'
 // ════════════════════════════════════════════════════════════
 
 const FIREBASE_ENABLED = FIREBASE_URL.trim() !== '';
@@ -920,14 +922,18 @@ function cardPend(p, i) {
   const slug = slugify(p.nombre);
   return `<div class="room-card" style="animation-delay:${i*.04}s">
   <div class="card-header">
-    ${faviconHtml(p.web, 'card-logo')}
-    <div class="room-name">${p.nombre}</div>
-    ${terpecaBadge(p.terpeca)}
-    <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" data-slug="${slug}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
-      <span class="fav-heart">♥</span>
-      <span class="fav-likes">${likeCount(slug)}</span>
-    </button>
-    ${p.rating ? `<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>` : ''}
+    <div class="card-header-top">
+      ${faviconHtml(p.web, 'card-logo')}
+      <div class="room-name">${p.nombre}</div>
+    </div>
+    <div class="card-header-bottom">
+      ${terpecaBadge(p.terpeca)}
+      <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" data-slug="${slug}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
+        <span class="fav-heart">♥</span>
+        <span class="fav-likes">${likeCount(slug)}</span>
+      </button>
+      ${p.rating ? `<div class="rating-badge ${rc(p.rating)}">★ ${p.rating}</div>` : ''}
+    </div>
   </div>
   <div class="empresa">${p.empresa}</div>
   <div class="card-tags">
