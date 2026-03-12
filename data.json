@@ -379,25 +379,6 @@
       "jugabilidad": "",
       "gamemaster": "",
       "terpeca": ""
-    },
-    {
-      "nombre": "Escape Room",
-      "empresa": "Valoración",
-      "ciudad": "Dificultad",
-      "tematica": "Tipo / Temática",
-      "tipo": "Descripción",
-      "duracion": "",
-      "dificultad": "",
-      "rating": "",
-      "web": "",
-      "valoracion": "",
-      "descripcion": "",
-      "max_personas": "",
-      "historia": "",
-      "ambientacion": "",
-      "jugabilidad": "",
-      "gamemaster": "",
-      "terpeca": ""
     }
   ],
   "hechos": [
@@ -604,7 +585,7 @@
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 21,
+    "pendientes_count": 20,
     "hechos_count": 10
   }
 }
