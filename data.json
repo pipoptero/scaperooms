@@ -16,7 +16,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": 71
     },
     {
       "nombre": "Cybercity 2049",
@@ -34,7 +35,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": 55
     },
     {
       "nombre": "Exodus",
@@ -52,7 +54,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "La Mina",
@@ -70,7 +73,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": 78
     },
     {
       "nombre": "Distrito 111",
@@ -88,7 +92,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Room Angie",
@@ -106,7 +111,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Enterprise",
@@ -124,7 +130,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Awaken",
@@ -142,7 +149,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "The Exam",
@@ -160,7 +168,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Jurassic Land",
@@ -178,7 +187,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Atlantis",
@@ -196,7 +206,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Intracorpus",
@@ -214,7 +225,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Tomb Hunter : La Leyenda de Akasha Escape Room",
@@ -232,7 +244,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Alien: El Origen",
@@ -250,7 +263,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Criogenic 500",
@@ -268,7 +282,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Katrina",
@@ -286,7 +301,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": 19
     },
     {
       "nombre": "Outline",
@@ -304,7 +320,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": 10
     },
     {
       "nombre": "Synergo",
@@ -322,7 +339,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": 113
     },
     {
       "nombre": "El cetro de fuego",
@@ -340,7 +358,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Ouija",
@@ -358,7 +377,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Escape Room",
@@ -376,7 +396,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Outline",
@@ -394,7 +415,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Synergo",
@@ -412,7 +434,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "El Cetro de Fuego",
@@ -430,7 +453,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     },
     {
       "nombre": "Ouija",
@@ -448,7 +472,8 @@
       "historia": "",
       "ambientacion": "",
       "jugabilidad": "",
-      "gamemaster": ""
+      "gamemaster": "",
+      "terpeca": ""
     }
   ],
   "hechos": [
@@ -469,6 +494,7 @@
       "ambientacion": 10.0,
       "jugabilidad": 9.0,
       "gamemaster": 9.0,
+      "terpeca": "",
       "ranking": 1
     },
     {
@@ -488,6 +514,7 @@
       "ambientacion": 9.0,
       "jugabilidad": 9.0,
       "gamemaster": 7.0,
+      "terpeca": "",
       "ranking": 4
     },
     {
@@ -507,6 +534,7 @@
       "ambientacion": "",
       "jugabilidad": "",
       "gamemaster": "",
+      "terpeca": "",
       "ranking": 10
     },
     {
@@ -526,6 +554,7 @@
       "ambientacion": 10.0,
       "jugabilidad": 8.0,
       "gamemaster": 10.0,
+      "terpeca": "",
       "ranking": 2
     },
     {
@@ -545,6 +574,7 @@
       "ambientacion": 8.0,
       "jugabilidad": 9.0,
       "gamemaster": 9.0,
+      "terpeca": "",
       "ranking": 3
     },
     {
@@ -564,6 +594,7 @@
       "ambientacion": 9.0,
       "jugabilidad": 8.0,
       "gamemaster": 8.0,
+      "terpeca": "",
       "ranking": 6
     },
     {
@@ -583,6 +614,7 @@
       "ambientacion": 8.0,
       "jugabilidad": 7.0,
       "gamemaster": 9.0,
+      "terpeca": "",
       "ranking": 7
     },
     {
@@ -602,6 +634,7 @@
       "ambientacion": 9.0,
       "jugabilidad": 9.0,
       "gamemaster": 8.0,
+      "terpeca": "",
       "ranking": 5
     },
     {
@@ -621,6 +654,7 @@
       "ambientacion": 8.0,
       "jugabilidad": 7.0,
       "gamemaster": 8.0,
+      "terpeca": "",
       "ranking": 8
     },
     {
@@ -640,6 +674,7 @@
       "ambientacion": 7.0,
       "jugabilidad": 7.0,
       "gamemaster": 6.0,
+      "terpeca": "",
       "ranking": 9
     }
   ],
