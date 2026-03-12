@@ -46,6 +46,7 @@ COL_ALIASES = {
     "ambientacion":  ["ambientación", "ambientacion", "atmosphere"],
     "jugabilidad":   ["jugabilidad", "gameplay"],
     "gamemaster":    ["gamemaster", "game master", "gm", "game_master"],
+    "terpeca":       ["posición terpeca", "posicion terpeca", "terpeca", "pos terpeca", "posición_terpeca"],
 }
 
 def find_col(headers, key):
@@ -70,8 +71,8 @@ def safe_str(val):
     return s
 
 # Campos numéricos: float para notas, int para conteos/duraciones
-NUMERIC_FIELDS  = {"rating", "duracion", "valoracion", "historia", "ambientacion", "jugabilidad", "gamemaster"}
-INTEGER_FIELDS  = {"duracion", "max_personas"}
+NUMERIC_FIELDS  = {"rating", "duracion", "valoracion", "historia", "ambientacion", "jugabilidad", "gamemaster", "terpeca"}
+INTEGER_FIELDS  = {"duracion", "max_personas", "terpeca"}
 
 def safe_num(val):
     """Convierte un valor a float limpio.
