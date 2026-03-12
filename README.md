@@ -1,4 +1,4 @@
-# 🔐 Escape Rooms Tracker
+# 🔐 The Vault — Escape Room Chronicles
 
 Web interactiva para llevar el seguimiento de escape rooms. Se actualiza automáticamente al subir el Excel.
 
@@ -78,9 +78,10 @@ El Excel debe tener **dos hojas**:
 | Web | URL de la web |
 | Max_personas | Número máximo de jugadores *(opcional)* |
 | Descripción | Descripción breve del escape room *(opcional)* |
+| Posición TERPECA | Posición en el ranking mundial TERPECA *(opcional, entero)* |
 
 ### Hoja «Hechos»
-Mismas columnas que Pendientes, más:
+Mismas columnas que Pendientes (incluida Posición TERPECA), más:
 | Columna | Descripción |
 |---------|-------------|
 | Valoración Grupo | Vuestra puntuación personal (0-10) *(acepta decimales: 9.2 o 9,2)* |
@@ -91,41 +92,60 @@ Mismas columnas que Pendientes, más:
 | GameMaster | Valoración del game master (0-10) *(opcional)* |
 
 > **Notas sobre el formato:**
-> - Los valores numéricos con decimal deben escribirse con **punto** (`8.5`) — Excel a veces interpreta la coma como separador de miles. El script también acepta coma (`8,5`) como fallback.
-> - ⚠️ Si Excel muestra un valor decimal como una fecha (por ejemplo `8.9` aparece como `08/09/2026`), es un problema de formato de celda. Selecciona la celda, formato → **Número**, y vuelve a escribir el valor.
+> - Los valores numéricos con decimal deben escribirse con **punto** (`8.5`). El script también acepta coma (`8,5`) como fallback.
+> - ⚠️ Si Excel muestra un valor decimal como una fecha (por ejemplo `8.9` aparece como `08/09/2026`), selecciona la celda, formato → **Número**, y vuelve a escribir el valor. El script detecta y corrige este problema automáticamente.
 > - La columna Descripción puede llamarse: `Descripción`, `Descripcion`, `Description`, `Descripción del Escape` o `Resumen`.
-> - Las columnas de categorías (Historia, Ambientación, Jugabilidad, GameMaster) son opcionales — si no tienen dato, no se muestran.
+> - Las columnas de categorías (Historia, Ambientación, Jugabilidad, GameMaster) son opcionales.
+> - No dejes filas con cabeceras repetidas ni bloques de datos duplicados en el Excel — el script elimina duplicados automáticamente pero es mejor mantener el Excel limpio.
 
 ---
 
 ## 🖥 Vistas de la web
 
+### Header — The Vault
+Cabecera con estilo steampunk/metálico con el título **THE VAULT** y subtítulo *Escape Room Chronicles*.
+
+Debajo del título, una **barra de estadísticas** muestra en tiempo real:
+- Escapes completados, pendientes y total
+- Media de valoración del grupo
+- Horas totales jugadas
+- **Barra de progreso animada** con % completado de la lista
+- **Insights dinámicos:** mejor escape, empresa top, ciudad top y temática favorita — calculados automáticamente desde los datos del Excel
+
 ### Pestaña Pendientes
 Cuadrícula de tarjetas con filtros por ciudad, dificultad y tipo. Ordenación por rating, nombre, duración o dificultad. Cada tarjeta incluye:
-- Nombre, empresa, tags de ciudad/temática/tipo
-- Duración, dificultad y máximo de jugadores (`Max_personas`)
-- Descripción informativa (si existe en el Excel)
-- **♥ botón de favorito** junto al nombre, con contador de likes de todos los usuarios
-- Widget de votación con **medias estrellas** (nota 1-10 en pasos de 1)
+- **Logo circular** obtenido automáticamente del favicon de la web del escape
+- Nombre, empresa
+- Si tiene posición en el ranking TERPECA: **badge oficial TERPECA** con el número de posición debajo
+- **♥ botón de favorito** con contador de likes de todos los usuarios
+- Ciudad · Temática · **★ Rating** alineado a la derecha
+- Tipo, descripción (si existe), duración, dificultad, máximo de jugadores
+- Widget de votación con **medias estrellas** (nota 1-10)
 
 El botón **♥ Favoritos (N)** en la barra de filtros muestra solo los escapes que tú has marcado.
 
 ### Pestaña Hechos
 Vista de **reseñas** — cada escape ocupa una fila con tres columnas:
 - **Izquierda:** posición en el ranking según votos de la comunidad (🥇🥈🥉 para el podio)
-- **Centro:** info técnica + puntuaciones (Escapistas / Grupo / Comunidad) + widget de votación
-- **Derecha:** tu opinión personal (columna Descripción del Excel) y, si existen, las **valoraciones por categorías** (Historia, Ambientación, Jugabilidad, Game Master) mostradas como estrellas con su nota
+- **Centro:** logo circular + nombre + badge TERPECA si aplica, info técnica, puntuaciones (Escapistas / Grupo / Comunidad) y widget de votación
+- **Derecha:** opinión personal (columna Descripción del Excel) y, si existen, **valoraciones por categorías** (Historia, Ambientación, Jugabilidad, Game Master) con estrellas visuales
 
 ### Pestaña Ranking
-Tabla ordenada por **Valoración Grupo** (tu nota personal del Excel, con soporte de decimales). Columnas: posición, nombre, empresa, temática, dificultad, duración, rating Escapistas, nota Grupo y **media de votos de la Comunidad** con número de votantes. La columna Comunidad solo aparece si Firebase está configurado.
+Tabla ordenada por **Valoración Grupo** (nota personal del Excel). Columnas: posición, nombre, empresa, temática, dificultad, duración, rating Escapistas, nota Grupo y **media de votos de la Comunidad** con número de votantes. La columna Comunidad solo aparece si Firebase está configurado.
+
+---
+
+## 🏆 Badge TERPECA
+
+Si un escape tiene valor en la columna **Posición TERPECA**, se muestra automáticamente el logo oficial de los *Top Escape Rooms Project Enthusiasts' Choice Awards* con el número de posición debajo. Aparece tanto en Pendientes como en Hechos.
 
 ---
 
 ## ⭐ Sistema de votación con estrellas
 
-Cada tarjeta (Pendientes y Hechos) incluye un widget de **medias estrellas**:
+Cada tarjeta incluye un widget de **medias estrellas**:
 - 5 estrellas clicables, cada una con mitad izquierda (½ estrella) y mitad derecha (1 estrella)
-- Permite dar notas del **1 al 10** — números enteros o impares como 3, 5, 7, 9
+- Permite dar notas del **1 al 10**
 - Al pasar el ratón se previsualiza la nota antes de confirmar
 - Muestra tu nota personal y la **media de la comunidad** con número de votantes
 - El Ranking incluye la media comunitaria de cada escape
@@ -135,19 +155,19 @@ Cada tarjeta (Pendientes y Hechos) incluye un widget de **medias estrellas**:
 
 ## ♥ Sistema de favoritos / likes
 
-Cada tarjeta de Pendientes tiene un botón **♥** junto al nombre del escape:
+Cada tarjeta de Pendientes tiene un botón **♥** junto al nombre:
 - El corazón es gris si no lo has marcado, rojo si sí
-- Debajo del corazón se muestra el **total de likes de todos los usuarios** que lo han marcado
+- Debajo del corazón se muestra el **total de likes de todos los usuarios**
 - Al pulsar se sincroniza con Firebase en tiempo real
-- Tus favoritos se recuerdan entre visitas y entre dispositivos (vinculados a tu ID anónimo)
+- Tus favoritos se recuerdan entre visitas y dispositivos
 - El botón **♥ Favoritos** en la barra de filtros muestra solo tus escapes marcados
-- Requiere Firebase configurado (sin Firebase, los favoritos se guardan solo localmente en el navegador)
+- Sin Firebase, los favoritos se guardan solo localmente en el navegador
 
 ---
 
 ## 🔥 Configurar Firebase (votaciones y likes)
 
-Firebase es gratuito y solo necesitas configurarlo una vez para activar votaciones con estrellas y el contador de likes compartido.
+Firebase es gratuito y solo necesitas configurarlo una vez.
 
 ### 1. Crear proyecto
 - Ve a [console.firebase.google.com](https://console.firebase.google.com)
@@ -226,8 +246,14 @@ Ve a Settings → Actions → General → Workflow permissions y activa "Read an
 **La web muestra error 404 en data.json**
 La Action aún no se ha ejecutado o falló. Ve a la pestaña Actions, comprueba el log y dale a "Re-run jobs" si es necesario.
 
-**Las votaciones o likes no aparecen**
-Asegúrate de haber pegado la URL de Firebase en `index.html` y de haber subido el archivo al repo. Comprueba también que las reglas de Firebase estén publicadas.
+**Las votaciones o likes no aparecen / dan error 401**
+Ve a Firebase Console → Realtime Database → Reglas y asegúrate de tener los nodos `votes` y `likes` con `.read: true` y `.write: true` publicados.
 
 **Los decimales en el Excel aparecen como fechas**
-Es un problema de formato de celda en Excel. Selecciona la celda problemática → formato → **Número** → vuelve a escribir el valor. El script detecta y corrige automáticamente este problema al convertir el Excel.
+Es un problema de formato de celda en Excel. Selecciona la celda → formato → **Número** → vuelve a escribir el valor. El script lo detecta y corrige automáticamente.
+
+**Aparecen escapes duplicados o un escape con nombre raro sin datos**
+Revisa el Excel buscando filas de cabecera repetidas o bloques de datos pegados dos veces. El script elimina duplicados automáticamente y avisa en el log de la Action (`⚠ Duplicados eliminados: N`).
+
+**El favicon/logo no aparece en alguna tarjeta**
+Es normal si el escape no tiene web configurada en el Excel, o si la web no tiene favicon. Se muestra 🔐 como fallback automáticamente.
