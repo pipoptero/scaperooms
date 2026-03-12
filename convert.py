@@ -108,7 +108,12 @@ def parse_sheet(ws, debug_fields=None):
         nombre_idx = col_map["nombre"]
         if nombre_idx < 0 or nombre_idx >= len(row):
             continue
-        if row[nombre_idx] is None or str(row[nombre_idx]).strip() == "":
+        val = row[nombre_idx]
+        if val is None or str(val).strip() == "":
+            continue
+        # Ignorar si parece una fila de cabecera repetida
+        if str(val).strip().lower() in ["nombre del escape", "nombre", "name", "escape"]:
+            print(f"   ⚠ Cabecera repetida ignorada en fila: {list(row)[:4]}")
             continue
 
         obj = {}
@@ -131,10 +136,28 @@ def parse_sheet(ws, debug_fields=None):
 
 # ── Parsear hojas ─────────────────────────────────────────────────────────────
 print(f"\n📋 Hoja Pendientes:")
-pendientes = parse_sheet(wb[pend_name], debug_fields={"rating"})
+pendientes_raw = parse_sheet(wb[pend_name], debug_fields={"rating"})
+# Deduplicar por nombre (conservar primera aparición)
+seen = set()
+pendientes = []
+for p in pendientes_raw:
+    key = str(p.get("nombre","")).strip().lower()
+    if key and key not in seen:
+        seen.add(key)
+        pendientes.append(p)
+if len(pendientes_raw) != len(pendientes):
+    print(f"   ⚠ Duplicados eliminados: {len(pendientes_raw) - len(pendientes)}")
+
 print(f"\n📋 Hoja Hechos:")
-hechos_raw = parse_sheet(wb[hecho_name], debug_fields={"valoracion"})
-hechos = [h for h in hechos_raw if h["nombre"]]
+hechos_raw2 = parse_sheet(wb[hecho_name], debug_fields={"valoracion"})
+seen2 = set()
+hechos_dedup = []
+for h in hechos_raw2:
+    key = str(h.get("nombre","")).strip().lower()
+    if key and key not in seen2:
+        seen2.add(key)
+        hechos_dedup.append(h)
+hechos = [h for h in hechos_dedup if h["nombre"]]
 
 # Calcular ranking por valoración grupo (robusto ante valores no numéricos)
 def safe_float(val):
