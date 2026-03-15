@@ -436,6 +436,25 @@
       "jugabilidad": "",
       "gamemaster": "",
       "terpeca": ""
+    },
+    {
+      "nombre": "Achijira",
+      "empresa": "Red Dopamine",
+      "ciudad": "",
+      "tematica": "Misterio",
+      "tipo": "Avenura",
+      "duracion": 105,
+      "dificultad": "Media",
+      "rating": 9.0,
+      "web": "https://www.reddopamine.com/landing-misterio-achijira",
+      "valoracion": "",
+      "descripcion": "Tu Misión Será recatar a los que hicieron la última expedición. Su vida está en tus manos. No es tan sencillo como parece. Las pruebas y los distintos tipos de escenarios que te encontrarán pondrán a prueba tu conocimiento. Jugar es fácil, conseguir que todo salga bien no tanto...",
+      "max_personas": 7,
+      "historia": "",
+      "ambientacion": "",
+      "jugabilidad": "",
+      "gamemaster": "",
+      "terpeca": ""
     }
   ],
   "hechos": [
@@ -642,7 +661,7 @@
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 23,
+    "pendientes_count": 24,
     "hechos_count": 10
   }
 }
