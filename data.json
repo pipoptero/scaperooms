@@ -321,7 +321,7 @@
       "ambientacion": "",
       "jugabilidad": "",
       "gamemaster": "",
-      "terpeca": 10
+      "terpeca": 12
     },
     {
       "nombre": "Synergo",
@@ -398,6 +398,44 @@
       "jugabilidad": "",
       "gamemaster": "",
       "terpeca": 95
+    },
+    {
+      "nombre": "Roomions",
+      "empresa": "Virus Games",
+      "ciudad": "Calella",
+      "tematica": "Fiesta",
+      "tipo": "Avenura",
+      "duracion": 75,
+      "dificultad": "Media/Facil",
+      "rating": 8.5,
+      "web": "https://virusroomescape.com/es/escape-room-calella-roomions/#reserva-roomions",
+      "valoracion": "",
+      "descripcion": "¡El día del lanzamiento ha llegado! Aunque el laboratorio del doctor Nefário ha sido saboteado por alguien… preparadlo todo para el despegue del año a tiempo! En este escape room visual, familiar y lleno de color, vuestro equipo tendrá que reparar un cohete antes de que sea demasiado tarde. Con pruebas colaborativas, lógica sencilla y ambientación futurista, Roomions es ideal para quienes buscan una aventura accesible pero emocionante, sin sustos ni oscuridad. Perfecto para grupos con peques, adultos primerizos o amantes de lo geek.",
+      "max_personas": 8,
+      "historia": "",
+      "ambientacion": "",
+      "jugabilidad": "",
+      "gamemaster": "",
+      "terpeca": ""
+    },
+    {
+      "nombre": "Tao Room Escape",
+      "empresa": "Virus Games",
+      "ciudad": "Calella",
+      "tematica": "Fiesta",
+      "tipo": "Avenura",
+      "duracion": 90,
+      "dificultad": "Media/Facil",
+      "rating": 8.5,
+      "web": "https://virusroomescape.com/es/escape-room-calella-tao/",
+      "valoracion": "",
+      "descripcion": "Habéis reservado un tratamiento exclusivo en el misterioso Tao Japanese Massage Center, pero al llegar… nada es lo que parece. Tras una extraña bienvenida, os adentráis en una experiencia sensorial con giros inesperados, enigmas envolventes y un ambiente que mezcla calma oriental con diversión creciente. Una sala original,  perfecta para quienes buscan algo diferente, elegante y sorprendente en Calella.",
+      "max_personas": 8,
+      "historia": "",
+      "ambientacion": "",
+      "jugabilidad": "",
+      "gamemaster": "",
+      "terpeca": ""
     }
   ],
   "hechos": [
@@ -604,7 +642,7 @@
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 21,
+    "pendientes_count": 23,
     "hechos_count": 10
   }
 }
