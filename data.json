@@ -400,25 +400,6 @@
       "terpeca": 95
     },
     {
-      "nombre": "Roomions",
-      "empresa": "Virus Games",
-      "ciudad": "Calella",
-      "tematica": "Fiesta",
-      "tipo": "Avenura",
-      "duracion": 75,
-      "dificultad": "Media/Facil",
-      "rating": 8.5,
-      "web": "https://virusroomescape.com/es/escape-room-calella-roomions/#reserva-roomions",
-      "valoracion": "",
-      "descripcion": "¡El día del lanzamiento ha llegado! Aunque el laboratorio del doctor Nefário ha sido saboteado por alguien… preparadlo todo para el despegue del año a tiempo! En este escape room visual, familiar y lleno de color, vuestro equipo tendrá que reparar un cohete antes de que sea demasiado tarde. Con pruebas colaborativas, lógica sencilla y ambientación futurista, Roomions es ideal para quienes buscan una aventura accesible pero emocionante, sin sustos ni oscuridad. Perfecto para grupos con peques, adultos primerizos o amantes de lo geek.",
-      "max_personas": 8,
-      "historia": "",
-      "ambientacion": "",
-      "jugabilidad": "",
-      "gamemaster": "",
-      "terpeca": ""
-    },
-    {
       "nombre": "Tao Room Escape",
       "empresa": "Virus Games",
       "ciudad": "Calella",
@@ -516,7 +497,7 @@
       "jugabilidad": "",
       "gamemaster": "",
       "terpeca": "",
-      "ranking": 10
+      "ranking": 11
     },
     {
       "nombre": "Jurásico",
@@ -636,7 +617,7 @@
       "jugabilidad": 7.0,
       "gamemaster": 8.0,
       "terpeca": "",
-      "ranking": 8
+      "ranking": 9
     },
     {
       "nombre": "Bank of Thaqar",
@@ -656,12 +637,32 @@
       "jugabilidad": 7.0,
       "gamemaster": 6.0,
       "terpeca": "",
-      "ranking": 9
+      "ranking": 10
+    },
+    {
+      "nombre": "Roomions",
+      "empresa": "Virus Games",
+      "ciudad": "Calella",
+      "tematica": "Fiesta",
+      "tipo": "Avenura",
+      "duracion": 75,
+      "dificultad": "Media/Facil",
+      "rating": 8.5,
+      "web": "https://virusroomescape.com/es/escape-room-calella-roomions/#reserva-roomions",
+      "valoracion": 8.0,
+      "descripcion": "Hoy hemos probado el escape room de Roomions y la experiencia ha sido muy positiva. Fuimos dos adultos y dos niños (6 y 10 años) y el juego funcionó perfecto para todos. El pequeño, en su primer escape room, participó mucho y salió encantado. La mayor, con experiencia, también lo disfrutó mucho. Es un room de tamaño contenido (una sala y media), pero muy bien aprovechado: no paras en ningún momento y todo fluye. Mención especial al Game Master, Edu (Nefario Jr.), que lo hizo genial. Muy recomendable: familiar y muy divertido.",
+      "max_personas": "",
+      "historia": 8.0,
+      "ambientacion": 8.5,
+      "jugabilidad": 8.0,
+      "gamemaster": 8.5,
+      "terpeca": "",
+      "ranking": 8
     }
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 24,
-    "hechos_count": 10
+    "pendientes_count": 23,
+    "hechos_count": 11
   }
 }
