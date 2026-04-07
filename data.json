@@ -400,25 +400,6 @@
       "terpeca": 95
     },
     {
-      "nombre": "Tao Room Escape",
-      "empresa": "Virus Games",
-      "ciudad": "Calella",
-      "tematica": "Fiesta",
-      "tipo": "Avenura",
-      "duracion": 90,
-      "dificultad": "Media/Facil",
-      "rating": 8.5,
-      "web": "https://virusroomescape.com/es/escape-room-calella-tao/",
-      "valoracion": "",
-      "descripcion": "Habéis reservado un tratamiento exclusivo en el misterioso Tao Japanese Massage Center, pero al llegar… nada es lo que parece. Tras una extraña bienvenida, os adentráis en una experiencia sensorial con giros inesperados, enigmas envolventes y un ambiente que mezcla calma oriental con diversión creciente. Una sala original,  perfecta para quienes buscan algo diferente, elegante y sorprendente en Calella.",
-      "max_personas": 8,
-      "historia": "",
-      "ambientacion": "",
-      "jugabilidad": "",
-      "gamemaster": "",
-      "terpeca": ""
-    },
-    {
       "nombre": "Achijira",
       "empresa": "Red Dopamine",
       "ciudad": "",
@@ -449,7 +430,7 @@
       "dificultad": "Media",
       "rating": 9.0,
       "web": "https://sagaescaperoom.com/",
-      "valoracion": 9.8,
+      "valoracion": 9.375,
       "descripcion": "Inmersión cinematográfica absoluta con una estética Steampunk y victoriana impecable (niebla, olores y texturas de primer nivel). Jugada por 3 adultos y 2 niñas de 10 años en modo Tensión, resultó una experiencia redonda: las niñas fliparon desde la primera sala y el trato del Game Master fue excelente y muy cordial. Los puzzles de nueva generación están totalmente integrados en la trama, logrando un flujo de juego magnífico sin candados forzados. Una joya visual y narrativa que, gracias a su ambientación única, encantó a todo el grupo por igual.",
       "max_personas": "",
       "historia": 9.5,
@@ -497,7 +478,7 @@
       "jugabilidad": "",
       "gamemaster": "",
       "terpeca": "",
-      "ranking": 11
+      "ranking": 12
     },
     {
       "nombre": "Jurásico",
@@ -577,7 +558,7 @@
       "jugabilidad": 7.0,
       "gamemaster": 9.0,
       "terpeca": "",
-      "ranking": 7
+      "ranking": 8
     },
     {
       "nombre": "Jaipur",
@@ -637,7 +618,7 @@
       "jugabilidad": 7.0,
       "gamemaster": 6.0,
       "terpeca": "",
-      "ranking": 10
+      "ranking": 11
     },
     {
       "nombre": "Roomions",
@@ -649,7 +630,7 @@
       "dificultad": "Media/Facil",
       "rating": 8.5,
       "web": "https://virusroomescape.com/es/escape-room-calella-roomions/#reserva-roomions",
-      "valoracion": 8.0,
+      "valoracion": 8.25,
       "descripcion": "Hoy hemos probado el escape room de Roomions y la experiencia ha sido muy positiva. Fuimos dos adultos y dos niños (6 y 10 años) y el juego funcionó perfecto para todos. El pequeño, en su primer escape room, participó mucho y salió encantado. La mayor, con experiencia, también lo disfrutó mucho. Es un room de tamaño contenido (una sala y media), pero muy bien aprovechado: no paras en ningún momento y todo fluye. Mención especial al Game Master, Edu (Nefario Jr.), que lo hizo genial. Muy recomendable: familiar y muy divertido.",
       "max_personas": "",
       "historia": 8.0,
@@ -657,12 +638,32 @@
       "jugabilidad": 8.0,
       "gamemaster": 8.5,
       "terpeca": "",
-      "ranking": 8
+      "ranking": 7
+    },
+    {
+      "nombre": "Tao Room Escape",
+      "empresa": "Virus Games",
+      "ciudad": "Calella",
+      "tematica": "Fiesta",
+      "tipo": "Avenura",
+      "duracion": 90,
+      "dificultad": "Media/Facil",
+      "rating": 8.5,
+      "web": "https://virusroomescape.com/es/escape-room-calella-tao/",
+      "valoracion": 7.375,
+      "descripcion": "Visitamos Tao Room Escape Virus Games en grupo de 8 (4 adultos y 4 niños de entre 6 y 10 años, algunos ya con experiencia en escape rooms). La experiencia seguramente cambia mucho según el tamaño del grupo: en nuestro caso, las salas se nos quedaron pequeñas y con pocos enigmas para tanta gente, lo que hizo que varios participantes se quedaran sin apenas intervenir. Es una pena, porque es un escape del que nos habían hablado muy bien y le teníamos muchas ganas. Aun así, nos dejó un poco fríos. Probablemente sea más disfrutable en grupos más reducidos (3-4 personas). No descartamos darle otra oportunidad en el futuro en ese formato.",
+      "max_personas": "",
+      "historia": 7.0,
+      "ambientacion": 7.5,
+      "jugabilidad": 7.5,
+      "gamemaster": 7.5,
+      "terpeca": "",
+      "ranking": 10
     }
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 23,
-    "hechos_count": 11
+    "pendientes_count": 22,
+    "hechos_count": 12
   }
 }
