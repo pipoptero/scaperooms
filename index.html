@@ -333,6 +333,100 @@
   .ranking-table tr:hover td{background:rgba(255,255,255,.02);}
   .rank-pos{font-family:'Cinzel',serif;font-weight:700;font-size:1.05rem;color:var(--text3);}
   .rank-pos.gold{color:var(--gold);}.rank-pos.silver{color:#c0c0c0;}.rank-pos.bronze{color:#cd7f32;}
+  .rank-room-name{font-family:'Cinzel',serif;font-size:.9rem;color:var(--text);}
+  .rank-score-group{font-family:'Cinzel',serif;color:var(--amber);font-size:1rem;}
+  .rank-score-community{font-family:'Share Tech Mono',monospace;font-size:.82rem;}
+  .rank-score-community .comm-avg{color:var(--amber);font-family:'Cinzel',serif;font-size:.95rem;}
+  .rank-score-community .comm-count{color:var(--text3);font-size:.68rem;margin-left:4px;}
+  .rank-score-community .comm-empty{color:var(--text3);font-size:.68rem;}
+
+  /* Ranking responsive: en móvil la tabla pasa a tarjetas verticales */
+  @media(max-width:760px){
+    .ranking-table,
+    .ranking-table thead,
+    .ranking-table tbody,
+    .ranking-table tr,
+    .ranking-table th,
+    .ranking-table td{
+      display:block;
+      width:100%;
+    }
+    .ranking-table{
+      border-collapse:separate;
+      border-spacing:0;
+      margin-top:12px;
+    }
+    .ranking-table thead{display:none;}
+    .ranking-table tbody{display:flex;flex-direction:column;gap:12px;}
+    .ranking-table tr{
+      position:relative;
+      padding:14px;
+      border:1px solid var(--border);
+      background:var(--bg2);
+      animation:fadeUp .25s ease both;
+    }
+    .ranking-table tr:hover td{background:transparent;}
+    .ranking-table td{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:14px;
+      padding:7px 0;
+      border-bottom:1px solid rgba(255,255,255,.035);
+      text-align:right;
+      min-width:0;
+    }
+    .ranking-table td:last-child{border-bottom:none;}
+    .ranking-table td::before{
+      content:attr(data-label);
+      flex:0 0 100px;
+      font-family:'Share Tech Mono',monospace;
+      font-size:.56rem;
+      line-height:1.4;
+      letter-spacing:.1em;
+      text-align:left;
+      text-transform:uppercase;
+      color:var(--text3);
+    }
+    .ranking-table td[data-label="#"]{
+      justify-content:center;
+      padding:0 0 10px;
+      margin-bottom:4px;
+      border-bottom:1px solid var(--border);
+      text-align:center;
+    }
+    .ranking-table td[data-label="#"]::before{display:none;}
+    .ranking-table td[data-label="#"] .rank-pos{font-size:1.45rem;}
+    .ranking-table td[data-label="Escape Room"]{
+      display:block;
+      text-align:center;
+      padding:4px 0 12px;
+      border-bottom:1px solid var(--border);
+    }
+    .ranking-table td[data-label="Escape Room"]::before{
+      display:block;
+      width:100%;
+      margin-bottom:5px;
+      text-align:center;
+    }
+    .ranking-table td[data-label="Escape Room"] .rank-room-name{
+      display:block;
+      font-size:1rem;
+      line-height:1.25;
+    }
+    .ranking-table td .tag{
+      max-width:100%;
+      white-space:normal;
+      text-align:right;
+    }
+  }
+
+  @media(max-width:420px){
+    .ranking-table tr{padding:12px;}
+    .ranking-table td{gap:10px;font-size:.86rem;}
+    .ranking-table td::before{flex-basis:88px;font-size:.52rem;}
+    .rank-score-group{font-size:.95rem;}
+  }
 
   @media(max-width:640px){
     header{padding:28px 18px 60px;}.content{padding:0 14px 40px;}
@@ -1070,23 +1164,23 @@ function renderRanking() {
       const slug = slugify(h.nombre);
       const { avg, count } = voteStats(slug);
       const commCell = FIREBASE_ENABLED
-        ? `<td style="font-family:'Share Tech Mono',monospace;font-size:.82rem;">
+        ? `<td data-label="Comunidad" class="rank-score-community">
             ${count > 0
-              ? `<span style="color:var(--amber);font-family:'Cinzel',serif;font-size:.95rem;">★ ${(avg*2).toFixed(1)}</span>
-                 <span style="color:var(--text3);font-size:.68rem;margin-left:4px;">(${count})</span>`
-              : `<span style="color:var(--text3);font-size:.68rem;">—</span>`
+              ? `<span class="comm-avg">★ ${(avg*2).toFixed(1)}</span>
+                 <span class="comm-count">(${count})</span>`
+              : `<span class="comm-empty">—</span>`
             }
           </td>`
         : '';
       return `<tr>
-        <td><span class="rank-pos ${medals[i]||''}">${emoji[i]||'#'+(i+1)}</span></td>
-        <td style="font-family:'Cinzel',serif;font-size:.9rem;color:var(--text)">${h.nombre}</td>
-        <td>${h.empresa}</td>
-        <td><span class="tag tag-tema" style="font-size:.7rem">${h.tematica}</span></td>
-        <td><span class="meta-val ${dc(h.dificultad)}" style="font-size:.82rem">⚠ ${h.dificultad}</span></td>
-        <td>${h.duracion}</td>
-        <td>★ ${h.rating}</td>
-        <td style="font-family:'Cinzel',serif;color:var(--amber);font-size:1rem">★ ${h.valoracion}</td>
+        <td data-label="#"><span class="rank-pos ${medals[i]||''}">${emoji[i]||'#'+(i+1)}</span></td>
+        <td data-label="Escape Room"><span class="rank-room-name">${h.nombre || '—'}</span></td>
+        <td data-label="Empresa">${h.empresa || '—'}</td>
+        <td data-label="Temática"><span class="tag tag-tema" style="font-size:.7rem">${h.tematica || '—'}</span></td>
+        <td data-label="Dificultad"><span class="meta-val ${dc(h.dificultad)}" style="font-size:.82rem">⚠ ${h.dificultad || '—'}</span></td>
+        <td data-label="Duración">${h.duracion ? `${h.duracion} min` : '—'}</td>
+        <td data-label="Escapistas">${h.rating ? `★ ${h.rating}` : '—'}</td>
+        <td data-label="Grupo" class="rank-score-group">${h.valoracion ? `★ ${h.valoracion}` : '—'}</td>
         ${commCell}
       </tr>`;
     }).join('')}</tbody>`;
