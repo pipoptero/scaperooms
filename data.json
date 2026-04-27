@@ -466,19 +466,19 @@
       "ciudad": "Barcelona",
       "tematica": "Ciencia ficción",
       "tipo": "Tecnológico",
-      "duracion": 75,
+      "duracion": 120,
       "dificultad": "Media-Alta",
       "rating": 9.0,
       "web": "https://escapebarcelona.com/",
-      "valoracion": 0.0,
-      "descripcion": "",
+      "valoracion": 8.375,
+      "descripcion": "Ambientación muy cuidada y sorprendente, lo mejor del escape. Requiere algo de agilidad física. Inicio algo duro: los primeros enigmas cuestan incluso con experiencia, pero luego fluye mejor.  Gran trabajo del GM como NPC, con buena tensión durante la partida. Ojo: zona complicada para aparcar.",
       "max_personas": "",
-      "historia": "",
-      "ambientacion": "",
-      "jugabilidad": "",
-      "gamemaster": "",
+      "historia": 8.5,
+      "ambientacion": 9.0,
+      "jugabilidad": 8.0,
+      "gamemaster": 8.0,
       "terpeca": "",
-      "ranking": 12
+      "ranking": 6
     },
     {
       "nombre": "Jurásico",
@@ -538,7 +538,7 @@
       "jugabilidad": 8.0,
       "gamemaster": 8.0,
       "terpeca": "",
-      "ranking": 6
+      "ranking": 7
     },
     {
       "nombre": "Exorcista",
@@ -558,7 +558,7 @@
       "jugabilidad": 7.0,
       "gamemaster": 9.0,
       "terpeca": "",
-      "ranking": 8
+      "ranking": 9
     },
     {
       "nombre": "Jaipur",
@@ -598,7 +598,7 @@
       "jugabilidad": 7.0,
       "gamemaster": 8.0,
       "terpeca": "",
-      "ranking": 9
+      "ranking": 10
     },
     {
       "nombre": "Bank of Thaqar",
@@ -618,7 +618,7 @@
       "jugabilidad": 7.0,
       "gamemaster": 6.0,
       "terpeca": "",
-      "ranking": 11
+      "ranking": 12
     },
     {
       "nombre": "Roomions",
@@ -630,15 +630,15 @@
       "dificultad": "Media/Facil",
       "rating": 8.5,
       "web": "https://virusroomescape.com/es/escape-room-calella-roomions/#reserva-roomions",
-      "valoracion": 8.25,
+      "valoracion": 8.125,
       "descripcion": "Hoy hemos probado el escape room de Roomions y la experiencia ha sido muy positiva. Fuimos dos adultos y dos niños (6 y 10 años) y el juego funcionó perfecto para todos. El pequeño, en su primer escape room, participó mucho y salió encantado. La mayor, con experiencia, también lo disfrutó mucho. Es un room de tamaño contenido (una sala y media), pero muy bien aprovechado: no paras en ningún momento y todo fluye. Mención especial al Game Master, Edu (Nefario Jr.), que lo hizo genial. Muy recomendable: familiar y muy divertido.",
       "max_personas": "",
       "historia": 8.0,
-      "ambientacion": 8.5,
+      "ambientacion": 8.0,
       "jugabilidad": 8.0,
       "gamemaster": 8.5,
       "terpeca": "",
-      "ranking": 7
+      "ranking": 8
     },
     {
       "nombre": "Tao Room Escape",
@@ -658,7 +658,7 @@
       "jugabilidad": 7.5,
       "gamemaster": 7.5,
       "terpeca": "",
-      "ranking": 10
+      "ranking": 11
     }
   ],
   "meta": {
