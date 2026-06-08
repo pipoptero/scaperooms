@@ -856,6 +856,13 @@ function renderAuthStatus() {
     logoutBtn.style.display = 'none';
     return;
   }
+  if (!window.firebase) {
+    nameEl.textContent = 'SDK Firebase no cargado';
+    loginBtn.disabled = true;
+    loginBtn.title = 'No se pudo cargar Firebase desde gstatic.com';
+    logoutBtn.style.display = 'none';
+    return;
+  }
 
   loginBtn.disabled = false;
   loginBtn.title = 'Entrar con tu cuenta de Google';
@@ -917,7 +924,11 @@ async function migrateAnonymousDataToAccount() {
     likesCache[slug][USER_ID] = true;
     delete likesCache[slug][LOCAL_USER_ID];
     await fbPut(`likes/${slug}/${USER_ID}`, true);
-    await fbDelete(`likes/${slug}/${LOCAL_USER_ID}`);
+    try {
+      await fbDelete(`likes/${slug}/${LOCAL_USER_ID}`);
+    } catch(e) {
+      console.warn('No se pudo limpiar el favorito anonimo tras iniciar sesion:', e.message);
+    }
   }
 
   for (const [slug, users] of Object.entries(votesCache)) {
@@ -925,27 +936,53 @@ async function migrateAnonymousDataToAccount() {
     votesCache[slug][USER_ID] = users[LOCAL_USER_ID];
     delete votesCache[slug][LOCAL_USER_ID];
     await fbPut(`votes/${slug}/${USER_ID}`, votesCache[slug][USER_ID]);
-    await fbDelete(`votes/${slug}/${LOCAL_USER_ID}`);
+    try {
+      await fbDelete(`votes/${slug}/${LOCAL_USER_ID}`);
+    } catch(e) {
+      console.warn('No se pudo limpiar el voto anonimo tras iniciar sesion:', e.message);
+    }
   }
   FAVS = favSlugs;
   writeStoredFavs();
 }
 
 async function signInGoogle() {
-  if (!firebaseAuthConfigured() || !FIREBASE_AUTH || !GOOGLE_PROVIDER) {
-    alert('Falta configurar Firebase Auth en index.html y activar Google en Firebase Console.');
+  if (!firebaseAuthConfigured()) {
+    alert('Falta rellenar FIREBASE_CONFIG en index.html.');
     return;
   }
+  if (!window.firebase) {
+    alert('No se ha cargado el SDK de Firebase desde gstatic.com. Prueba con Ctrl+F5, revisa conexion/extensiones del navegador o abre la web en Chrome/Edge normal.');
+    return;
+  }
+  if (!FIREBASE_AUTH || !GOOGLE_PROVIDER) {
+    await initFirebaseAuth();
+  }
+  if (!FIREBASE_AUTH || !GOOGLE_PROVIDER) {
+    alert('Firebase se ha cargado, pero Auth no se ha inicializado. Revisa que Firebase Authentication este activado en el proyecto.');
+    return;
+  }
+  let result;
   try {
-    await FIREBASE_AUTH.signInWithPopup(GOOGLE_PROVIDER);
-    AUTH_USER = FIREBASE_AUTH.currentUser;
-    USER_ID = AUTH_USER ? AUTH_USER.uid : LOCAL_USER_ID;
-    AUTH_TOKEN = AUTH_USER ? await AUTH_USER.getIdToken() : '';
+    result = await FIREBASE_AUTH.signInWithPopup(GOOGLE_PROVIDER);
+  } catch(e) {
+    console.error('Error al iniciar sesion con Google:', e);
+    const detail = e.code ? `\n\nDetalle: ${e.code}` : '';
+    alert(`No se pudo iniciar sesion con Google. Revisa la configuracion de Firebase Auth.${detail}`);
+    return;
+  }
+
+  AUTH_USER = result.user || FIREBASE_AUTH.currentUser;
+  USER_ID = AUTH_USER ? AUTH_USER.uid : LOCAL_USER_ID;
+  AUTH_TOKEN = AUTH_USER ? await AUTH_USER.getIdToken() : '';
+  renderAuthStatus();
+
+  try {
     await migrateAnonymousDataToAccount();
     await refreshSignedSession();
   } catch(e) {
-    console.error('Error al iniciar sesion con Google:', e);
-    alert('No se pudo iniciar sesion con Google. Revisa la configuracion de Firebase Auth.');
+    console.warn('Sesion iniciada, pero no se pudieron sincronizar todos los datos:', e.message);
+    await refreshSignedSession();
   }
 }
 
