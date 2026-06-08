@@ -92,8 +92,35 @@ Estas columnas permiten ampliar el listado al estilo de un catálogo más grande
 | Características | Etiquetas extra como contacto físico, grupos grandes, portátil, etc. |
 | Abierto | Sí/No, Abierto/Cerrado o true/false |
 | Verificado | Sí/No o true/false |
+| Imagen | URL directa de la imagen/portada que se mostrará en la tarjeta |
 | Rating Collector | Nota externa adicional si quieres importarla manualmente |
 | Votos | Número de opiniones/votos externos |
+
+### Imágenes locales
+
+La web puede mostrar imágenes locales guardadas en la carpeta `images/`.
+El conversor busca automáticamente archivos con el nombre normalizado del escape:
+
+```text
+images/cybercity-2049.jpg
+images/la-taberna.webp
+```
+
+Si existe una imagen local, se usa antes que la columna `Imagen` del Excel. Si no existe, se usa la URL indicada en `Imagen`. Si tampoco hay URL, la tarjeta muestra una portada visual de fallback.
+
+Para descargar imágenes desde URLs que tengas autorizadas:
+
+```bash
+python scripts/download_images.py image_sources.csv
+python convert.py
+```
+
+El CSV debe tener estas columnas:
+
+```csv
+nombre,imagen
+Cybercity 2049,https://example.com/cybercity-2049.jpg
+```
 
 ### Hoja «Hechos»
 Mismas columnas que Pendientes (incluida Posición TERPECA), más:

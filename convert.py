@@ -7,6 +7,9 @@ Ejecutado automáticamente por GitHub Actions.
 import json
 import sys
 import glob
+import os
+import re
+import unicodedata
 import openpyxl
 
 # ── Buscar el archivo Excel en el repo ───────────────────────────────────────
@@ -45,6 +48,7 @@ COL_ALIASES = {
     "rating_collector": ["rating collector", "valoración collector", "valoracion collector", "collector rating"],
     "votos":       ["votos", "opiniones", "reviews", "votes"],
     "web":         ["web", "url", "link"],
+    "imagen":      ["imagen", "image", "foto", "photo", "cover", "portada", "url imagen", "image url"],
     "valoracion":  ["valoración grupo", "valoracion grupo", "group rating", "puntuación", "puntuacion"],
     "descripcion":   ["descripción", "descripcion", "description", "descripción del escape", "descripcion del escape", "descripción del room", "resumen"],
     "min_personas":  ["min_personas", "min personas", "mínimo jugadores", "minimo jugadores", "min players"],
@@ -102,6 +106,21 @@ def safe_num(val):
     except ValueError:
         return ""
 
+def slugify(text):
+    text = str(text or "").strip().lower()
+    text = unicodedata.normalize("NFD", text)
+    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
+    text = re.sub(r"[^a-z0-9]+", "-", text).strip("-")
+    return text or "escape-room"
+
+def local_image_for(nombre):
+    slug = slugify(nombre)
+    for ext in [".jpg", ".jpeg", ".png", ".webp", ".avif"]:
+        path = os.path.join("images", slug + ext)
+        if os.path.exists(path):
+            return path.replace("\\", "/")
+    return ""
+
 def parse_sheet(ws, debug_fields=None):
     rows = list(ws.iter_rows(values_only=True))
     if not rows:
@@ -140,6 +159,9 @@ def parse_sheet(ws, debug_fields=None):
                 else:
                     val = safe_str(raw)
             obj[key] = val
+        local_image = local_image_for(obj.get("nombre"))
+        if local_image:
+            obj["imagen"] = local_image
         result.append(obj)
     return result
 

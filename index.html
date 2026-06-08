@@ -185,18 +185,33 @@
   .result-info{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);letter-spacing:.08em;margin-bottom:14px;}
 
   /* ── CARDS ── */
-  .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:14px;}
-  .room-card{background:var(--bg2);border:1px solid var(--border);padding:18px;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;animation:fadeUp .3s ease both;display:flex;flex-direction:column;}
+  .rooms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;}
+  .room-card{background:var(--bg2);border:1px solid var(--border);padding:0;position:relative;transition:transform .2s,border-color .2s,box-shadow .2s;overflow:hidden;animation:fadeUp .3s ease both;display:flex;flex-direction:column;min-height:100%;}
   .room-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--amber),transparent);opacity:0;transition:opacity .2s;}
   .room-card:hover{border-color:rgba(245,166,35,.35);transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.45);}
   .room-card:hover::before{opacity:1;}
-  .card-header{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
-  .room-name{font-family:'Cinzel',serif;font-size:1rem;font-weight:600;color:var(--text);line-height:1.2;flex:1;}
+  .card-media{position:relative;aspect-ratio:2/3;max-height:430px;background:linear-gradient(135deg,#171927,#2a1b0d 55%,#101018);overflow:hidden;border-bottom:1px solid rgba(255,255,255,.06);}
+  .card-media img{width:100%;height:100%;object-fit:contain;display:block;background:radial-gradient(ellipse at center,rgba(255,255,255,.05),rgba(0,0,0,.26));filter:saturate(.98) contrast(1.03);transition:transform .35s ease;}
+  .room-card:hover .card-media img{transform:scale(1.035);}
+  .card-media::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.08) 0%,rgba(0,0,0,.22) 45%,rgba(0,0,0,.82) 100%);pointer-events:none;}
+  .card-media-fallback{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-family:'Cinzel',serif;font-size:3.2rem;font-weight:900;color:rgba(245,166,35,.42);letter-spacing:.08em;text-shadow:0 0 28px rgba(245,166,35,.18);}
+  .card-media-fallback::before{content:'';position:absolute;inset:18px;border:1px solid rgba(245,166,35,.18);}
+  .card-media-top{position:absolute;top:10px;left:10px;right:10px;display:flex;justify-content:space-between;align-items:flex-start;gap:10px;z-index:2;}
+  .card-media .terpeca-img{width:30px;height:30px;}
+  .card-media .terpeca-pos{font-size:.5rem;}
+  .card-media .fav-heart{font-size:1.2rem;}
+  .card-media .fav-likes{font-size:.58rem;padding:1px 4px;}
+  .card-media-title{position:absolute;left:14px;right:14px;bottom:12px;z-index:2;display:flex;align-items:flex-end;gap:10px;}
+  .card-media-title-main{min-width:0;flex:1;}
+  .card-header{display:flex;align-items:center;gap:10px;margin:0 0 10px;}
+  .card-body{padding:15px 16px 16px;display:flex;flex-direction:column;flex:1;}
+  .room-name{font-family:'Cinzel',serif;font-size:1.08rem;font-weight:700;color:var(--text);line-height:1.15;flex:1;text-shadow:0 1px 10px rgba(0,0,0,.65);}
   .rating-badge{font-family:'Share Tech Mono',monospace;font-size:.85rem;padding:3px 9px;border-radius:2px;white-space:nowrap;flex-shrink:0;}
   .rating-high{background:rgba(6,214,160,.1);color:var(--green);border:1px solid rgba(6,214,160,.28);}
   .rating-mid{background:rgba(245,166,35,.1);color:var(--amber);border:1px solid rgba(245,166,35,.28);}
   .rating-low{background:rgba(230,57,70,.1);color:var(--red);border:1px solid rgba(230,57,70,.28);}
   .empresa{font-family:'Share Tech Mono',monospace;font-size:.65rem;color:var(--text3);letter-spacing:.07em;margin-bottom:9px;text-transform:uppercase;}
+  .card-media .empresa{color:rgba(232,232,240,.72);margin:4px 0 0;}
   .card-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px;}
   .tag{font-family:'Rajdhani',sans-serif;font-size:.73rem;font-weight:600;padding:2px 7px;border-radius:2px;}
   .tag-city{background:rgba(76,201,240,.08);color:var(--blue);border:1px solid rgba(76,201,240,.18);}
@@ -434,7 +449,8 @@
 
   @media(max-width:640px){
     header{padding:28px 18px 60px;}.content{padding:0 14px 40px;}
-    .tabs-container{padding:18px 14px 0;gap:0;}.tab{padding:9px 14px;font-size:.72rem;}
+    .tabs-container{padding:18px 14px 0;gap:0;flex-wrap:wrap;justify-content:stretch;}
+    .tab{flex:1 1 50%;min-width:0;padding:9px 10px;font-size:.72rem;text-align:center;}
     .panel{padding:14px;}.rooms-grid{grid-template-columns:1fr;}
     .updated-badge{top:auto;bottom:16px;right:50%;transform:translateX(50%);text-align:center;}
   }
@@ -485,6 +501,7 @@
       <button class="tab active" id="tab-pend"  onclick="switchTab('pendientes')">🔒 Pendientes <span class="count-badge" id="badge-pend">0</span></button>
       <button class="tab"        id="tab-hecho" onclick="switchTab('hechos')">✅ Hechos <span class="count-badge" id="badge-hecho">0</span></button>
       <button class="tab"        id="tab-rank"  onclick="switchTab('ranking')">🏆 Ranking</button>
+      <button class="tab"        id="tab-cat"   onclick="switchTab('catalogo')">🗂 Catálogo <span class="count-badge" id="badge-cat">0</span></button>
     </div>
   </div>
 
@@ -535,6 +552,31 @@
     <div id="panel-ranking" class="panel" style="display:none">
       <table class="ranking-table" id="ranking-table"></table>
     </div>
+
+    <!-- CATALOGO -->
+    <div id="panel-catalogo" class="panel" style="display:none">
+      <div class="filters">
+        <span class="filter-label">Buscar:</span>
+        <input type="text" class="filter-input" id="search-cat" placeholder="🔍  Nombre, empresa, ciudad..." oninput="renderCatalogo()">
+        <select class="filter-select" id="filter-prov-cat" onchange="renderCatalogo()"><option value="">Provincia</option></select>
+        <select class="filter-select" id="filter-ciudad-cat" onchange="renderCatalogo()"><option value="">Ciudad</option></select>
+        <select class="filter-select" id="filter-jugadores-cat" onchange="renderCatalogo()"><option value="">Jugadores</option></select>
+        <select class="filter-select" id="filter-dif-cat" onchange="renderCatalogo()"><option value="">Dificultad</option></select>
+        <label class="filter-check"><input type="checkbox" id="filter-terror-cat" onchange="renderCatalogo()"> Terror</label>
+        <label class="filter-check"><input type="checkbox" id="filter-img-cat" onchange="renderCatalogo()"> Con imagen</label>
+        <label class="filter-check"><input type="checkbox" id="filter-open-cat" onchange="renderCatalogo()"> Abiertos</label>
+        <button class="clear-btn" onclick="clearFilters('cat')">✕ Limpiar</button>
+      </div>
+      <div class="sort-row">
+        <span class="filter-label">Ordenar:</span>
+        <button class="sort-btn active" id="sort-cat-rating" onclick="setSortCatalogo('rating')">★ Rating</button>
+        <button class="sort-btn" id="sort-cat-votes" onclick="setSortCatalogo('votes')">🗳 Votos</button>
+        <button class="sort-btn" id="sort-cat-name" onclick="setSortCatalogo('name')">A→Z</button>
+      </div>
+      <div class="divider-line"></div>
+      <div class="result-info" id="result-info-cat"></div>
+      <div class="rooms-grid" id="grid-catalogo"></div>
+    </div>
   </div>
 </div>
 
@@ -559,7 +601,7 @@ if (!USER_ID) {
 // Cache de votos: { roomSlug: { userId: stars, ... }, ... }
 let votesCache = {};
 
-let PENDIENTES = [], HECHOS = [], sortPend = 'rating';
+let PENDIENTES = [], HECHOS = [], CATALOGO = [], sortPend = 'rating', sortCatalogo = 'rating';
 
 // ── Utilidades ────────────────────────────────────────────────────────────────
 function slugify(str) {
@@ -601,6 +643,23 @@ function supportsPlayers(p, players) {
 }
 function displayRating(p) {
   return p.rating || p.rating_collector || '';
+}
+function shortText(text, max = 230) {
+  const s = String(text || '').trim();
+  return s.length > max ? s.slice(0, max).trim() + '...' : s;
+}
+function catalogImageHtml(p) {
+  const initial = (p.nombre || '?').trim().slice(0, 1).toUpperCase();
+  const fallback = `<div class="card-media-fallback">${initial}</div>`;
+  if (!p.imagen) return fallback;
+  return `<img src="${p.imagen}" alt="${p.nombre || 'Escape room'}" loading="lazy" onerror="this.replaceWith(this.nextElementSibling)">${fallback}`;
+}
+function imageHtml(p) {
+  const initial = (p.nombre || '?').trim().slice(0, 1).toUpperCase();
+  const localSrc = `images/${slugify(p.nombre || '')}.webp`;
+  const src = p.imagen || localSrc;
+  const fallback = `<div class="card-media-fallback">${initial}</div>`;
+  return `<img src="${src}" alt="${p.nombre || 'Escape room'}" loading="lazy" onerror="this.replaceWith(this.nextElementSibling)">${fallback}`;
 }
 
 // ── Firebase REST API ─────────────────────────────────────────────────────────
@@ -752,6 +811,17 @@ async function loadVotes() {
 }
 
 // ── Cargar data.json ──────────────────────────────────────────────────────────
+async function loadCatalogo() {
+  try {
+    const r = await fetch('catalog.json?v=' + Date.now());
+    if (!r.ok) return;
+    const d = await r.json();
+    CATALOGO = d.catalogo || [];
+  } catch(e) {
+    console.warn('No se pudo cargar catalog.json:', e.message);
+  }
+}
+
 async function loadData() {
   try {
     const r = await fetch('data.json?v=' + Date.now());
@@ -766,12 +836,13 @@ async function loadData() {
     }
     // Cargar votos primero (bloquea hasta tener datos para el ranking)
     await loadVotes();
+    await loadCatalogo();
 
     document.getElementById('loading').style.display = 'none';
     document.getElementById('app').style.display = 'block';
     if (!FIREBASE_ENABLED) document.getElementById('setup-banner').style.display = 'block';
 
-    populateFilters(); renderStats(); renderPendientes(); renderHechos(); renderRanking();
+    populateFilters(); renderStats(); renderPendientes(); renderHechos(); renderRanking(); renderCatalogo();
     updateFavCount();
 
     // Cargar likes DESPUÉS de pintar la UI y actualizar contadores
@@ -803,8 +874,13 @@ function populateFilters() {
   fill('filter-tipo-pend',   [...new Set(PENDIENTES.map(p=>p.tipo).filter(Boolean))].sort(), 'Tipo');
   fill('filter-publico-pend',[...new Set(PENDIENTES.flatMap(p=>listValues(p.publico)))].sort(), 'Público');
   fill('filter-dif-hecho',   [...new Set(HECHOS.map(h=>h.dificultad).filter(Boolean))].sort(), 'Dificultad');
+  fill('filter-prov-cat',    [...new Set(CATALOGO.map(c=>c.provincia).filter(Boolean))].sort(), 'Provincia');
+  fill('filter-ciudad-cat',  [...new Set(CATALOGO.map(c=>c.ciudad).filter(Boolean))].sort(), 'Ciudad');
+  fill('filter-jugadores-cat', ['1','2','3','4','5','6','7','8','9','10'].filter(n => CATALOGO.some(c => supportsPlayers(c, n))).map(n => `${n} jugador${n === '1' ? '' : 'es'}`), 'Jugadores');
+  fill('filter-dif-cat',     [...new Set(CATALOGO.map(c=>c.dificultad).filter(Boolean))].sort(), 'Dificultad');
   document.getElementById('badge-pend').textContent  = PENDIENTES.length;
   document.getElementById('badge-hecho').textContent = HECHOS.length;
+  document.getElementById('badge-cat').textContent = CATALOGO.length;
 }
 
 function renderStats() {
@@ -877,9 +953,9 @@ function renderStats() {
 }
 
 function switchTab(t) {
-  ['pendientes','hechos','ranking'].forEach(x => {
+  ['pendientes','hechos','ranking','catalogo'].forEach(x => {
     document.getElementById('panel-' + x).style.display = x === t ? 'block' : 'none';
-    const id = x==='pendientes'?'pend':x==='hechos'?'hecho':'rank';
+    const id = x==='pendientes'?'pend':x==='hechos'?'hecho':x==='ranking'?'rank':'cat';
     document.getElementById('tab-' + id).classList.toggle('active', x === t);
   });
 }
@@ -891,6 +967,13 @@ function setSortPend(s) {
   renderPendientes();
 }
 
+function setSortCatalogo(s) {
+  sortCatalogo = s;
+  document.querySelectorAll('[id^="sort-cat-"]').forEach(b => b.classList.remove('active'));
+  document.getElementById('sort-cat-' + s).classList.add('active');
+  renderCatalogo();
+}
+
 function clearFilters(w) {
   if (w === 'pend') {
     ['search-pend','filter-ciudad-pend','filter-prov-pend','filter-jugadores-pend','filter-dif-pend','filter-genero-pend','filter-tipo-pend','filter-publico-pend']
@@ -899,6 +982,14 @@ function clearFilters(w) {
     document.getElementById('filter-verificado-pend').checked = false;
     renderPendientes();
   } else {
+    if (w === 'cat') {
+      ['search-cat','filter-prov-cat','filter-ciudad-cat','filter-jugadores-cat','filter-dif-cat']
+        .forEach(id => { document.getElementById(id).value = ''; });
+      ['filter-terror-cat','filter-img-cat','filter-open-cat']
+        .forEach(id => { document.getElementById(id).checked = false; });
+      renderCatalogo();
+      return;
+    }
     document.getElementById('search-hecho').value = '';
     document.getElementById('filter-dif-hecho').value = '';
     renderHechos();
@@ -1065,39 +1156,50 @@ function cardPend(p, i) {
   const features = listValues(p.caracteristicas).slice(0, 3);
   const location = [p.ciudad, p.provincia].filter(Boolean).join(' - ');
   return `<div class="room-card" style="animation-delay:${i*.04}s">
-  <div class="card-header">
-    ${faviconHtml(p.web, 'card-logo')}
-    <div class="room-name">${p.nombre}</div>
-    ${terpecaBadge(p.terpeca)}
-    <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" data-slug="${slug}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
-      <span class="fav-heart">♥</span>
-      <span class="fav-likes">${likeCount(slug)}</span>
-    </button>
+  <div class="card-media">
+    ${imageHtml(p)}
+    <div class="card-media-top">
+      ${faviconHtml(p.web, 'card-logo')}
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        ${terpecaBadge(p.terpeca)}
+        <button class="fav-btn ${iLiked(slug) ? 'active' : ''}" data-slug="${slug}" onclick="toggleFav('${slug}',this)" title="Me apetece ir">
+          <span class="fav-heart">♥</span>
+          <span class="fav-likes">${likeCount(slug)}</span>
+        </button>
+      </div>
+    </div>
+    <div class="card-media-title">
+      <div class="card-media-title-main">
+        <div class="room-name">${p.nombre}</div>
+        <div class="empresa">${p.empresa || ''}</div>
+      </div>
+      ${rating ? `<div class="rating-badge ${rc(rating)}">★ ${rating}</div>` : ''}
+    </div>
   </div>
-  <div class="empresa">${p.empresa}</div>
-  <div class="card-tags" style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
-    ${location ? `<span class="tag tag-city">📍 ${location}</span>` : ''}
-    ${genres.slice(0, 3).map(g => `<span class="tag tag-tema">${g}</span>`).join('')}
-    ${rating ? `<div class="rating-badge ${rc(rating)}" style="margin-left:auto">★ ${rating}</div>` : ''}
-  </div>
-  ${(p.tipo || p.publico || features.length || p.abierto || p.verificado) ? `<div class="card-tags">
-    ${p.tipo ? `<span class="tag tag-tipo">${p.tipo}</span>` : ''}
-    ${listValues(p.publico).map(v => `<span class="tag tag-muted">${v}</span>`).join('')}
-    ${features.map(v => `<span class="tag tag-feature">${v}</span>`).join('')}
-    ${isTruthyFlag(p.abierto) ? `<span class="tag tag-feature">Abierto</span>` : ''}
-    ${isTruthyFlag(p.verificado) ? `<span class="tag tag-feature">Verificado</span>` : ''}
-  </div>` : ''}
-  ${p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : ''}
-  <div class="card-meta">
-    ${p.duracion      ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>` : ''}
-    ${p.dificultad    ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>` : ''}
-    ${players         ? `<div class="meta-item"><span class="meta-key">Jugadores</span><span class="meta-val">👥 ${players}</span></div>` : ''}
-    ${p.votos         ? `<div class="meta-item"><span class="meta-key">Opiniones</span><span class="meta-val">🗳 ${p.votos}</span></div>` : ''}
-  </div>
-  ${voteWidget(slug)}
-  <div class="card-footer">
-    ${p.web ? `<a class="web-link" href="${p.web}" target="_blank">Ver web</a>` : '<span></span>'}
-    <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
+  <div class="card-body">
+    <div class="card-tags" style="display:flex;align-items:center;gap:5px;flex-wrap:wrap;">
+      ${location ? `<span class="tag tag-city">📍 ${location}</span>` : ''}
+      ${genres.slice(0, 3).map(g => `<span class="tag tag-tema">${g}</span>`).join('')}
+    </div>
+    ${(p.tipo || p.publico || features.length || p.abierto || p.verificado) ? `<div class="card-tags">
+      ${p.tipo ? `<span class="tag tag-tipo">${p.tipo}</span>` : ''}
+      ${listValues(p.publico).map(v => `<span class="tag tag-muted">${v}</span>`).join('')}
+      ${features.map(v => `<span class="tag tag-feature">${v}</span>`).join('')}
+      ${isTruthyFlag(p.abierto) ? `<span class="tag tag-feature">Abierto</span>` : ''}
+      ${isTruthyFlag(p.verificado) ? `<span class="tag tag-feature">Verificado</span>` : ''}
+    </div>` : ''}
+    ${p.descripcion ? `<div class="card-desc">${p.descripcion}</div>` : ''}
+    <div class="card-meta">
+      ${p.duracion      ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${p.duracion} min</span></div>` : ''}
+      ${p.dificultad    ? `<div class="meta-item"><span class="meta-key">Dificultad</span><span class="meta-val ${dc(p.dificultad)}">⚠ ${p.dificultad}</span></div>` : ''}
+      ${players         ? `<div class="meta-item"><span class="meta-key">Jugadores</span><span class="meta-val">👥 ${players}</span></div>` : ''}
+      ${p.votos         ? `<div class="meta-item"><span class="meta-key">Opiniones</span><span class="meta-val">🗳 ${p.votos}</span></div>` : ''}
+    </div>
+    ${voteWidget(slug)}
+    <div class="card-footer">
+      ${p.web ? `<a class="web-link" href="${p.web}" target="_blank">Ver web</a>` : '<span></span>'}
+      <span class="tag" style="background:rgba(6,214,160,.05);color:#06d6a0;border:1px solid rgba(6,214,160,.18)">🔒 Pendiente</span>
+    </div>
   </div>
 </div>`;
 }
@@ -1166,6 +1268,49 @@ function cardHecho(h, rank) {
   </div>`;
 }
 
+function cardCatalogo(c, i) {
+  const rating = displayRating(c);
+  const players = playerLabel(c);
+  const location = [c.ciudad, c.provincia].filter(Boolean).join(' - ');
+  return `<div class="room-card" style="animation-delay:${Math.min(i, 20)*.025}s">
+  <div class="card-media">
+    ${catalogImageHtml(c)}
+    <div class="card-media-top">
+      ${faviconHtml(c.web, 'card-logo')}
+      <div style="display:flex;gap:8px;align-items:flex-start">
+        ${c.verificado ? `<span class="tag tag-feature">Verificado</span>` : ''}
+      </div>
+    </div>
+    <div class="card-media-title">
+      <div class="card-media-title-main">
+        <div class="room-name">${c.nombre}</div>
+        <div class="empresa">${c.empresa || ''}</div>
+      </div>
+      ${rating ? `<div class="rating-badge ${rc(rating)}">★ ${rating}</div>` : ''}
+    </div>
+  </div>
+  <div class="card-body">
+    <div class="card-tags">
+      ${location ? `<span class="tag tag-city">📍 ${location}</span>` : ''}
+      ${c.terror ? `<span class="tag tag-tema">Terror</span>` : ''}
+      ${c.dificultad ? `<span class="tag tag-tipo">${c.dificultad}</span>` : ''}
+      ${c.abierto ? `<span class="tag tag-feature">Abierto</span>` : `<span class="tag tag-muted">Estado no confirmado</span>`}
+    </div>
+    ${c.descripcion ? `<div class="card-desc">${shortText(c.descripcion)}</div>` : ''}
+    <div class="card-meta">
+      ${c.duracion ? `<div class="meta-item"><span class="meta-key">Duración</span><span class="meta-val">⏱ ${c.duracion} min</span></div>` : ''}
+      ${players ? `<div class="meta-item"><span class="meta-key">Jugadores</span><span class="meta-val">👥 ${players}</span></div>` : ''}
+      ${c.votos ? `<div class="meta-item"><span class="meta-key">Opiniones</span><span class="meta-val">🗳 ${c.votos}</span></div>` : ''}
+      ${c.pais ? `<div class="meta-item"><span class="meta-key">País</span><span class="meta-val">${c.pais}</span></div>` : ''}
+    </div>
+    <div class="card-footer">
+      ${c.web ? `<a class="web-link" href="${c.web}" target="_blank">Ver web</a>` : '<span></span>'}
+      <span class="tag tag-muted">Catálogo</span>
+    </div>
+  </div>
+</div>`;
+}
+
 // ── Renders principales ───────────────────────────────────────────────────────
 function renderPendientes() {
   const s = document.getElementById('search-pend').value.toLowerCase();
@@ -1219,6 +1364,44 @@ function renderHechos() {
 
   document.getElementById('result-info-hecho').textContent = `${f.length} escape rooms completados`;
   document.getElementById('grid-hechos').innerHTML = f.map((h, i) => cardHecho(h, i + 1)).join('');
+}
+
+function renderCatalogo() {
+  const s = document.getElementById('search-cat').value.toLowerCase();
+  const prov = document.getElementById('filter-prov-cat').value;
+  const ciudad = document.getElementById('filter-ciudad-cat').value;
+  const players = document.getElementById('filter-jugadores-cat').value;
+  const dificultad = document.getElementById('filter-dif-cat').value;
+  const onlyTerror = document.getElementById('filter-terror-cat').checked;
+  const onlyImages = document.getElementById('filter-img-cat').checked;
+  const onlyOpen = document.getElementById('filter-open-cat').checked;
+
+  let f = CATALOGO.filter(c => {
+    if (s && ![c.nombre, c.empresa, c.ciudad, c.provincia, c.pais].some(x => (x || '').toLowerCase().includes(s))) return false;
+    if (prov && c.provincia !== prov) return false;
+    if (ciudad && c.ciudad !== ciudad) return false;
+    if (!supportsPlayers(c, players)) return false;
+    if (dificultad && c.dificultad !== dificultad) return false;
+    if (onlyTerror && !c.terror) return false;
+    if (onlyImages && !c.imagen) return false;
+    if (onlyOpen && !c.abierto) return false;
+    return true;
+  });
+
+  if (sortCatalogo === 'rating') {
+    f.sort((a, b) => (parseFloat(displayRating(b)) || 0) - (parseFloat(displayRating(a)) || 0));
+  } else if (sortCatalogo === 'votes') {
+    f.sort((a, b) => (parseInt(b.votos) || 0) - (parseInt(a.votos) || 0));
+  } else if (sortCatalogo === 'name') {
+    f.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
+  }
+
+  const visible = f.slice(0, 120);
+  document.getElementById('result-info-cat').textContent =
+    `Mostrando ${visible.length} de ${f.length} salas filtradas (${CATALOGO.length} en catalogo)`;
+  document.getElementById('grid-catalogo').innerHTML = visible.length
+    ? visible.map(cardCatalogo).join('')
+    : `<div class="empty-state"><div class="lock">?</div><p>NO SE ENCONTRARON RESULTADOS</p></div>`;
 }
 
 function renderRanking() {
