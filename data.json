@@ -1,25 +1,6 @@
 {
   "pendientes": [
     {
-      "nombre": "Willy el Tuerto",
-      "empresa": "Willy el Tuerto Escape Room",
-      "ciudad": "Sabadell",
-      "tematica": "Piratas / tesoro",
-      "tipo": "Aventura inmersiva",
-      "duracion": 80,
-      "dificultad": "Media",
-      "rating": 9.2,
-      "web": "https://willyeltuertoescaperoom.com/",
-      "valoracion": "",
-      "descripcion": "Aclamado como una de las mejores aventuras piratas de España, destacando por una escenografía espectacular que parece sacada de un parque temático. Los usuarios elogian su inmersión total en la búsqueda del tesoro y una ambientación \"de 10\" que te hace sentir dentro de una película de los Goonies. Top Mundial Terpeca (varios años). Ganador de premios nacionales a Mejor Escenografía y Mejor Sala de Aventura.",
-      "max_personas": 6,
-      "historia": "",
-      "ambientacion": "",
-      "jugabilidad": "",
-      "gamemaster": "",
-      "terpeca": 71
-    },
-    {
       "nombre": "Cybercity 2049",
       "empresa": "Escape Barcelona",
       "ciudad": "Santa Coloma de Gramenet",
@@ -679,11 +660,31 @@
       "gamemaster": 10,
       "terpeca": "",
       "ranking": 1
+    },
+    {
+      "nombre": "Willy el Tuerto",
+      "empresa": "Willy el Tuerto Escape Room",
+      "ciudad": "Sabadell",
+      "tematica": "Piratas / tesoro / Goonies",
+      "tipo": "Aventura inmersiva",
+      "duracion": 80,
+      "dificultad": "Media",
+      "rating": 9.2,
+      "web": "https://willyeltuertoescaperoom.com/",
+      "valoracion": 6,
+      "descripcion": "Este fin de semana visitamos **Willy el Tuerto** en familia (2 adultos y dos peques de 10 y 6 años) y lo pasamos en grande.\n\nUn consejo: si podéis, ved **Los Goonies** unos días antes. Nosotros lo hicimos y ayuda muchísimo a entrar en el ambiente y disfrutar de todos los guiños que esconde el juego.\n\nLa ambientación está muy conseguida, especialmente teniendo en cuenta que es una sala con unos años a sus espaldas. Está llena de referencias a la película y transmite perfectamente ese espíritu de aventura y búsqueda del tesoro.\n\nEn cuanto a jugadores, para nosotros 4 personas fue el número ideal. Todos participamos activamente en las pruebas y nadie se quedó mirando. Con grupos más grandes quizá podría quedarse algo corto.\n\nEntre la introducción, la partida y la charla final con el GM estuvimos cerca de una hora y media disfrutando de la experiencia.\n\nUn escape room muy recomendable para familias y para cualquier fan de **Los Goonies**. ¡Los Goonies nunca dicen muerto!",
+      "max_personas": "",
+      "historia": 9.5,
+      "ambientacion": 9.5,
+      "jugabilidad": 8,
+      "gamemaster": 8,
+      "terpeca": "",
+      "ranking": 14
     }
   ],
   "meta": {
     "source": "escape_rooms_tracker_mejorado.xlsx",
-    "pendientes_count": 22,
-    "hechos_count": 13
+    "pendientes_count": 21,
+    "hechos_count": 14
   }
 }
