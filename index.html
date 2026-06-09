@@ -36,7 +36,7 @@
   /* ── HEADER ── */
   #app{display:none;position:relative;z-index:1;}
   header{
-    padding:52px 32px 44px;text-align:center;position:relative;overflow:hidden;
+    padding:34px 32px 28px;text-align:center;position:relative;overflow:hidden;
     background:radial-gradient(ellipse at 50% 0%,#1a1208 0%,#0d0a06 40%,#080808 100%);
     border-bottom:2px solid #3a2a0a;
   }
@@ -56,15 +56,15 @@
   }
 
   /* Ornamentos laterales */
-  .vault-icon{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px;}
-  .vault-ornament{font-size:1.1rem;opacity:.5;color:#c8922a;}
-  .vault-glyph{font-size:1.8rem;filter:drop-shadow(0 0 8px rgba(200,140,30,.7));opacity:.8;}
+  .vault-icon{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:2px;}
+  .vault-ornament{font-size:.95rem;opacity:.45;color:#c8922a;}
+  .vault-glyph{font-size:1.45rem;filter:drop-shadow(0 0 8px rgba(200,140,30,.7));opacity:.8;}
 
   /* Título principal — efecto metálico tridimensional */
   h1{
     font-family:'Cinzel',serif;
     font-weight:900;
-    font-size:clamp(2.4rem,6vw,4.2rem);
+    font-size:clamp(2rem,5vw,3.5rem);
     letter-spacing:.2em;
     text-transform:uppercase;
     line-height:1;
@@ -93,13 +93,13 @@
       drop-shadow(0 2px 0 rgba(0,0,0,.8))
       drop-shadow(0 3px 0 rgba(0,0,0,.7))
       drop-shadow(0 4px 0 rgba(0,0,0,.5))
-      drop-shadow(0 8px 20px rgba(0,0,0,.8))
+      drop-shadow(0 6px 16px rgba(0,0,0,.8))
       drop-shadow(0 0 40px rgba(200,140,20,.2));
   }
 
   /* Marco ornamental alrededor del título */
   .vault-frame{
-    display:inline-block;position:relative;padding:10px 32px 14px;
+    display:inline-block;position:relative;padding:8px 28px 10px;
     border-top:1px solid rgba(200,140,30,.3);
     border-bottom:1px solid rgba(200,140,30,.3);
   }
@@ -112,7 +112,7 @@
   .vault-frame::after{right:-8px;}
 
   /* Subtítulo */
-  .vault-sub-line{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:12px;}
+  .vault-sub-line{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:8px;}
   .vault-dash{
     height:1px;flex:1;max-width:90px;
     background:linear-gradient(90deg,transparent,rgba(180,120,20,.5));
@@ -132,29 +132,13 @@
   .updated-badge span{color:var(--green);display:block;}
 
   /* ── STATS ── */
-  .stats-bar{padding:22px 32px;background:var(--bg2);border-bottom:1px solid var(--border);}
-  .stats-top{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin-bottom:18px;}
-  .stat-item{text-align:center;padding:10px 26px;position:relative;}
+  .status-strip{padding:12px 32px;background:var(--bg2);border-bottom:1px solid var(--border);display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);align-items:center;gap:22px;}
+  .stats-bar{padding:0;background:transparent;border-bottom:none;grid-column:2;min-width:0;}
+  .stats-top{display:flex;gap:0;justify-content:center;flex-wrap:wrap;margin-bottom:0;}
+  .stat-item{text-align:center;padding:5px 18px;position:relative;}
   .stat-item:not(:last-child)::after{content:'|';position:absolute;right:0;top:50%;transform:translateY(-50%);color:var(--border);}
-  .stat-num{font-family:'Cinzel',serif;font-size:1.9rem;font-weight:700;color:var(--amber);line-height:1;display:block;}
-  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.14em;text-transform:uppercase;margin-top:3px;display:block;}
-
-  /* Barra de progreso */
-  .progress-wrap{max-width:680px;margin:0 auto 16px;}
-  .progress-header{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px;}
-  .progress-title{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;}
-  .progress-pct{font-family:'Cinzel',serif;font-size:1rem;font-weight:700;color:var(--amber);}
-  .progress-track{height:6px;background:rgba(255,255,255,.05);border:1px solid var(--border);position:relative;overflow:hidden;}
-  .progress-fill{height:100%;background:linear-gradient(90deg,var(--amber),var(--gold));transition:width 1.2s cubic-bezier(.4,0,.2,1);position:relative;}
-  .progress-fill::after{content:'';position:absolute;right:0;top:0;bottom:0;width:3px;background:white;opacity:.6;filter:blur(1px);}
-
-  /* Insights row */
-  .stats-insights{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:14px;}
-  .insight-pill{font-family:'Share Tech Mono',monospace;font-size:.62rem;padding:5px 12px;border:1px solid var(--border);background:rgba(255,255,255,.02);color:var(--text3);display:flex;align-items:center;gap:6px;white-space:nowrap;}
-  .insight-pill .ip-icon{font-size:.85rem;}
-  .insight-pill .ip-val{color:var(--text);font-weight:700;letter-spacing:.04em;}
-  .insight-pill.highlight{border-color:rgba(245,166,35,.2);background:rgba(245,166,35,.04);}
-  .insight-pill.highlight .ip-val{color:var(--amber);}
+  .stat-num{font-family:'Cinzel',serif;font-size:1.55rem;font-weight:700;color:var(--amber);line-height:1;display:block;}
+  .stat-label{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text3);letter-spacing:.12em;text-transform:uppercase;margin-top:2px;display:block;}
 
   /* ── TABS ── */
   .tabs-container{display:flex;justify-content:center;padding:26px 32px 0;gap:4px;max-width:1400px;margin:0 auto;}
@@ -276,11 +260,14 @@
   .personal-btn.active.done{border-color:rgba(6,214,160,.38);background:rgba(6,214,160,.07);color:var(--green);}
   .personal-btn.danger:hover{border-color:rgba(230,57,70,.45);color:var(--red);}
   .personal-hint{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;}
+  .catalog-result-row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;}
+  .catalog-result-row .result-info{margin-bottom:0;}
+  .catalog-result-row .catalog-more{margin-top:0;justify-content:flex-end;flex-shrink:0;}
   .catalog-more{display:flex;justify-content:center;margin-top:18px;}
   .catalog-more .sort-btn{padding:9px 18px;color:var(--amber);border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.04);}
   .catalog-more .sort-btn:hover{border-color:var(--amber);background:rgba(245,166,35,.08);}
 
-  .auth-bar{max-width:1400px;margin:16px auto 0;padding:0 32px;display:flex;justify-content:flex-end;align-items:center;gap:10px;}
+  .auth-bar{max-width:none;margin:0;padding:0;display:flex;justify-content:flex-end;align-items:center;gap:8px;grid-column:3;justify-self:end;min-width:0;}
   .auth-status{display:flex;align-items:center;gap:10px;border:1px solid var(--border);background:rgba(255,255,255,.035);padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:.64rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;}
   .auth-avatar{width:26px;height:26px;border-radius:50%;object-fit:cover;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.14);}
   .auth-name{color:var(--text2);max-width:220px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
@@ -495,14 +482,36 @@
   }
 
   @media(max-width:640px){
-    header{padding:28px 18px 60px;}.content{padding:0 14px 40px;}
+    header{padding:12px 14px 10px;}
+    h1{font-size:1.75rem;letter-spacing:.13em;filter:drop-shadow(0 2px 0 rgba(0,0,0,.8)) drop-shadow(0 5px 14px rgba(0,0,0,.75));}
+    .vault-frame{padding:4px 16px 5px;}
+    .vault-frame::before,.vault-frame::after,.vault-icon,.vault-dash{display:none;}
+    .vault-sub-line{display:none;}
+    .vault-subtitle{font-size:.55rem;letter-spacing:.22em;}
+    .updated-badge{display:none;}
+    .status-strip{padding:7px 8px;gap:6px;grid-template-columns:1fr;align-items:center;}
+    .stats-bar{padding:0;grid-column:1;justify-self:center;}
+    .stats-top{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:2px;margin-bottom:0;}
+    .stat-item{padding:3px 1px;}
+    .stat-item:not(:last-child)::after{display:none;}
+    .stat-num{font-size:.95rem;}
+    .stat-label{font-size:.46rem;letter-spacing:.05em;white-space:normal;}
+    .auth-bar{margin:0;padding:0;gap:5px;min-width:0;grid-column:1;justify-self:end;}
+    .auth-status{padding:5px 6px;gap:5px;font-size:.52rem;letter-spacing:.04em;}
+    .auth-label{display:none;}
+    .auth-avatar{width:20px;height:20px;}
+    .auth-name{max-width:72px;}
+    .auth-btn{padding:7px 8px;font-size:.54rem;letter-spacing:.04em;}
+    .content{padding:0 14px 40px;}
     .tabs-container{padding:18px 14px 0;gap:0;flex-wrap:wrap;justify-content:stretch;}
     .tab{flex:1 1 50%;min-width:0;padding:9px 10px;font-size:.72rem;text-align:center;}
     .panel{padding:14px;}.rooms-grid{grid-template-columns:1fr;}
     .updated-badge{top:auto;bottom:16px;right:50%;transform:translateX(50%);text-align:center;}
-    .auth-bar{padding:0 14px;justify-content:center;flex-wrap:wrap;}
+    .auth-bar{justify-content:flex-end;flex-wrap:nowrap;}
     .auth-status{max-width:100%;}
-    .auth-name{max-width:160px;}
+    .auth-name{max-width:72px;}
+    .catalog-result-row{align-items:flex-start;flex-direction:column;}
+    .catalog-result-row .catalog-more{justify-content:flex-start;}
     .detail-modal{padding:10px;}
     .detail-dialog{grid-template-columns:1fr;max-height:92vh;}
     .detail-media{height:320px;min-height:0;border-right:none;border-bottom:1px solid var(--border);}
@@ -549,16 +558,17 @@
     </div>
   </header>
 
-  <div class="auth-bar">
-    <div class="auth-status" id="auth-status">
-      <span>Cuenta personal</span>
-      <span class="auth-name" id="auth-name">Sin iniciar sesion</span>
+  <div class="status-strip">
+    <div class="stats-bar" id="stats-bar"></div>
+    <div class="auth-bar">
+      <div class="auth-status" id="auth-status">
+        <span class="auth-label">Cuenta personal</span>
+        <span class="auth-name" id="auth-name">Sin iniciar sesion</span>
+      </div>
+      <button class="auth-btn" id="auth-login" type="button" onclick="signInGoogle()">Entrar con Google</button>
+      <button class="auth-btn secondary" id="auth-logout" type="button" onclick="signOutGoogle()" style="display:none">Salir</button>
     </div>
-    <button class="auth-btn" id="auth-login" type="button" onclick="signInGoogle()">Entrar con Google</button>
-    <button class="auth-btn secondary" id="auth-logout" type="button" onclick="signOutGoogle()" style="display:none">Salir</button>
   </div>
-
-  <div class="stats-bar" id="stats-bar"></div>
 
   <div style="max-width:1400px;margin:0 auto;padding:0 32px;">
     <div class="tabs-container">
@@ -629,10 +639,8 @@
         <select class="filter-select" id="filter-jugadores-cat" onchange="renderCatalogoDesdeInicio()"><option value="">Jugadores</option></select>
         <select class="filter-select" id="filter-dif-cat" onchange="renderCatalogoDesdeInicio()"><option value="">Dificultad</option></select>
         <label class="filter-check"><input type="checkbox" id="filter-terror-cat" onchange="renderCatalogoDesdeInicio()"> Terror</label>
-        <label class="filter-check"><input type="checkbox" id="filter-img-cat" onchange="renderCatalogoDesdeInicio()"> Con imagen</label>
         <label class="filter-check"><input type="checkbox" id="filter-open-cat" onchange="renderCatalogoDesdeInicio()"> Abiertos</label>
         <label class="filter-check"><input type="checkbox" id="filter-hide-done-cat" onchange="renderCatalogoDesdeInicio()"> Ocultar hechos</label>
-        <label class="filter-check"><input type="checkbox" id="filter-unplanned-cat" onchange="renderCatalogoDesdeInicio()"> Sin planificar</label>
         <button class="clear-btn" onclick="clearFilters('cat')">✕ Limpiar</button>
       </div>
       <div class="sort-row">
@@ -642,8 +650,10 @@
         <button class="sort-btn" id="sort-cat-name" onclick="setSortCatalogo('name')">A→Z</button>
       </div>
       <div class="divider-line"></div>
-      <div class="result-info" id="result-info-cat"></div>
-      <div class="catalog-more" id="catalog-more-top"></div>
+      <div class="catalog-result-row">
+        <div class="result-info" id="result-info-cat"></div>
+        <div class="catalog-more" id="catalog-more-top"></div>
+      </div>
       <div class="rooms-grid" id="grid-catalogo"></div>
       <div class="catalog-more" id="catalog-more"></div>
     </div>
@@ -1426,7 +1436,6 @@ function renderStats() {
   const pendingRooms = allPendingRooms();
   const doneRooms = allDoneRooms();
   const total = doneRooms.length + pendingRooms.length;
-  const pct   = total > 0 ? Math.round((doneRooms.length / total) * 100) : 0;
 
   // Media grupo (solo los que tienen valoración)
   const conVal = HECHOS.filter(h => parseFloat(h.valoracion) > 0);
@@ -1439,58 +1448,14 @@ function renderStats() {
     ? `${Math.floor(minsJugados/60)}h ${minsJugados%60 > 0 ? minsJugados%60+'m' : ''}`
     : `${minsJugados}m`;
 
-  // Empresa más visitada
-  const empCount = {};
-  HECHOS.forEach(h => { if (h.empresa) empCount[h.empresa] = (empCount[h.empresa]||0)+1; });
-  const topEmp = Object.entries(empCount).sort((a,b)=>b[1]-a[1])[0];
-
-  // Ciudad más visitada
-  const cityCount = {};
-  HECHOS.forEach(h => { if (h.ciudad) cityCount[h.ciudad] = (cityCount[h.ciudad]||0)+1; });
-  const topCity = Object.entries(cityCount).sort((a,b)=>b[1]-a[1])[0];
-
-  // Mejor escape (mayor valoracion grupo)
-  const mejor = HECHOS.filter(h=>parseFloat(h.valoracion)>0)
-    .sort((a,b)=>parseFloat(b.valoracion)-parseFloat(a.valoracion))[0];
-
-  // Temática favorita
-  const temaCount = {};
-  HECHOS.forEach(h => { if (h.tematica) temaCount[h.tematica] = (temaCount[h.tematica]||0)+1; });
-  const topTema = Object.entries(temaCount).sort((a,b)=>b[1]-a[1])[0];
-
   document.getElementById('stats-bar').innerHTML = `
     <div class="stats-top">
-      <div class="stat-item"><span class="stat-num">${doneRooms.length}</span><span class="stat-label">Completados</span></div>
+      <div class="stat-item"><span class="stat-num">${doneRooms.length}</span><span class="stat-label">Hechos</span></div>
       <div class="stat-item"><span class="stat-num">${pendingRooms.length}</span><span class="stat-label">Pendientes</span></div>
       <div class="stat-item"><span class="stat-num">${total}</span><span class="stat-label">Total</span></div>
-      <div class="stat-item"><span class="stat-num">${avgGrupo}</span><span class="stat-label">Media grupo</span></div>
-      <div class="stat-item"><span class="stat-num">${hrsJugados}</span><span class="stat-label">Horas jugadas</span></div>
-    </div>
-
-    <div class="progress-wrap">
-      <div class="progress-header">
-        <span class="progress-title">Progreso de la lista</span>
-        <span class="progress-pct">${pct}% completado</span>
-      </div>
-      <div class="progress-track">
-        <div class="progress-fill" id="progress-fill" style="width:0%"></div>
-      </div>
-    </div>
-
-    <div class="stats-insights">
-      ${mejor    ? `<div class="insight-pill highlight"><span class="ip-icon">🥇</span><span>Mejor escape</span><span class="ip-val">${mejor.nombre}</span><span style="opacity:.4">${mejor.valoracion}/10</span></div>` : ''}
-      ${topEmp   ? `<div class="insight-pill"><span class="ip-icon">🏢</span><span>Empresa top</span><span class="ip-val">${topEmp[0]}</span><span style="opacity:.4">${topEmp[1]}×</span></div>` : ''}
-      ${topCity  ? `<div class="insight-pill"><span class="ip-icon">📍</span><span>Ciudad top</span><span class="ip-val">${topCity[0]}</span><span style="opacity:.4">${topCity[1]}×</span></div>` : ''}
-      ${topTema  ? `<div class="insight-pill"><span class="ip-icon">🎭</span><span>Temática top</span><span class="ip-val">${topTema[0]}</span><span style="opacity:.4">${topTema[1]}×</span></div>` : ''}
+      <div class="stat-item"><span class="stat-num">${avgGrupo}</span><span class="stat-label">Media</span></div>
+      <div class="stat-item"><span class="stat-num">${hrsJugados}</span><span class="stat-label">Horas</span></div>
     </div>`;
-
-  // Animar la barra con un pequeño delay para que se vea la transición
-  requestAnimationFrame(() => {
-    setTimeout(() => {
-      const fill = document.getElementById('progress-fill');
-      if (fill) fill.style.width = pct + '%';
-    }, 150);
-  });
 }
 
 function switchTab(t) {
@@ -1542,7 +1507,7 @@ function clearFilters(w) {
     if (w === 'cat') {
       ['search-cat','filter-comunidad-cat','filter-prov-cat','filter-ciudad-cat','filter-jugadores-cat','filter-dif-cat']
         .forEach(id => { document.getElementById(id).value = ''; });
-      ['filter-terror-cat','filter-img-cat','filter-open-cat','filter-hide-done-cat','filter-unplanned-cat']
+      ['filter-terror-cat','filter-open-cat','filter-hide-done-cat']
         .forEach(id => { document.getElementById(id).checked = false; });
       updateGeoFilters('cat');
       renderCatalogoDesdeInicio();
@@ -2100,10 +2065,8 @@ function renderCatalogo() {
   const players = document.getElementById('filter-jugadores-cat').value;
   const dificultad = document.getElementById('filter-dif-cat').value;
   const onlyTerror = document.getElementById('filter-terror-cat').checked;
-  const onlyImages = document.getElementById('filter-img-cat').checked;
   const onlyOpen = document.getElementById('filter-open-cat').checked;
   const hideDone = document.getElementById('filter-hide-done-cat').checked;
-  const onlyUnplanned = document.getElementById('filter-unplanned-cat').checked;
 
   let f = CATALOGO.filter(c => {
     const groupState = groupStateFor(c);
@@ -2115,10 +2078,8 @@ function renderCatalogo() {
     if (!supportsPlayers(c, players)) return false;
     if (dificultad && c.dificultad !== dificultad) return false;
     if (onlyTerror && !c.terror) return false;
-    if (onlyImages && !c.imagen) return false;
     if (onlyOpen && !c.abierto) return false;
     if (hideDone && (groupState.done || userState.done)) return false;
-    if (onlyUnplanned && (groupState.done || groupState.pending || userState.done || userState.pending)) return false;
     return true;
   });
 
