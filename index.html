@@ -276,6 +276,9 @@
   .personal-btn.active.done{border-color:rgba(6,214,160,.38);background:rgba(6,214,160,.07);color:var(--green);}
   .personal-btn.danger:hover{border-color:rgba(230,57,70,.45);color:var(--red);}
   .personal-hint{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;}
+  .catalog-more{display:flex;justify-content:center;margin-top:18px;}
+  .catalog-more .sort-btn{padding:9px 18px;color:var(--amber);border-color:rgba(245,166,35,.3);background:rgba(245,166,35,.04);}
+  .catalog-more .sort-btn:hover{border-color:var(--amber);background:rgba(245,166,35,.08);}
 
   .auth-bar{max-width:1400px;margin:16px auto 0;padding:0 32px;display:flex;justify-content:flex-end;align-items:center;gap:10px;}
   .auth-status{display:flex;align-items:center;gap:10px;border:1px solid var(--border);background:rgba(255,255,255,.035);padding:7px 10px;font-family:'Share Tech Mono',monospace;font-size:.64rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;}
@@ -619,17 +622,17 @@
     <div id="panel-catalogo" class="panel">
       <div class="filters">
         <span class="filter-label">Buscar:</span>
-        <input type="text" class="filter-input" id="search-cat" placeholder="🔍  Nombre, empresa, ciudad..." oninput="renderCatalogo()">
-        <select class="filter-select" id="filter-comunidad-cat" onchange="updateGeoFilters('cat');renderCatalogo()"><option value="">Comunidad autónoma</option></select>
-        <select class="filter-select" id="filter-prov-cat" onchange="updateGeoFilters('cat');renderCatalogo()"><option value="">Provincia</option></select>
-        <select class="filter-select" id="filter-ciudad-cat" onchange="updateGeoFilters('cat');renderCatalogo()"><option value="">Ciudad</option></select>
-        <select class="filter-select" id="filter-jugadores-cat" onchange="renderCatalogo()"><option value="">Jugadores</option></select>
-        <select class="filter-select" id="filter-dif-cat" onchange="renderCatalogo()"><option value="">Dificultad</option></select>
-        <label class="filter-check"><input type="checkbox" id="filter-terror-cat" onchange="renderCatalogo()"> Terror</label>
-        <label class="filter-check"><input type="checkbox" id="filter-img-cat" onchange="renderCatalogo()"> Con imagen</label>
-        <label class="filter-check"><input type="checkbox" id="filter-open-cat" onchange="renderCatalogo()"> Abiertos</label>
-        <label class="filter-check"><input type="checkbox" id="filter-hide-done-cat" onchange="renderCatalogo()"> Ocultar hechos</label>
-        <label class="filter-check"><input type="checkbox" id="filter-unplanned-cat" onchange="renderCatalogo()"> Sin planificar</label>
+        <input type="text" class="filter-input" id="search-cat" placeholder="🔍  Nombre, empresa, ciudad..." oninput="renderCatalogoDesdeInicio()">
+        <select class="filter-select" id="filter-comunidad-cat" onchange="updateGeoFilters('cat');renderCatalogoDesdeInicio()"><option value="">Comunidad autónoma</option></select>
+        <select class="filter-select" id="filter-prov-cat" onchange="updateGeoFilters('cat');renderCatalogoDesdeInicio()"><option value="">Provincia</option></select>
+        <select class="filter-select" id="filter-ciudad-cat" onchange="updateGeoFilters('cat');renderCatalogoDesdeInicio()"><option value="">Ciudad</option></select>
+        <select class="filter-select" id="filter-jugadores-cat" onchange="renderCatalogoDesdeInicio()"><option value="">Jugadores</option></select>
+        <select class="filter-select" id="filter-dif-cat" onchange="renderCatalogoDesdeInicio()"><option value="">Dificultad</option></select>
+        <label class="filter-check"><input type="checkbox" id="filter-terror-cat" onchange="renderCatalogoDesdeInicio()"> Terror</label>
+        <label class="filter-check"><input type="checkbox" id="filter-img-cat" onchange="renderCatalogoDesdeInicio()"> Con imagen</label>
+        <label class="filter-check"><input type="checkbox" id="filter-open-cat" onchange="renderCatalogoDesdeInicio()"> Abiertos</label>
+        <label class="filter-check"><input type="checkbox" id="filter-hide-done-cat" onchange="renderCatalogoDesdeInicio()"> Ocultar hechos</label>
+        <label class="filter-check"><input type="checkbox" id="filter-unplanned-cat" onchange="renderCatalogoDesdeInicio()"> Sin planificar</label>
         <button class="clear-btn" onclick="clearFilters('cat')">✕ Limpiar</button>
       </div>
       <div class="sort-row">
@@ -640,7 +643,9 @@
       </div>
       <div class="divider-line"></div>
       <div class="result-info" id="result-info-cat"></div>
+      <div class="catalog-more" id="catalog-more-top"></div>
       <div class="rooms-grid" id="grid-catalogo"></div>
+      <div class="catalog-more" id="catalog-more"></div>
     </div>
   </div>
 </div>
@@ -711,6 +716,8 @@ function writeStoredFavs() {
 let votesCache = {};
 
 let PENDIENTES = [], HECHOS = [], CATALOGO = [], TERPECA_AWARDS = [], sortPend = 'rating', sortCatalogo = 'rating';
+const CATALOG_PAGE_SIZE = 120;
+let catalogVisibleCount = CATALOG_PAGE_SIZE;
 let GROUP_ROOM_INDEX = { pendientes: new Set(), hechos: new Set() };
 
 // Preparado para el siguiente paso con Google/Firebase Auth:
@@ -880,7 +887,7 @@ function allPendingRooms() {
 }
 
 function allDoneRooms() {
-  return mergeRooms(HECHOS, personalDoneRooms(), () => true);
+  return HECHOS;
 }
 
 // ── Firebase REST API ─────────────────────────────────────────────────────────
@@ -1503,8 +1510,23 @@ function setSortPend(s) {
 
 function setSortCatalogo(s) {
   sortCatalogo = s;
+  resetCatalogoLimit();
   document.querySelectorAll('[id^="sort-cat-"]').forEach(b => b.classList.remove('active'));
   document.getElementById('sort-cat-' + s).classList.add('active');
+  renderCatalogo();
+}
+
+function resetCatalogoLimit() {
+  catalogVisibleCount = CATALOG_PAGE_SIZE;
+}
+
+function renderCatalogoDesdeInicio() {
+  resetCatalogoLimit();
+  renderCatalogo();
+}
+
+function showMoreCatalogo() {
+  catalogVisibleCount += CATALOG_PAGE_SIZE;
   renderCatalogo();
 }
 
@@ -1523,7 +1545,7 @@ function clearFilters(w) {
       ['filter-terror-cat','filter-img-cat','filter-open-cat','filter-hide-done-cat','filter-unplanned-cat']
         .forEach(id => { document.getElementById(id).checked = false; });
       updateGeoFilters('cat');
-      renderCatalogo();
+      renderCatalogoDesdeInicio();
       return;
     }
     document.getElementById('search-hecho').value = '';
@@ -2108,12 +2130,18 @@ function renderCatalogo() {
     f.sort((a, b) => (a.nombre || '').localeCompare(b.nombre || ''));
   }
 
-  const visible = f.slice(0, 120);
+  const visible = f.slice(0, catalogVisibleCount);
+  const remaining = Math.max(f.length - visible.length, 0);
   document.getElementById('result-info-cat').textContent =
     `Mostrando ${visible.length} de ${f.length} salas filtradas (${CATALOGO.length} en catalogo)`;
   document.getElementById('grid-catalogo').innerHTML = visible.length
     ? visible.map(cardCatalogo).join('')
     : `<div class="empty-state"><div class="lock">?</div><p>NO SE ENCONTRARON RESULTADOS</p></div>`;
+  const moreHtml = remaining > 0
+    ? `<button class="sort-btn" type="button" onclick="showMoreCatalogo()">Mostrar ${Math.min(CATALOG_PAGE_SIZE, remaining)} mas</button>`
+    : '';
+  document.getElementById('catalog-more-top').innerHTML = moreHtml;
+  document.getElementById('catalog-more').innerHTML = moreHtml;
 }
 
 function renderRanking() {
