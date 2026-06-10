@@ -188,8 +188,10 @@
   .award-seal{display:flex;align-items:center;gap:4px;background:rgba(10,10,15,.82);border:1px solid rgba(245,166,35,.32);padding:3px 5px;box-shadow:0 4px 16px rgba(0,0,0,.35);}
   .award-seal.award-10escapes{border-color:rgba(76,201,240,.38);}
   .award-seal.award-era{border-color:rgba(6,214,160,.32);}
+  .award-seal.award-giba{border-color:rgba(245,166,35,.38);}
   .award-seal img{width:24px!important;height:24px!important;object-fit:contain!important;background:transparent!important;filter:none!important;transform:none!important;}
   .award-seal .award-logo-wide{width:34px!important;height:24px!important;}
+  .award-seal .award-logo-square{width:26px!important;height:26px!important;}
   .award-seal span{font-family:'Share Tech Mono',monospace;font-size:.54rem;line-height:1;color:var(--amber);letter-spacing:.06em;text-transform:uppercase;white-space:nowrap;}
   .card-media .fav-heart{font-size:1.2rem;}
   .card-media .fav-likes{font-size:.58rem;padding:1px 4px;}
@@ -1981,6 +1983,7 @@ const TERPECA_LOGO = 'data:image/png;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUND
 
 const TEN_ESCAPES_LOGO = 'images/awards/10escapes-logo.png';
 const ESCAPE_ROOM_AWARDS_LOGO = 'images/awards/escape-room-awards-logo.png';
+const GIBA_AWARDS_LOGO = 'images/awards/giba-awards-logo.svg';
 
 function terpecaBadge(pos) {
   if (!pos) return '';
@@ -2051,8 +2054,9 @@ function companyMatchesAward(roomCompany, awardCompany) {
 
 function extraAwardsFor(room) {
   const roomKey = normalizedKey(room.nombre || '');
+  const roomCompactKey = compactKey(room.nombre || '');
   if (!roomKey) return [];
-  const candidates = EXTRA_AWARDS.filter(a => a.room_key === roomKey);
+  const candidates = EXTRA_AWARDS.filter(a => a.room_key === roomKey || compactKey(a.room || a.room_key || '') === roomCompactKey);
   if (!candidates.length) return [];
   const matched = candidates.filter(a => companyMatchesAward(room.empresa || '', a.company || ''));
   const usable = matched.length ? matched : (
@@ -2103,22 +2107,34 @@ function awardSealHtml(award) {
       <span>${label}</span>
     </div>`;
   }
-  const cls = award.source_id === '10escapes' ? 'award-10escapes' : 'award-era';
-  const logo = award.source_id === '10escapes' ? TEN_ESCAPES_LOGO : ESCAPE_ROOM_AWARDS_LOGO;
-  const alt = award.source_id === '10escapes' ? '10Escapes' : 'Escape Room Awards';
+  const sourceMeta = {
+    '10escapes': { cls: 'award-10escapes', logo: TEN_ESCAPES_LOGO, alt: '10Escapes' },
+    'escape_room_awards': { cls: 'award-era', logo: ESCAPE_ROOM_AWARDS_LOGO, alt: 'Escape Room Awards' },
+    'giba_awards': { cls: 'award-giba', logo: GIBA_AWARDS_LOGO, alt: 'Giba Awards', logoClass: 'award-logo-square' }
+  }[award.source_id] || { cls: 'award-era', logo: ESCAPE_ROOM_AWARDS_LOGO, alt: 'Premio' };
+  const cls = sourceMeta.cls;
+  const logo = sourceMeta.logo;
+  const alt = sourceMeta.alt;
+  const logoClass = sourceMeta.logoClass || 'award-logo-wide';
   return `<div class="award-seal ${cls}" title="${escapeHtml(title)}">
-    <img class="award-logo-wide" src="${logo}" alt="${alt}">
+    <img class="${logoClass}" src="${logo}" alt="${alt}">
     <span>${label}</span>
   </div>`;
 }
 
 function awardSeals(room, limit = 3) {
-  return publicAwardsFor(room).slice(0, limit).map(awardSealHtml).join('');
+  const awards = publicAwardsFor(room);
+  const visible = awards.slice(0, limit);
+  const giba = awards.find(a => a.source_id === 'giba_awards');
+  if (giba && limit > 0 && !visible.some(a => a.source_id === 'giba_awards')) {
+    visible[Math.max(0, limit - 1)] = giba;
+  }
+  return visible.map(awardSealHtml).join('');
 }
 
 function awardTags(room, limit = 4) {
   return publicAwardsFor(room).slice(0, limit).map(award => {
-    const source = award.source_id === '10escapes' ? '10Escapes' : award.source_id === 'terpeca' ? 'TERPECA' : 'Awards';
+    const source = award.source_id === '10escapes' ? '10Escapes' : award.source_id === 'terpeca' ? 'TERPECA' : award.source_id === 'giba_awards' ? 'Giba' : 'Awards';
     return `<span class="tag tag-feature">${escapeHtml(source)} ${escapeHtml(award.label || '')}</span>`;
   }).join('');
 }
@@ -2462,7 +2478,7 @@ function cardCatalogo(c, i) {
   const location = [cleanValue(c.ciudad), cleanValue(c.provincia)].filter(Boolean).join(' - ');
   const groupTags = groupStateTags(c);
   const userTags = userStateTags(c);
-  const awardSeal = awardSeals(c, 2);
+  const awardSeal = awardSeals(c, 3);
   const detailKey = jsString(roomKey(c));
   return `<div class="room-card" tabindex="0" role="button" onclick="openDetailFromCard(event,'catalogo','${detailKey}')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();openDetail('catalogo','${detailKey}')}" style="animation-delay:${Math.min(i, 20)*.025}s">
   <div class="card-media">

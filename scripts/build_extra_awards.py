@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Genera extra_awards.json desde 10Escapes y Escape Room Awards."""
+"""Genera extra_awards.json desde premios publicos de escape rooms."""
 
 import html
 import json
@@ -15,6 +15,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUT_FILE = ROOT / "extra_awards.json"
 CATALOG_FILE = ROOT / "catalog.json"
 USER_AGENT = "scaperooms-extra-awards/1.0"
+GIBA_AWARDS_URL = "https://www.gibaescape.com/proyectos/escape-room-giba-awards"
 
 TEN_ESCAPES_URLS = {
     2025: "https://10escapes.com/ganadores25/",
@@ -66,6 +67,17 @@ ERA_CATEGORIES = {
     "MARKETING": "Mejor marketing inauguracion",
     "ESCAPE ROOM": "Mejor escape room",
     "SALA ORIGINAL": "Mejor sala original",
+}
+
+GIBA_EDITION_YEAR = {
+    "VIII": 2025,
+    "VII": 2024,
+    "VI": 2023,
+    "V": 2022,
+    "IV": 2021,
+    "III": 2020,
+    "II": 2019,
+    "I": 2018,
 }
 
 
@@ -176,6 +188,48 @@ def parse_10escapes(awards):
             add_award(awards, "10escapes", "10Escapes", url, year, category, status, room, company, rank)
 
 
+def split_giba_room_company(text):
+    text = clean_room(text)
+    if "|" in text:
+        company, room = [part.strip() for part in text.split("|", 1)]
+        return room, company
+    match = re.match(r"(.+?)\s+\(([^()]+)\)\s*$", text)
+    if match:
+        return match.group(1).strip(), match.group(2).strip()
+    return text, ""
+
+
+def parse_giba_awards(awards, catalog_rooms):
+    lines = html_to_lines(fetch_text(GIBA_AWARDS_URL))
+    year = None
+    for index, line in enumerate(lines):
+        explicit_year = re.match(r"^GIBA AWARDS\s+(20\d{2})\s*$", line, flags=re.I)
+        if explicit_year:
+            year = int(explicit_year.group(1))
+            continue
+        edition = re.match(r"^GIBA AWARDS\s+([IVX]+)\s+EDICI", line, flags=re.I)
+        if edition:
+            year = GIBA_EDITION_YEAR.get(edition.group(1).upper())
+            continue
+        if not year:
+            continue
+        category_line = re.match(r"^([123])\.\s*(.+)$", line)
+        if not category_line:
+            continue
+        if index + 1 >= len(lines) or lines[index + 1].startswith("GIBA AWARDS"):
+            continue
+        rank = int(category_line.group(1))
+        category = re.sub(r"\s+", " ", category_line.group(2)).strip()
+        room, company = split_giba_room_company(lines[index + 1])
+        catalog_room = match_catalog_room(f"{room} {company}", catalog_rooms) or match_catalog_room(room, catalog_rooms)
+        if catalog_room:
+            room = catalog_room["name"]
+            if catalog_room.get("company"):
+                company = catalog_room["company"]
+        status = "winner" if rank == 1 else "runner_up"
+        add_award(awards, "giba_awards", "Giba Awards", GIBA_AWARDS_URL, year, category, status, room, company, rank)
+
+
 def load_catalog_rooms():
     data = json.loads(CATALOG_FILE.read_text(encoding="utf-8"))
     rooms = []
@@ -186,6 +240,7 @@ def load_catalog_rooms():
         rooms.append({
             "name": name,
             "name_key": slug_key(name),
+            "name_compact": compact_key(name),
             "company": item.get("empresa") or "",
         })
     return sorted(rooms, key=lambda item: len(item["name_key"]), reverse=True)
@@ -210,9 +265,11 @@ def era_category_from_line(line):
 
 def match_catalog_room(payload, catalog_rooms):
     key = slug_key(payload)
+    compact = compact_key(payload)
     for room in catalog_rooms:
         room_key = room["name_key"]
-        if key.startswith(room_key + " ") or key == room_key:
+        room_compact = room["name_compact"]
+        if key.startswith(room_key + " ") or key == room_key or compact.startswith(room_compact):
             return room
     return None
 
@@ -279,6 +336,7 @@ def build():
     awards = []
     catalog_rooms = load_catalog_rooms()
     parse_10escapes(awards)
+    parse_giba_awards(awards, catalog_rooms)
     for spec in ERA_PDFS:
         parse_era_pdf(awards, spec, catalog_rooms)
     awards = dedupe(awards)
@@ -294,11 +352,13 @@ def build():
             "sources": [
                 "https://10escapes.com/",
                 "https://escaperoomawardsoficial.com/",
+                GIBA_AWARDS_URL,
             ],
             "count": len(awards),
             "by_source": {
                 "10escapes": sum(1 for item in awards if item["source_id"] == "10escapes"),
                 "escape_room_awards": sum(1 for item in awards if item["source_id"] == "escape_room_awards"),
+                "giba_awards": sum(1 for item in awards if item["source_id"] == "giba_awards"),
             },
         },
         "awards": awards,
