@@ -2636,7 +2636,6 @@ function detailAccountHtml(room, kind) {
       <button class="detail-personal-btn done ${state.done ? 'active' : ''}" type="button" onclick="setPersonalRoomState('${kind}','${key}','done')">${state.done ? '✓ Hecho' : 'Hecho por mi'}</button>
       <button class="detail-personal-btn favorite ${favorite ? 'active' : ''}" data-slug="${slug}" type="button" onclick="toggleFav('${slug}',this)">${favorite ? '♥ Favorito' : '♡ Favorito'} <span class="fav-likes">${likeCount(slug)}</span></button>
     </div>
-    ${voteWidget(slug, `${slug}_detail`)}
   </div>`;
 }
 
@@ -2680,11 +2679,11 @@ function openDetail(kind, key) {
     <div class="detail-desc">${synopsis}</div>` : ''}
     ${isReview ? reviewBlockHtml(room) : ''}
     ${detailAccountHtml(room, kind)}
+    ${communityReviewsHtml(room, kind)}
     <div class="detail-actions">
       ${room.web ? `<a class="detail-link" href="${room.web}" target="_blank">Ver web oficial</a>` : ''}
       ${kind === 'catalogo' ? `<span class="tag tag-muted">Catálogo</span>` : kind === 'hechos' ? `<span class="tag tag-feature">Review grupo</span>` : `<span class="tag tag-feature">Pendiente</span>`}
-    </div>
-    ${communityReviewsHtml(room, kind)}`;
+    </div>`;
 
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
