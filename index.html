@@ -2472,6 +2472,10 @@ function jsString(text) {
   return String(text || '').replace(/\\/g, '\\\\').replace(/'/g, "\\'");
 }
 
+function cssSafe(text) {
+  return String(text || '').replace(/[^a-zA-Z0-9_-]/g, '_');
+}
+
 function roomKey(room) {
   return room.id || slugify(room.nombre || '');
 }
