@@ -332,7 +332,33 @@
   .detail-personal-btn.active.favorite{border-color:rgba(230,57,70,.48);background:rgba(230,57,70,.08);color:var(--red);}
   .detail-account .vote-section{margin-top:10px;margin-bottom:0;}
   .detail-login-hint{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;line-height:1.5;}
-
+  .community-reviews{border:1px solid rgba(255,255,255,.08);background:rgba(255,255,255,.02);padding:13px 14px;margin-top:14px;}
+  .review-summary-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:12px;}
+  .review-summary-item{border:1px solid rgba(245,166,35,.14);background:rgba(245,166,35,.035);padding:8px 9px;min-width:0;}
+  .review-summary-label{font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .review-summary-score{font-family:'Cinzel',serif;font-size:1.05rem;color:var(--amber);line-height:1.1;margin-top:3px;}
+  .my-review-box{border:1px solid rgba(245,166,35,.16);background:rgba(245,166,35,.035);padding:11px 12px;margin-bottom:12px;}
+  .my-review-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px;}
+  .my-review-title{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--amber);letter-spacing:.12em;text-transform:uppercase;}
+  .review-score-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;margin-bottom:10px;}
+  .review-score-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;}
+  .review-score-label{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+  .review-stars{display:flex;gap:1px;flex-shrink:0;}
+  .review-stars .star-wrap{width:1.24rem;height:1.24rem;}
+  .review-stars .star-bg,.review-stars .star-fg{font-size:1.12rem;line-height:1.24rem;}
+  .review-textarea{width:100%;min-height:76px;resize:vertical;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.92rem;line-height:1.4;padding:9px 10px;outline:none;}
+  .review-textarea:focus{border-color:rgba(245,166,35,.45);}
+  .review-form-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap;}
+  .review-form-status{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;min-height:16px;}
+  .review-list{display:flex;flex-direction:column;gap:8px;}
+  .community-review{border:1px solid rgba(255,255,255,.06);background:rgba(0,0,0,.12);padding:10px 11px;}
+  .community-review-head{display:flex;justify-content:space-between;gap:10px;align-items:flex-start;margin-bottom:6px;}
+  .community-review-user{font-family:'Cinzel',serif;color:var(--text);font-size:.86rem;}
+  .community-review-date{font-family:'Share Tech Mono',monospace;font-size:.55rem;color:var(--text3);white-space:nowrap;}
+  .community-review-scores{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:6px;}
+  .review-score-pill{font-family:'Share Tech Mono',monospace;font-size:.56rem;color:var(--text2);border:1px solid rgba(245,166,35,.14);background:rgba(245,166,35,.035);padding:3px 6px;text-transform:uppercase;}
+  .community-review-text{font-size:.9rem;line-height:1.45;color:var(--text2);white-space:pre-line;overflow-wrap:anywhere;}
+  .review-empty{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;line-height:1.5;padding:8px 0;}
   /* ── ASSISTANT ── */
   .assistant-toggle{position:fixed;left:22px;bottom:22px;z-index:120;width:54px;height:54px;border:1px solid rgba(245,166,35,.42);background:rgba(12,12,18,.94);color:var(--amber);box-shadow:0 12px 36px rgba(0,0,0,.55);cursor:pointer;font-size:1.35rem;display:flex;align-items:center;justify-content:center;}
   .assistant-toggle:hover{border-color:var(--amber);background:rgba(245,166,35,.08);}
@@ -598,6 +624,9 @@
     .detail-cats{grid-template-columns:1fr;}
     .detail-personal-grid{grid-template-columns:1fr;}
     .detail-account-head{align-items:flex-start;flex-direction:column;}
+    .review-summary-grid{grid-template-columns:1fr 1fr;}
+    .review-score-grid{grid-template-columns:1fr;}
+    .community-review-head{flex-direction:column;gap:2px;}
     .assistant-toggle{left:14px;bottom:14px;width:48px;height:48px;}
     .assistant-panel{left:0;right:0;bottom:0;width:100%;max-height:86vh;border-left:none;border-right:none;border-bottom:none;}
     .assistant-grid{grid-template-columns:1fr;}
@@ -914,6 +943,13 @@ function writeStoredFavs() {
 
 // Cache de votos: { roomSlug: { userId: stars, ... }, ... }
 let votesCache = {};
+let roomReviewsCache = {};
+const REVIEW_CATEGORIES = [
+  ['historia', 'Historia'],
+  ['ambientacion', 'Ambientación'],
+  ['jugabilidad', 'Jugabilidad'],
+  ['gamemaster', 'Game Master']
+];
 
 let PENDIENTES = [], HECHOS = [], CATALOGO = [], TERPECA_AWARDS = [], EXTRA_AWARDS = [], sortPend = 'rating', sortMine = 'rating', sortCatalogo = 'rating';
 const CATALOG_PAGE_SIZE = 120;
@@ -1189,6 +1225,7 @@ async function refreshSignedSession() {
   if (AUTH_USER) AUTH_TOKEN = await AUTH_USER.getIdToken();
   await loadUserRoomStates();
   await loadVotes();
+  await loadRoomReviews();
   await loadLikes();
   refreshAllLikeCounts();
   populateFilters();
@@ -1515,6 +1552,208 @@ async function loadVotes() {
 }
 
 // ── Cargar data.json ──────────────────────────────────────────────────────────
+function shortDisplayName(user = AUTH_USER) {
+  const raw = String(user?.displayName || user?.email || 'Usuario').trim();
+  if (!raw) return 'Usuario';
+  const parts = raw.split(/\s+/).filter(Boolean);
+  if (parts.length === 1) return parts[0];
+  return `${parts[0]} ${parts.slice(1, 2).map(p => `${p[0]}.`).join('')}`;
+}
+
+function formatReviewDate(ts) {
+  if (!ts) return '';
+  try {
+    return new Intl.DateTimeFormat('es-ES', { day: '2-digit', month: 'short', year: 'numeric' }).format(new Date(ts));
+  } catch {
+    return '';
+  }
+}
+
+function scoreToTen(stars) {
+  const val = Number(stars) || 0;
+  return Math.round(val * 20) / 10;
+}
+
+function reviewStats(slug) {
+  const reviews = Object.values(roomReviewsCache[slug] || {});
+  return REVIEW_CATEGORIES.map(([id, label]) => {
+    const vals = reviews.map(review => Number(review?.scores?.[id]) || 0).filter(Boolean);
+    const avg = vals.length ? vals.reduce((sum, val) => sum + val, 0) / vals.length : 0;
+    return { id, label, avg, count: vals.length };
+  });
+}
+
+function reviewStarsHtml(widgetId, category, value = 0, editable = true) {
+  const safeWidget = cssSafe(widgetId);
+  const safeCategory = cssSafe(category);
+  const current = Number(value) || 0;
+  let html = `<div class="review-stars" data-widget="${safeWidget}" data-category="${safeCategory}" data-value="${current}">`;
+  for (let i = 1; i <= 5; i++) {
+    const fill = Math.max(0, Math.min(1, current - (i - 1))) * 100;
+    const half = i - 0.5;
+    const full = i;
+    const clickAttrs = editable ? ` onclick="setReviewCategoryScoreFromEvent(event,'${safeWidget}','${safeCategory}',${i})" title="Izquierda: ${scoreToTen(half)}/10 · derecha: ${scoreToTen(full)}/10"` : '';
+    html += `<span class="star-wrap"${clickAttrs}><span class="star-bg">★</span><span class="star-fg" style="width:${fill}%">★</span></span>`;
+  }
+  html += '</div>';
+  return html;
+}
+
+function setReviewCategoryScore(widgetId, category, value) {
+  const selector = `.review-stars[data-widget="${cssSafe(widgetId)}"][data-category="${cssSafe(category)}"]`;
+  const root = document.querySelector(selector);
+  if (!root) return;
+  root.dataset.value = String(value);
+  root.querySelectorAll('.star-fg').forEach((star, index) => {
+    const fill = Math.max(0, Math.min(1, value - index)) * 100;
+    star.style.width = `${fill}%`;
+  });
+}
+function setReviewCategoryScoreFromEvent(event, widgetId, category, starIndex) {
+  const rect = event.currentTarget.getBoundingClientRect();
+  const isLeftHalf = event.clientX - rect.left < rect.width / 2;
+  setReviewCategoryScore(widgetId, category, starIndex - (isLeftHalf ? 0.5 : 0));
+}
+
+function myRoomReview(slug) {
+  return AUTH_USER ? (roomReviewsCache[slug] || {})[USER_ID] || null : null;
+}
+
+function reviewFormHtml(room, kind, slug) {
+  const key = roomKey(room);
+  const personal = userStateFor(room);
+  const canReview = AUTH_USER && personal.hecho;
+  const review = myRoomReview(slug) || { scores: {}, text: '' };
+  if (!AUTH_USER) {
+    return '<div class="review-empty">Entra con Google para escribir tu reseña cuando hayas marcado la sala como hecha.</div>';
+  }
+  if (!canReview) {
+    return '<div class="review-empty">Marca esta sala como Hecho por mí para poder publicar tu reseña.</div>';
+  }
+  const widgetId = `${slug}_${USER_ID}_review`;
+  return `<div class="my-review-box">
+    <div class="my-review-top">
+      <div class="my-review-title">Mi reseña</div>
+      ${review.updatedAt ? `<button class="auth-btn secondary" type="button" onclick="deleteRoomReview('${kind}','${key}')">Eliminar</button>` : ''}
+    </div>
+    <div class="review-score-grid">
+      ${REVIEW_CATEGORIES.map(([id, label]) => `<div class="review-score-row"><span class="review-score-label">${label}</span>${reviewStarsHtml(widgetId, id, review.scores?.[id] || 0, true)}</div>`).join('')}
+    </div>
+    <textarea class="review-textarea" id="review-text-${cssSafe(slug)}" maxlength="1200" placeholder="Tu opinión, sin spoilers. Opcional.">${escapeHtml(review.text || '')}</textarea>
+    <div class="review-form-actions">
+      <span class="review-form-status" id="review-status-${cssSafe(slug)}"></span>
+      <button class="auth-btn" type="button" onclick="saveRoomReview('${kind}','${key}')">Guardar reseña</button>
+    </div>
+  </div>`;
+}
+
+function reviewSummaryHtml(slug) {
+  const stats = reviewStats(slug);
+  const hasStats = stats.some(item => item.count);
+  if (!hasStats) return '';
+  return `<div class="review-summary-grid">${stats.map(item => `<div class="review-summary-item"><div class="review-summary-label">${item.label}</div><div class="review-summary-score">${item.count ? scoreToTen(item.avg).toFixed(1) : '-'}<span class="vote-count">/10</span></div></div>`).join('')}</div>`;
+}
+
+function reviewListHtml(slug) {
+  const reviews = Object.entries(roomReviewsCache[slug] || {}).map(([uid, review]) => ({ uid, ...review })).sort((a, b) => (b.updatedAt || 0) - (a.updatedAt || 0));
+  if (!reviews.length) return '<div class="review-empty">Todavía no hay reseñas de la comunidad.</div>';
+  return `<div class="review-list">${reviews.map(review => {
+    const scores = REVIEW_CATEGORIES.filter(([id]) => review.scores?.[id]).map(([id, label]) => `<span class="review-score-pill">${label}: ${scoreToTen(review.scores[id]).toFixed(1)}/10</span>`).join('');
+    const text = String(review.text || '').trim();
+    return `<article class="community-review">
+      <div class="community-review-head"><span class="community-review-user">${escapeHtml(review.userName || 'Usuario')}</span><span class="community-review-date">${formatReviewDate(review.updatedAt)}</span></div>
+      <div class="community-review-scores">${scores}</div>
+      ${text ? `<div class="community-review-text">${escapeHtml(text)}</div>` : ''}
+    </article>`;
+  }).join('')}</div>`;
+}
+
+function communityReviewsHtml(room, kind) {
+  const slug = slugify(room.nombre || room.empresa || roomKey(room));
+  return `<section class="community-reviews">
+    <div class="detail-section-title">Reseñas de la comunidad</div>
+    ${reviewSummaryHtml(slug)}
+    ${reviewFormHtml(room, kind, slug)}
+    ${reviewListHtml(slug)}
+  </section>`;
+}
+
+async function saveRoomReview(kind, key) {
+  if (!AUTH_USER || !FIREBASE_ENABLED) {
+    alert('Inicia sesión con Google para guardar tu reseña.');
+    return;
+  }
+  const room = getRoomByKindKey(kind, key);
+  if (!room || !userStateFor(room).hecho) {
+    alert('Solo puedes reseñar salas que tengas marcadas como Hecho por mí.');
+    return;
+  }
+  const slug = slugify(room.nombre || room.empresa || roomKey(room));
+  const widgetId = `${slug}_${USER_ID}_review`;
+  const scores = {};
+  REVIEW_CATEGORIES.forEach(([id]) => {
+    const root = document.querySelector(`.review-stars[data-widget="${cssSafe(widgetId)}"][data-category="${cssSafe(id)}"]`);
+    const val = Number(root?.dataset?.value) || 0;
+    if (val > 0) scores[id] = Math.round(val * 2) / 2;
+  });
+  const text = document.getElementById(`review-text-${cssSafe(slug)}`)?.value.trim() || '';
+  if (!Object.keys(scores).length) {
+    alert('Añade al menos una puntuación por estrellas para guardar la reseña.');
+    return;
+  }
+  const previous = myRoomReview(slug) || {};
+  const now = Date.now();
+  const review = {
+    uid: USER_ID,
+    userName: shortDisplayName(),
+    roomName: room.nombre || '',
+    company: room.empresa || '',
+    scores,
+    text,
+    createdAt: previous.createdAt || now,
+    updatedAt: now
+  };
+  try {
+    await fbPut(`roomReviews/${slug}/${USER_ID}`, review);
+    if (!roomReviewsCache[slug]) roomReviewsCache[slug] = {};
+    roomReviewsCache[slug][USER_ID] = review;
+    const status = document.getElementById(`review-status-${cssSafe(slug)}`);
+    if (status) status.textContent = 'Reseña guardada';
+    openDetail(kind, key);
+  } catch (err) {
+    console.error(err);
+    alert('No se pudo guardar la reseña. Revisa las reglas de Firebase para roomReviews.');
+  }
+}
+
+async function deleteRoomReview(kind, key) {
+  if (!AUTH_USER || !FIREBASE_ENABLED) return;
+  const room = getRoomByKindKey(kind, key);
+  if (!room) return;
+  const slug = slugify(room.nombre || room.empresa || roomKey(room));
+  try {
+    await fbDelete(`roomReviews/${slug}/${USER_ID}`);
+    if (roomReviewsCache[slug]) delete roomReviewsCache[slug][USER_ID];
+    openDetail(kind, key);
+  } catch (err) {
+    console.error(err);
+    alert('No se pudo eliminar la reseña.');
+  }
+}
+
+async function loadRoomReviews() {
+  if (!FIREBASE_ENABLED) {
+    roomReviewsCache = {};
+    return;
+  }
+  try {
+    const data = await fbGet('roomReviews');
+    roomReviewsCache = data || {};
+  } catch (err) {
+    console.warn('No se pudieron cargar las reseñas', err);
+    roomReviewsCache = {};
+  }
+}
 async function loadCatalogo() {
   try {
     const r = await fetch('catalog.json?v=' + Date.now());
@@ -2444,7 +2683,8 @@ function openDetail(kind, key) {
     <div class="detail-actions">
       ${room.web ? `<a class="detail-link" href="${room.web}" target="_blank">Ver web oficial</a>` : ''}
       ${kind === 'catalogo' ? `<span class="tag tag-muted">Catálogo</span>` : kind === 'hechos' ? `<span class="tag tag-feature">Review grupo</span>` : `<span class="tag tag-feature">Pendiente</span>`}
-    </div>`;
+    </div>
+    ${communityReviewsHtml(room, kind)}`;
 
   modal.classList.add('open');
   modal.setAttribute('aria-hidden', 'false');
