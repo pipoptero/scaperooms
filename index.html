@@ -1817,6 +1817,7 @@ async function loadData() {
     await loadUserRoomStates();
     // Cargar votos primero (bloquea hasta tener datos para el ranking)
     await loadVotes();
+    await loadRoomReviews();
     await loadCatalogo();
     await loadTerpecaAwards();
     await loadExtraAwards();
