@@ -1622,7 +1622,7 @@ function myRoomReview(slug) {
 function reviewFormHtml(room, kind, slug) {
   const key = roomKey(room);
   const personal = userStateFor(room);
-  const canReview = AUTH_USER && personal.hecho;
+  const canReview = AUTH_USER && personal.done;
   const review = myRoomReview(slug) || { scores: {}, text: '' };
   if (!AUTH_USER) {
     return '<div class="review-empty">Entra con Google para escribir tu reseña cuando hayas marcado la sala como hecha.</div>';
@@ -1684,7 +1684,7 @@ async function saveRoomReview(kind, key) {
     return;
   }
   const room = getRoomByKindKey(kind, key);
-  if (!room || !userStateFor(room).hecho) {
+  if (!room || !userStateFor(room).done) {
     alert('Solo puedes reseñar salas que tengas marcadas como Hecho por mí.');
     return;
   }
