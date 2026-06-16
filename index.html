@@ -340,12 +340,14 @@
   .my-review-box{border:1px solid rgba(245,166,35,.16);background:rgba(245,166,35,.035);padding:11px 12px;margin-bottom:12px;}
   .my-review-top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:9px;}
   .my-review-title{font-family:'Share Tech Mono',monospace;font-size:.62rem;color:var(--amber);letter-spacing:.12em;text-transform:uppercase;}
-  .review-score-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px 12px;margin-bottom:10px;}
-  .review-score-row{display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0;}
+  .review-score-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px;margin-bottom:10px;}
+  .review-score-row{display:grid;grid-template-columns:minmax(90px,1fr) auto;align-items:center;gap:10px;min-width:0;}
   .review-score-label{font-family:'Share Tech Mono',monospace;font-size:.58rem;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-  .review-stars{display:flex;gap:1px;flex-shrink:0;}
-  .review-stars .star-wrap{width:1.24rem;height:1.24rem;}
-  .review-stars .star-bg,.review-stars .star-fg{font-size:1.12rem;line-height:1.24rem;}
+  .review-score-control{display:grid;grid-template-columns:auto 46px;align-items:center;gap:8px;justify-self:end;}
+  .review-stars{display:flex;gap:2px;flex-shrink:0;cursor:pointer;touch-action:none;user-select:none;}
+  .review-stars .star-wrap{width:1.34rem;height:1.34rem;}
+  .review-stars .star-bg,.review-stars .star-fg{font-size:1.2rem;line-height:1.34rem;}
+  .review-score-value{font-family:'Share Tech Mono',monospace;font-size:.68rem;color:var(--amber);letter-spacing:.04em;text-align:right;white-space:nowrap;}
   .review-textarea{width:100%;min-height:76px;resize:vertical;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-family:'Rajdhani',sans-serif;font-size:.92rem;line-height:1.4;padding:9px 10px;outline:none;}
   .review-textarea:focus{border-color:rgba(245,166,35,.45);}
   .review-form-actions{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:9px;flex-wrap:wrap;}
@@ -626,6 +628,8 @@
     .detail-account-head{align-items:flex-start;flex-direction:column;}
     .review-summary-grid{grid-template-columns:1fr 1fr;}
     .review-score-grid{grid-template-columns:1fr;}
+    .review-score-row{grid-template-columns:minmax(82px,1fr) auto;}
+    .review-score-control{grid-template-columns:auto 44px;}
     .community-review-head{flex-direction:column;gap:2px;}
     .assistant-toggle{left:14px;bottom:14px;width:48px;height:48px;}
     .assistant-panel{left:0;right:0;bottom:0;width:100%;max-height:86vh;border-left:none;border-right:none;border-bottom:none;}
@@ -1587,15 +1591,16 @@ function reviewStarsHtml(widgetId, category, value = 0, editable = true) {
   const safeWidget = cssSafe(widgetId);
   const safeCategory = cssSafe(category);
   const current = Number(value) || 0;
-  let html = `<div class="review-stars" data-widget="${safeWidget}" data-category="${safeCategory}" data-value="${current}">`;
+  const valueId = `review-value-${safeWidget}-${safeCategory}`;
+  const events = editable
+    ? ` onpointerdown="setReviewCategoryScoreFromPointer(event,'${safeWidget}','${safeCategory}');this.dataset.dragging='1';this.setPointerCapture?.(event.pointerId)" onpointermove="if(this.dataset.dragging==='1')setReviewCategoryScoreFromPointer(event,'${safeWidget}','${safeCategory}')" onpointerup="this.dataset.dragging='0';this.releasePointerCapture?.(event.pointerId)" onpointerleave="this.dataset.dragging='0'"`
+    : '';
+  let html = `<div class="review-score-control"><div class="review-stars" data-widget="${safeWidget}" data-category="${safeCategory}" data-value="${current}"${events}>`;
   for (let i = 1; i <= 5; i++) {
     const fill = Math.max(0, Math.min(1, current - (i - 1))) * 100;
-    const half = i - 0.5;
-    const full = i;
-    const clickAttrs = editable ? ` onclick="setReviewCategoryScoreFromEvent(event,'${safeWidget}','${safeCategory}',${i})" title="Izquierda: ${scoreToTen(half)}/10 · derecha: ${scoreToTen(full)}/10"` : '';
-    html += `<span class="star-wrap"${clickAttrs}><span class="star-bg">★</span><span class="star-fg" style="width:${fill}%">★</span></span>`;
+    html += `<span class="star-wrap"><span class="star-bg">★</span><span class="star-fg" style="width:${fill}%">★</span></span>`;
   }
-  html += '</div>';
+  html += `</div><span class="review-score-value" id="${valueId}">${scoreToTen(current).toFixed(1)}/10</span></div>`;
   return html;
 }
 
@@ -1608,11 +1613,16 @@ function setReviewCategoryScore(widgetId, category, value) {
     const fill = Math.max(0, Math.min(1, value - index)) * 100;
     star.style.width = `${fill}%`;
   });
+  const valueNode = document.getElementById(`review-value-${cssSafe(widgetId)}-${cssSafe(category)}`);
+  if (valueNode) valueNode.textContent = `${scoreToTen(value).toFixed(1)}/10`;
 }
-function setReviewCategoryScoreFromEvent(event, widgetId, category, starIndex) {
+
+function setReviewCategoryScoreFromPointer(event, widgetId, category) {
+  event.preventDefault();
   const rect = event.currentTarget.getBoundingClientRect();
-  const isLeftHalf = event.clientX - rect.left < rect.width / 2;
-  setReviewCategoryScore(widgetId, category, starIndex - (isLeftHalf ? 0.5 : 0));
+  const ratio = Math.max(0, Math.min(1, (event.clientX - rect.left) / rect.width));
+  const value = Math.max(0.5, Math.min(5, Math.ceil(ratio * 10) / 2));
+  setReviewCategoryScore(widgetId, category, value);
 }
 
 function myRoomReview(slug) {
@@ -2488,6 +2498,20 @@ function findDetailRoom(kind, key) {
   return list.find(room => roomKey(room) === key) || null;
 }
 
+function detailRefForRoom(room, order = ['catalogo', 'pendientes', 'hechos']) {
+  const lists = { catalogo: CATALOGO, pendientes: PENDIENTES, hechos: HECHOS };
+  const exactKey = roomKey(room);
+  for (const kind of order) {
+    if ((lists[kind] || []).some(item => roomKey(item) === exactKey)) return { kind, key: exactKey };
+  }
+  const state = userRoomKey(room);
+  for (const kind of order) {
+    const match = (lists[kind] || []).find(item => userRoomKey(item) === state);
+    if (match) return { kind, key: roomKey(match) };
+  }
+  return { kind: 'catalogo', key: exactKey };
+}
+
 function detailImageHtml(room, kind) {
   const initial = escapeHtml((room.nombre || '?').trim().slice(0, 1).toUpperCase());
   const fallback = `<div class="card-media-fallback">${initial}</div>`;
@@ -2714,10 +2738,9 @@ document.addEventListener('keydown', event => {
 // ── Templates de tarjetas ─────────────────────────────────────────────────────
 function cardPend(p, i) {
   const slug = slugify(p.nombre);
-  const detailKind = HECHOS.some(room => userRoomKey(room) === userRoomKey(p))
-    ? 'hechos'
-    : PENDIENTES.some(room => userRoomKey(room) === userRoomKey(p)) ? 'pendientes' : 'catalogo';
-  const detailKey = jsString(roomKey(p));
+  const detailRef = detailRefForRoom(p, ['catalogo', 'pendientes', 'hechos']);
+  const detailKind = detailRef.kind;
+  const detailKey = jsString(detailRef.key);
   const rating = displayRating(p);
   const players = playerLabel(p);
   const price = priceLabel(p);
